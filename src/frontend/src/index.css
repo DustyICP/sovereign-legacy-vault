@@ -1,0 +1,209 @@
+@font-face {
+  font-family: "Fraunces";
+  src: url("/assets/fonts/Fraunces.woff2") format("woff2");
+  font-display: swap;
+  font-style: normal;
+  font-weight: 100 900;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark-only theme — near-black steel + warm gold (no light variant) */
+    --font-display: "Fraunces";
+    --font-body: "Inter";
+    --font-mono: "IBM Plex Mono";
+    --radius: 0.5rem;
+
+    --background: 0.135 0.012 255;
+    --surface: 0.17 0.014 255;
+    --surface-raised: 0.205 0.016 255;
+    --foreground: 0.93 0.012 85;
+    --card: 0.17 0.014 255;
+    --card-foreground: 0.93 0.012 85;
+    --popover: 0.205 0.016 255;
+    --popover-foreground: 0.93 0.012 85;
+
+    --primary: 0.72 0.16 85;
+    --primary-foreground: 0.14 0.02 85;
+
+    --secondary: 0.205 0.014 255;
+    --secondary-foreground: 0.85 0.01 85;
+    --muted: 0.205 0.012 255;
+    --muted-foreground: 0.56 0.012 80;
+
+    --accent: 0.8 0.14 85;
+    --accent-foreground: 0.14 0.02 85;
+
+    --destructive: 0.55 0.2 25;
+    --destructive-foreground: 0.95 0.01 25;
+    --success: 0.62 0.15 150;
+    --warning: 0.75 0.15 85;
+
+    --border: 0.26 0.014 255;
+    --input: 0.26 0.014 255;
+    --ring: 0.78 0.15 85;
+
+    --chart-1: 0.72 0.16 85;
+    --chart-2: 0.55 0.012 255;
+    --chart-3: 0.42 0.014 255;
+    --chart-4: 0.62 0.1 70;
+    --chart-5: 0.8 0.12 85;
+
+    --sidebar: 0.15 0.012 255;
+    --sidebar-foreground: 0.9 0.01 85;
+    --sidebar-primary: 0.72 0.16 85;
+    --sidebar-primary-foreground: 0.14 0.02 85;
+    --sidebar-accent: 0.205 0.016 255;
+    --sidebar-accent-foreground: 0.85 0.01 85;
+    --sidebar-border: 0.24 0.014 255;
+    --sidebar-ring: 0.78 0.15 85;
+
+    --gradient-gold: linear-gradient(
+      180deg,
+      oklch(0.82 0.13 85) 0%,
+      oklch(0.66 0.17 83) 55%,
+      oklch(0.55 0.15 80) 100%
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.19 0.016 255) 0%,
+      oklch(0.15 0.012 255) 100%
+    );
+  }
+
+  .dark {
+    /* Dark-only: mirror of :root so the .dark class never flips to light */
+    --font-display: "Fraunces";
+    --font-body: "Inter";
+    --font-mono: "IBM Plex Mono";
+    --radius: 0.5rem;
+
+    --background: 0.135 0.012 255;
+    --surface: 0.17 0.014 255;
+    --surface-raised: 0.205 0.016 255;
+    --foreground: 0.93 0.012 85;
+    --card: 0.17 0.014 255;
+    --card-foreground: 0.93 0.012 85;
+    --popover: 0.205 0.016 255;
+    --popover-foreground: 0.93 0.012 85;
+
+    --primary: 0.72 0.16 85;
+    --primary-foreground: 0.14 0.02 85;
+
+    --secondary: 0.205 0.014 255;
+    --secondary-foreground: 0.85 0.01 85;
+    --muted: 0.205 0.012 255;
+    --muted-foreground: 0.56 0.012 80;
+
+    --accent: 0.8 0.14 85;
+    --accent-foreground: 0.14 0.02 85;
+
+    --destructive: 0.55 0.2 25;
+    --destructive-foreground: 0.95 0.01 25;
+    --success: 0.62 0.15 150;
+    --warning: 0.75 0.15 85;
+
+    --border: 0.26 0.014 255;
+    --input: 0.26 0.014 255;
+    --ring: 0.78 0.15 85;
+
+    --chart-1: 0.72 0.16 85;
+    --chart-2: 0.55 0.012 255;
+    --chart-3: 0.42 0.014 255;
+    --chart-4: 0.62 0.1 70;
+    --chart-5: 0.8 0.12 85;
+
+    --sidebar: 0.15 0.012 255;
+    --sidebar-foreground: 0.9 0.01 85;
+    --sidebar-primary: 0.72 0.16 85;
+    --sidebar-primary-foreground: 0.14 0.02 85;
+    --sidebar-accent: 0.205 0.016 255;
+    --sidebar-accent-foreground: 0.85 0.01 85;
+    --sidebar-border: 0.24 0.014 255;
+    --sidebar-ring: 0.78 0.15 85;
+
+    --gradient-gold: linear-gradient(
+      180deg,
+      oklch(0.82 0.13 85) 0%,
+      oklch(0.66 0.17 83) 55%,
+      oklch(0.55 0.15 80) 100%
+    );
+    --gradient-subtle: linear-gradient(
+      180deg,
+      oklch(0.19 0.016 255) 0%,
+      oklch(0.15 0.012 255) 100%
+    );
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+  }
+}
+
+@layer utilities {
+  .transition-smooth {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .bg-surface {
+    background-color: oklch(var(--surface));
+  }
+
+  .bg-surface-raised {
+    background-color: oklch(var(--surface-raised));
+  }
+
+  .bg-gradient-gold {
+    background-image: var(--gradient-gold);
+  }
+
+  .bg-gradient-subtle {
+    background-image: var(--gradient-subtle);
+  }
+
+  .bg-rim-light {
+    /* Directional rim-light for the vault door's dark steel. A warm gold
+       radial glow emanating from the single top-center light source (the
+       same source that lights the door's gold edges), with a smooth gradient
+       falloff so the dark areas read as one consistently-lit photograph
+       rather than a lit center fading to flat black. Applied with
+       mix-blend-screen so it only lifts the dark steel and never washes out
+       the existing gold highlights. */
+    background: radial-gradient(
+      130% 100% at 50% -10%,
+      oklch(0.78 0.14 85 / 0.34) 0%,
+      oklch(0.62 0.13 84 / 0.16) 38%,
+      oklch(0.5 0.1 82 / 0.06) 62%,
+      transparent 78%
+    );
+  }
+
+  .text-extruded-gold {
+    /* Stepped multi-layer block emboss: bright upper-left highlight, mid-tone
+       gold face, then five progressively darker bronze/steel steps stepping
+       down and to the right, grounded by a deep soft shadow. */
+    background-image: linear-gradient(
+      180deg,
+      oklch(0.85 0.12 88) 0%,
+      oklch(0.68 0.17 84) 50%,
+      oklch(0.55 0.15 80) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(-1px -1px 0 oklch(0.96 0.05 95))
+      drop-shadow(1px 1px 0 oklch(0.52 0.13 82))
+      drop-shadow(2px 2px 0 oklch(0.44 0.11 80))
+      drop-shadow(3px 3px 0 oklch(0.36 0.09 78))
+      drop-shadow(4px 4px 0 oklch(0.28 0.07 75))
+      drop-shadow(5px 5px 0 oklch(0.2 0.05 70))
+      drop-shadow(6px 8px 16px oklch(0.06 0.01 255 / 0.75));
+  }
+}

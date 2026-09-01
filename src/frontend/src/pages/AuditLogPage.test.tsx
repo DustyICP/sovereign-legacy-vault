@@ -1,0 +1,64 @@
+import { AuditLogPage } from "@/pages/AuditLogPage";
+import { actorState } from "@/test/state";
+import {
+  createMockActor,
+  renderPage,
+  setActor,
+  setAuthenticated,
+} from "@/test/utils";
+import { screen, within } from "@testing-library/react";
+import { beforeEach, describe, expect, it } from "vitest";
+
+describe("AuditLogPage", () => {
+  beforeEach(() => {
+    setAuthenticated(true);
+    setActor(null);
+  });
+
+  it("renders audit rows with event type and description", async () => {
+    const actor = createMockActor();
+    actor.listAuditEvents.mockResolvedValue([
+      {
+        id: 0n,
+        timestamp: 1_700_000_000_000_000_000n,
+        eventType: "SECURITY",
+        description: "Vault armed",
+        prevHash: new Uint8Array([0]),
+        hash: new Uint8Array([1]),
+      },
+      {
+        id: 1n,
+        timestamp: 1_700_000_100_000_000_000n,
+        eventType: "VERIFICATION",
+        description: "Check-in recorded",
+        prevHash: new Uint8Array([1]),
+        hash: new Uint8Array([2]),
+      },
+    ]);
+    setActor(actor);
+
+    renderPage(<AuditLogPage />);
+
+    expect(await screen.findByText("SECURITY")).toBeInTheDocument();
+    expect(screen.getByText("VERIFICATION")).toBeInTheDocument();
+    expect(screen.getByText("Vault armed")).toBeInTheDocument();
+    expect(screen.getByText("Check-in recorded")).toBeInTheDocument();
+    expect(screen.getByText("2 events sealed")).toBeInTheDocument();
+
+    const table = screen.getByRole("table", { name: "Vault audit log" });
+    expect(within(table).getByText("Timestamp")).toBeInTheDocument();
+    expect(within(table).getByText("Event")).toBeInTheDocument();
+    expect(within(table).getByText("Description")).toBeInTheDocument();
+  });
+
+  it("shows the empty state when the ledger has no events", async () => {
+    const actor = createMockActor();
+    actor.listAuditEvents.mockResolvedValue([]);
+    setActor(actor);
+
+    renderPage(<AuditLogPage />);
+
+    expect(await screen.findByText("No events yet")).toBeInTheDocument();
+    expect(screen.getByText("0 events sealed")).toBeInTheDocument();
+  });
+});

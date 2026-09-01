@@ -1,0 +1,148 @@
+// Version: 4.0.0
+type AccessControlState__201339279 =
+  {
+    var adminAssigned : Bool;
+    userRoles : Map__386906547<Principal, UserRole__91647283>
+  };
+type AssetAllocation__794517451 = {beneficiaryId : Nat; share : Nat};
+type AssetAllocation__794882480 = {beneficiaryId : Nat; share : Nat};
+type Asset__37931526 =
+  {
+    allocations : [AssetAllocation__794882480];
+    balance : Nat;
+    decimals : Nat;
+    id : Nat;
+    name : Text;
+    symbol : Text
+  };
+type Asset__447052111 =
+  {
+    allocations : [AssetAllocation__794517451];
+    balance : Nat;
+    decimals : Nat;
+    id : Nat;
+    name : Text;
+    symbol : Text
+  };
+type AuditEvent__167088031 =
+  {
+    description : Text;
+    eventType : Text;
+    hash : Blob;
+    id : Nat;
+    prevHash : Blob;
+    timestamp : Timestamp__265477422
+  };
+type AuditEvent__3739697 =
+  {
+    description : Text;
+    eventType : Text;
+    hash : Blob;
+    id : Nat;
+    prevHash : Blob;
+    timestamp : Timestamp__281624749
+  };
+type Beneficiary__121212938 =
+  {
+    allocationShare : Nat;
+    createdAt : Timestamp__265477422;
+    id : Nat;
+    name : Text;
+    walletAddress : Text
+  };
+type Beneficiary__52157065 =
+  {
+    allocationShare : Nat;
+    createdAt : Timestamp__281624749;
+    id : Nat;
+    name : Text;
+    walletAddress : Text
+  };
+type Data__265875254<K, V> = {var count : Nat__58649523; kvs : [var ?(K, V)]};
+type Internal__161573640<K, V> =
+  {children : [var ?Node__430031793<K, V>]; data : Data__265875254<K, V>};
+type Leaf__1045638083<K, V> = {data : Data__265875254<K, V>};
+type List__1004628775<T> =
+  {
+    var blockIndex : Nat__58649523;
+    var blocks : [var [var ?T]];
+    var elementIndex : Nat__58649523
+  };
+type List__89170296<T> = List__1004628775<T>;
+type Map__13625999<K, V> =
+  {var root : Node__430031793<K, V>; var size : Nat__58649523};
+type Map__386906547<K, V> = Map__670138087<K, V>;
+type Map__670138087<K, V> = Map__13625999<K, V>;
+type Nat__58649523 = Nat__920180692;
+type Nat__920180692 = Nat;
+type NewActor__934361114 =
+  {
+    accessControlState : AccessControlState__201339279;
+    assets : List__89170296<Asset__37931526>;
+    auditEvents : List__89170296<AuditEvent__3739697>;
+    beneficiaries : List__89170296<Beneficiary__52157065>;
+    ids : VaultIds__795502377;
+    switchState : SwitchStateInternal__785960710
+  };
+type Node__430031793<K, V> =
+  {#internal : Internal__161573640<K, V>; #leaf : Leaf__1045638083<K, V>};
+type OldActor__423149881 = {};
+type SwitchStateInternal__785960710 =
+  {
+    var armedAt : ?Timestamp__281624749;
+    var cadenceSeconds : Nat;
+    var lastCheckIn : ?Timestamp__281624749;
+    var status : SwitchStatus__54792110
+  };
+type SwitchStatus__54792110 = {#armed; #disarmed};
+type SwitchStatus__844281464 = {#armed; #disarmed};
+type Timestamp__265477422 = Int;
+type Timestamp__281624749 = Int;
+type UserRole__91647283 = {#admin; #guest; #user};
+type VaultIds__795502377 =
+  {
+    var nextAssetId : Nat;
+    var nextAuditEventId : Nat;
+    var nextBeneficiaryId : Nat
+  };
+{
+  "20260831_200942" : (_old : OldActor__423149881) -> NewActor__934361114
+}
+actor  {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__386906547<Principal, UserRole__91647283>
+    };
+  stable assets :
+    {
+      var blockIndex : Nat__58649523;
+      var blocks : [var [var ?Asset__447052111]];
+      var elementIndex : Nat__58649523
+    };
+  stable auditEvents :
+    {
+      var blockIndex : Nat__58649523;
+      var blocks : [var [var ?AuditEvent__167088031]];
+      var elementIndex : Nat__58649523
+    };
+  stable beneficiaries :
+    {
+      var blockIndex : Nat__58649523;
+      var blocks : [var [var ?Beneficiary__121212938]];
+      var elementIndex : Nat__58649523
+    };
+  stable ids :
+    {
+      var nextAssetId : Nat;
+      var nextAuditEventId : Nat;
+      var nextBeneficiaryId : Nat
+    };
+  stable switchState :
+    {
+      var armedAt : ?Timestamp__265477422;
+      var cadenceSeconds : Nat;
+      var lastCheckIn : ?Timestamp__265477422;
+      var status : SwitchStatus__844281464
+    }
+};

@@ -1,0 +1,136 @@
+type WalletBalance = 
+ record {
+   assets: vec Asset;
+   totalUsd: opt nat;
+ };
+type Value = 
+ variant {
+   "bool": bool;
+   float: float64;
+   "int": int;
+   "nat": nat;
+   "null";
+   "text": text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type Timestamp = int;
+type SwitchTimeline = 
+ record {
+   cadenceSeconds: nat;
+   status: SwitchStatus;
+   timeSinceLastCheckIn: opt nat;
+   timeUntilRelease: opt nat;
+ };
+type SwitchStatus = 
+ variant {
+   armed;
+   disarmed;
+ };
+type SwitchState = 
+ record {
+   armedAt: opt Timestamp;
+   cadenceSeconds: nat;
+   lastCheckIn: opt Timestamp;
+   status: SwitchStatus;
+ };
+type Result__1 = 
+ variant {
+   err: Error;
+   ok;
+ };
+type Result = 
+ record {
+   hasMore: bool;
+   rows: vec vec Cell;
+ };
+type Error = 
+ variant {
+   AmbiguousAttribute: record {
+                         field: text;
+                         sources: vec text;
+                       };
+   FrontendOriginMismatch: record {
+                             expected: vec text;
+                             got: text;
+                           };
+   FrontendOriginsNotConfigured;
+   MalformedCandid;
+   MissingField: text;
+   MixedSsoSources: record {
+                      otherKeys: vec text;
+                      ssoKeys: vec text;
+                    };
+   NoAttributes;
+   Stale: record {ageNs: nat;};
+   UnknownNonce;
+   UntrustedSsoSource: record {domain: text;};
+ };
+type Cell = 
+ record {
+   name: text;
+   value: Value;
+ };
+type Beneficiary = 
+ record {
+   allocationShare: nat;
+   createdAt: Timestamp;
+   id: nat;
+   name: text;
+   walletAddress: text;
+ };
+type AuditEvent = 
+ record {
+   description: text;
+   eventType: text;
+   hash: blob;
+   id: nat;
+   prevHash: blob;
+   timestamp: Timestamp;
+ };
+type AssetAllocation = 
+ record {
+   beneficiaryId: nat;
+   share: nat;
+ };
+type Asset = 
+ record {
+   allocations: vec AssetAllocation;
+   balance: nat;
+   decimals: nat;
+   id: nat;
+   name: text;
+   symbol: text;
+ };
+service : {
+  _initialize_access_control: () -> ();
+  _internet_identity_sign_in_finish: () -> (Result__1);
+  _internet_identity_sign_in_start: () -> (blob);
+  addAsset: (symbol: text, name: text, balance: nat, decimals: nat,
+   allocations: vec AssetAllocation) -> (Asset);
+  addBeneficiary: (name: text, allocationShare: nat, walletAddress: text) ->
+   (Beneficiary);
+  appendAuditEvent: (eventType: text, description: text) -> (AuditEvent);
+  armSwitch: (cadenceSeconds: nat) -> (SwitchState);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  checkIn: () -> (SwitchState);
+  disarmSwitch: () -> (SwitchState);
+  execute: (qJson: text) -> (Result) query;
+  getApiDoc: () -> (text) query;
+  getCallerUserRole: () -> (UserRole) query;
+  getSwitchState: () -> (SwitchState) query;
+  getSwitchTimeline: () -> (SwitchTimeline) query;
+  getWalletBalance: () -> (WalletBalance) query;
+  isCallerAdmin: () -> (bool) query;
+  listAssets: () -> (vec Asset) query;
+  listAuditEvents: () -> (vec AuditEvent) query;
+  listBeneficiaries: () -> (vec Beneficiary) query;
+  removeBeneficiary: (id: nat) -> (bool);
+  schema: () -> (text) query;
+  updateBeneficiary: (id: nat, name: text, allocationShare: nat,
+   walletAddress: text) -> (opt Beneficiary);
+}
