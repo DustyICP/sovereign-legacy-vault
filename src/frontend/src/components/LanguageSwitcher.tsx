@@ -1,37 +1,27 @@
-import {
-  LANGUAGES,
-  type Language,
-  applyLanguageDirection,
-  getStoredLanguage,
-  setStoredLanguage,
-} from "@/lib/i18n";
+import { LANGUAGES } from "@/lib/i18n";
+import { useTranslation } from "@/lib/translations";
 import { ChevronDown } from "lucide-react";
-import { useEffect, useState } from "react";
 
 /**
- * Functional language placeholder: lists all 22 supported languages,
- * persists the selection, and flips document direction for RTL languages
- * (Arabic, Persian, Urdu). Translation coverage lands in a later phase.
+ * Language switcher: lists all 22 supported languages, persists the selection,
+ * and flips document direction for RTL languages (Arabic, Persian, Urdu).
+ * The active locale is driven by the I18nProvider context, so switching
+ * re-renders all copy immediately.
  */
 export function LanguageSwitcher() {
-  const [language, setLanguage] = useState<Language>(() => getStoredLanguage());
-
-  useEffect(() => {
-    applyLanguageDirection(language);
-  }, [language]);
+  const { language, setLanguage, t } = useTranslation();
 
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const next =
       LANGUAGES.find((lang) => lang.code === event.target.value) ??
       LANGUAGES[0];
     setLanguage(next);
-    setStoredLanguage(next);
   };
 
   return (
     <div className="relative">
       <label htmlFor="language-switcher" className="sr-only">
-        Language
+        {t("language.label")}
       </label>
       <select
         id="language-switcher"

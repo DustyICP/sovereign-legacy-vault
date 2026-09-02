@@ -33,17 +33,17 @@ The app's frontend pins an Internet Identity derivation origin, published at `/.
 The switch is a dead man's switch: a single state record that the app's owner arms, disarms, and checks in against. The backend stores the switch state and reports it to the frontend; it does not itself execute any release. The switch state is exposed through the role-guarded methods below and through the OQL `switchState` entity.
 
 - `getSwitchState() : async SwitchState` — query. Returns the current switch state record.
-- `armSwitch(cadenceSeconds : Nat) : async SwitchState` — update. Arms the switch and records the current time.
+- `armSwitch(cadenceSeconds : Nat) : async SwitchState` — update. Arms the switch and records the current time. `cadenceSeconds` must be a sane positive value between 1 and 31,536,000 (one year); otherwise the call traps with `Invalid cadence: must be between 1 and 31536000 seconds`.
 - `disarmSwitch() : async SwitchState` — update. Disarms the switch and records the current time.
 - `checkIn() : async SwitchState` — update. \"I'm still here\": records the current time as the last check-in.
 - `getSwitchTimeline() : async SwitchTimeline` — query. Returns the switch status and timing information used to drive the countdown UI.
 
 ### Beneficiaries
 
-- `addBeneficiary(name : Text, allocationShare : Nat, walletAddress : Text) : async Beneficiary` — update. Appends a beneficiary with a fresh id and `createdAt` = now.
+- `addBeneficiary(name : Text, allocationShare : Nat, walletAddress : Text) : async Beneficiary` — update. Appends a beneficiary with a fresh id and `createdAt` = now. Validates the `walletAddress` format (hard block) and enforces that the sum of `allocationShare` across all beneficiaries stays at or below 100.
 - `listBeneficiaries() : async [Beneficiary]` — query.
-- `updateBeneficiary(id : Nat, name : Text, allocationShare : Nat, walletAddress : Text) : async ?Beneficiary` — update. Returns `null` when no beneficiary has that id.
-- `removeBeneficiary(id : Nat) : async Bool` — update. Returns `false` when no beneficiary has that id.
+- `updateBeneficiary(id : Nat, name : Text, allocationShare : Nat, walletAddress : Text) : async ?Beneficiary` — update. Returns `null` when no beneficiary has that id. Applies the same wallet-address and allocation-sum validation as `addBeneficiary`; the updated share replaces the beneficiary's previous share in the sum.
+- `removeBeneficiary(id : Nat) : async Bool` — update. Returns `false` when no beneficiary has that id. Also removes the removed beneficiary's asset-allocation entries from every asset, so remaining allocation totals stay consistent.
 
 ### Assets & wallet balance
 
@@ -53,8 +53,17 @@ The switch is a dead man's switch: a single state record that the app's owner ar
 
 ### Audit log
 
-- `appendAuditEvent(eventType : Text, description : Text) : async AuditEvent` — update. Appends an event chained to the previous event's hash.
+- `appendAuditEvent(eventType : Text, description : Text) : async AuditEvent` — update. Appends an event chained to the previous event's hash. The backend also calls this automatically on every real action (see below); the endpoint remains public for manual appends.
 - `listAuditEvents() : async [AuditEvent]` — query.
+
+The backend automatically appends a chained-hash audit entry on every real action:
+
+- `login` — a user signs in through the app's frontend.
+- `beneficiary_added` / `beneficiary_updated` / `beneficiary_removed` — a beneficiary is added, updated, or removed (removal entries note the allocation cleanup).
+- `switch_armed` / `switch_disarmed` / `switch_checked_in` — the switch is armed, disarmed, or checked in.
+- `asset_added` — an asset is added.
+
+All entries keep the existing chained-hash format: each event's `hash` is the SHA-256 of its id, timestamp, event type, description, and the previous event's `hash` (`prevHash`); the first event chains from an empty blob.
 
 ### OQL
 
@@ -78,7 +87,7 @@ Exposed entities:
 - `SwitchStatus` is a variant: `#armed` or `#disarmed`.
 - Audit hashes (`prevHash`, `hash`) are 32-byte SHA-256 `Blob`s.
 - Identifiers (`Beneficiary.id`, `Asset.id`, `AuditEvent.id`) are `Nat`s assigned monotonically from 0.
-- `allocationShare` and `AssetAllocation.share` are plain `Nat`s; the backend does not validate that shares sum to any total.
+- `allocationShare` is a plain `Nat` percentage. The backend enforces that the sum of `allocationShare` across all beneficiaries never exceeds 100: `addBeneficiary` and `updateBeneficiary` trap when the new total would exceed 100.
 - `totalUsd` is `?Nat` and is always `null` in the current backend.
 
 ## Lifecycle and polling
@@ -92,13 +101,17 @@ Exposed entities:
 - `addBeneficiary`, `addAsset`, and `appendAuditEvent` are not idempotent: each call appends a new record with a fresh id. Retrying after an ambiguous failure can create duplicates; there is no deduplication key.
 - `armSwitch`, `disarmSwitch`, and `checkIn` are idempotent in effect — they overwrite state.
 - `updateBeneficiary` and `removeBeneficiary` are idempotent in effect; calling them for an unknown id returns `null` / `false` without error.
-- `removeBeneficiary` does not touch asset allocations that reference the removed beneficiary.
+- `removeBeneficiary` also removes every asset-allocation entry referencing the removed beneficiary from all assets; allocations for remaining beneficiaries are unchanged.
 
 ## Errors, traps, and limits
 
 - Every guarded endpoint traps with `Unauthorized` when the caller is anonymous or lacks the `#user` role. The trap rolls back the whole message; the caller cannot branch on it.
 - `updateBeneficiary` and `removeBeneficiary` return `null` / `false` for unknown ids (no trap).
-- The backend performs no validation of `allocationShare` sums, `cadenceSeconds > 0`, or `walletAddress` format — invalid values are stored as given.
+- Validation is a hard block: the call traps and the whole message is rolled back, so invalid values are never stored.
+  - `walletAddress` is optional: a blank/empty value is accepted (no wallet is set). When present, it must be either a 64-hexadecimal-character ICP account identifier or a valid ICP principal (validated via `Principal.fromText`). Anything else is rejected as malformed (hard block): a 64-character value containing non-hexadecimal characters traps with `Invalid wallet address: account identifier must be exactly 64 hexadecimal characters`, and any other non-blank value that is not a valid principal traps when the principal parser rejects it.
+  - Allocation shares: `addBeneficiary` / `updateBeneficiary` trap with `Invalid allocation: total allocation share would exceed 100%` when the summed shares across all beneficiaries would exceed 100.
+  - `armSwitch` traps with `Invalid cadence: must be between 1 and 31536000 seconds` when `cadenceSeconds` is 0 or greater than 31,536,000.
+- Validation failures trap before any audit entry is appended, so a rejected call leaves no audit trail.
 - `getWalletBalance().totalUsd` is always `null`; do not rely on it for a USD total.
 "
   };

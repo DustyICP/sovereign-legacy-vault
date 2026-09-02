@@ -35,14 +35,14 @@ describe("AssetsPage", () => {
         id: 0n,
         name: "Ada",
         allocationShare: 60n,
-        walletAddress: "addr-1",
+        walletAddress: "rrkah-fqaaa-aaaaa-aaaaq-cai",
         createdAt: 1n,
       },
       {
         id: 1n,
         name: "Bob",
         allocationShare: 40n,
-        walletAddress: "addr-2",
+        walletAddress: "2vxsx-fae",
         createdAt: 2n,
       },
     ]);
@@ -72,6 +72,27 @@ describe("AssetsPage", () => {
 
     expect(await screen.findByText("No assets held")).toBeInTheDocument();
     expect(screen.getByText("Assets Held")).toBeInTheDocument();
+  });
+
+  it("shows the Unallocated fallback when an asset has no beneficiary allocations", async () => {
+    const actor = createMockActor();
+    actor.listAssets.mockResolvedValue([
+      {
+        id: 0n,
+        symbol: "ICP",
+        name: "Internet Computer",
+        balance: 125000000n,
+        decimals: 8n,
+        allocations: [],
+      },
+    ]);
+    actor.listBeneficiaries.mockResolvedValue([]);
+    setActor(actor);
+
+    renderPage(<AssetsPage />);
+
+    expect(await screen.findByText("Internet Computer")).toBeInTheDocument();
+    expect(screen.getByText("Unallocated")).toBeInTheDocument();
   });
 
   it("shows the error state when the vault is unreachable", async () => {

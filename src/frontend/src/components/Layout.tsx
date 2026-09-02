@@ -1,6 +1,7 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
+import { useTranslation } from "@/lib/translations";
 import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { Navigate, Outlet, useRouterState } from "@tanstack/react-router";
 
@@ -11,6 +12,7 @@ import { Navigate, Outlet, useRouterState } from "@tanstack/react-router";
  * are sent to the landing page, authenticated ones are sent to the dashboard.
  */
 export function Layout() {
+  const { t } = useTranslation();
   const { isAuthenticated, isInitializing } = useInternetIdentity();
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
@@ -31,7 +33,7 @@ export function Layout() {
               aria-hidden="true"
             />
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Opening vault…
+              {t("loading.openingVault")}
             </p>
           </div>
         </main>

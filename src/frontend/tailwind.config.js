@@ -68,9 +68,31 @@ export default {
         },
       },
       fontFamily: {
-        display: ["var(--font-display)", "serif"],
-        body: ["var(--font-body)", "sans-serif"],
-        mono: ["var(--font-mono)", "monospace"],
+        // Arabic/Persian/Urdu glyph-covering system fallbacks appended so RTL
+        // locales render correctly without bundling extra font files. The
+        // primary faces (Fraunces/Inter/IBM Plex Mono) render Latin first.
+        display: [
+          "var(--font-display)",
+          "Noto Naskh Arabic",
+          "Vazirmatn",
+          "Noto Nastaliq Urdu",
+          "serif",
+        ],
+        body: [
+          "var(--font-body)",
+          "Noto Sans Arabic",
+          "Noto Sans Bengali",
+          "Noto Sans Devanagari",
+          "Vazirmatn",
+          "Noto Nastaliq Urdu",
+          "sans-serif",
+        ],
+        mono: [
+          "var(--font-mono)",
+          "Noto Sans Arabic",
+          "Noto Sans Mono",
+          "monospace",
+        ],
       },
       borderRadius: {
         lg: "var(--radius)",

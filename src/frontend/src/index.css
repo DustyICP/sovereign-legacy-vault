@@ -21,19 +21,19 @@
     --background: 0.135 0.012 255;
     --surface: 0.17 0.014 255;
     --surface-raised: 0.205 0.016 255;
-    --foreground: 0.93 0.012 85;
+    --foreground: 0.72 0.16 85;
     --card: 0.17 0.014 255;
-    --card-foreground: 0.93 0.012 85;
+    --card-foreground: 0.72 0.16 85;
     --popover: 0.205 0.016 255;
-    --popover-foreground: 0.93 0.012 85;
+    --popover-foreground: 0.72 0.16 85;
 
     --primary: 0.72 0.16 85;
     --primary-foreground: 0.14 0.02 85;
 
     --secondary: 0.205 0.014 255;
-    --secondary-foreground: 0.85 0.01 85;
+    --secondary-foreground: 0.72 0.16 85;
     --muted: 0.205 0.012 255;
-    --muted-foreground: 0.56 0.012 80;
+    --muted-foreground: 0.72 0.16 85;
 
     --accent: 0.8 0.14 85;
     --accent-foreground: 0.14 0.02 85;
@@ -54,11 +54,11 @@
     --chart-5: 0.8 0.12 85;
 
     --sidebar: 0.15 0.012 255;
-    --sidebar-foreground: 0.9 0.01 85;
+    --sidebar-foreground: 0.72 0.16 85;
     --sidebar-primary: 0.72 0.16 85;
     --sidebar-primary-foreground: 0.14 0.02 85;
     --sidebar-accent: 0.205 0.016 255;
-    --sidebar-accent-foreground: 0.85 0.01 85;
+    --sidebar-accent-foreground: 0.72 0.16 85;
     --sidebar-border: 0.24 0.014 255;
     --sidebar-ring: 0.78 0.15 85;
 
@@ -85,19 +85,19 @@
     --background: 0.135 0.012 255;
     --surface: 0.17 0.014 255;
     --surface-raised: 0.205 0.016 255;
-    --foreground: 0.93 0.012 85;
+    --foreground: 0.72 0.16 85;
     --card: 0.17 0.014 255;
-    --card-foreground: 0.93 0.012 85;
+    --card-foreground: 0.72 0.16 85;
     --popover: 0.205 0.016 255;
-    --popover-foreground: 0.93 0.012 85;
+    --popover-foreground: 0.72 0.16 85;
 
     --primary: 0.72 0.16 85;
     --primary-foreground: 0.14 0.02 85;
 
     --secondary: 0.205 0.014 255;
-    --secondary-foreground: 0.85 0.01 85;
+    --secondary-foreground: 0.72 0.16 85;
     --muted: 0.205 0.012 255;
-    --muted-foreground: 0.56 0.012 80;
+    --muted-foreground: 0.72 0.16 85;
 
     --accent: 0.8 0.14 85;
     --accent-foreground: 0.14 0.02 85;
@@ -118,11 +118,11 @@
     --chart-5: 0.8 0.12 85;
 
     --sidebar: 0.15 0.012 255;
-    --sidebar-foreground: 0.9 0.01 85;
+    --sidebar-foreground: 0.72 0.16 85;
     --sidebar-primary: 0.72 0.16 85;
     --sidebar-primary-foreground: 0.14 0.02 85;
     --sidebar-accent: 0.205 0.016 255;
-    --sidebar-accent-foreground: 0.85 0.01 85;
+    --sidebar-accent-foreground: 0.72 0.16 85;
     --sidebar-border: 0.24 0.014 255;
     --sidebar-ring: 0.78 0.15 85;
 
@@ -205,5 +205,68 @@
       drop-shadow(4px 4px 0 oklch(0.28 0.07 75))
       drop-shadow(5px 5px 0 oklch(0.2 0.05 70))
       drop-shadow(6px 8px 16px oklch(0.06 0.01 255 / 0.75));
+  }
+
+  /* ===== Right-to-Left (RTL) support =====
+     Arabic, Persian, and Urdu flip the document direction via dir="rtl".
+     Where possible components use logical properties (ms/me/ps/pe/start/end,
+     text-start, border-s/e) so the layout flips automatically. The overrides
+     below mirror the remaining LTR-biased physical utilities so the gold
+     identity holds identically in RTL. Colors and tokens are untouched. */
+
+  [dir="rtl"] .text-extruded-gold {
+    /* Flip the stepped emboss from stepping down-right to down-left so the
+       light source reads from the upper-right in RTL, mirroring the LTR
+       upper-left treatment. Top highlight and grounding shadow unchanged. */
+    filter: drop-shadow(-1px -1px 0 oklch(0.96 0.05 95))
+      drop-shadow(-1px 1px 0 oklch(0.52 0.13 82))
+      drop-shadow(-2px 2px 0 oklch(0.44 0.11 80))
+      drop-shadow(-3px 3px 0 oklch(0.36 0.09 78))
+      drop-shadow(-4px 4px 0 oklch(0.28 0.07 75))
+      drop-shadow(-5px 5px 0 oklch(0.2 0.05 70))
+      drop-shadow(-6px 8px 16px oklch(0.06 0.01 255 / 0.75));
+  }
+
+  /* Active gold indicator bars (Sidebar/Header) and timeline progress —
+     flip the absolute inset from the left edge to the right edge. */
+  [dir="rtl"] .absolute.left-0 {
+    left: auto;
+    right: 0;
+  }
+
+  /* Hairline dividers flip with direction. */
+  [dir="rtl"] .border-r {
+    border-right-width: 0;
+    border-left-width: 1px;
+  }
+  [dir="rtl"] .border-l {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
+
+  /* Directional spacing flips so gutters hug the inline-start edge. */
+  [dir="rtl"] .ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+  [dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+  }
+  [dir="rtl"] .pl-3 {
+    padding-left: 0;
+    padding-right: 0.75rem;
+  }
+  [dir="rtl"] .pr-8 {
+    padding-right: 0;
+    padding-left: 2rem;
+  }
+
+  /* Table headers and any explicit text alignment follow reading direction. */
+  [dir="rtl"] .text-left {
+    text-align: right;
+  }
+  [dir="rtl"] .text-right {
+    text-align: left;
   }
 }

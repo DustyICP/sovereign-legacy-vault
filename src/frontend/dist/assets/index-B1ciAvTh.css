@@ -582,7 +582,7 @@ code,
 kbd,
 samp,
 pre {
-  font-family: var(--font-mono), monospace; /* 1 */
+  font-family: var(--font-mono), Noto Sans Arabic, Noto Sans Mono, monospace; /* 1 */
   font-feature-settings: normal; /* 2 */
   font-variation-settings: normal; /* 3 */
   font-size: 1em; /* 4 */
@@ -873,19 +873,19 @@ video {
     --background: 0.135 0.012 255;
     --surface: 0.17 0.014 255;
     --surface-raised: 0.205 0.016 255;
-    --foreground: 0.93 0.012 85;
+    --foreground: 0.72 0.16 85;
     --card: 0.17 0.014 255;
-    --card-foreground: 0.93 0.012 85;
+    --card-foreground: 0.72 0.16 85;
     --popover: 0.205 0.016 255;
-    --popover-foreground: 0.93 0.012 85;
+    --popover-foreground: 0.72 0.16 85;
 
     --primary: 0.72 0.16 85;
     --primary-foreground: 0.14 0.02 85;
 
     --secondary: 0.205 0.014 255;
-    --secondary-foreground: 0.85 0.01 85;
+    --secondary-foreground: 0.72 0.16 85;
     --muted: 0.205 0.012 255;
-    --muted-foreground: 0.56 0.012 80;
+    --muted-foreground: 0.72 0.16 85;
 
     --accent: 0.8 0.14 85;
     --accent-foreground: 0.14 0.02 85;
@@ -906,11 +906,11 @@ video {
     --chart-5: 0.8 0.12 85;
 
     --sidebar: 0.15 0.012 255;
-    --sidebar-foreground: 0.9 0.01 85;
+    --sidebar-foreground: 0.72 0.16 85;
     --sidebar-primary: 0.72 0.16 85;
     --sidebar-primary-foreground: 0.14 0.02 85;
     --sidebar-accent: 0.205 0.016 255;
-    --sidebar-accent-foreground: 0.85 0.01 85;
+    --sidebar-accent-foreground: 0.72 0.16 85;
     --sidebar-border: 0.24 0.014 255;
     --sidebar-ring: 0.78 0.15 85;
 
@@ -937,19 +937,19 @@ video {
     --background: 0.135 0.012 255;
     --surface: 0.17 0.014 255;
     --surface-raised: 0.205 0.016 255;
-    --foreground: 0.93 0.012 85;
+    --foreground: 0.72 0.16 85;
     --card: 0.17 0.014 255;
-    --card-foreground: 0.93 0.012 85;
+    --card-foreground: 0.72 0.16 85;
     --popover: 0.205 0.016 255;
-    --popover-foreground: 0.93 0.012 85;
+    --popover-foreground: 0.72 0.16 85;
 
     --primary: 0.72 0.16 85;
     --primary-foreground: 0.14 0.02 85;
 
     --secondary: 0.205 0.014 255;
-    --secondary-foreground: 0.85 0.01 85;
+    --secondary-foreground: 0.72 0.16 85;
     --muted: 0.205 0.012 255;
-    --muted-foreground: 0.56 0.012 80;
+    --muted-foreground: 0.72 0.16 85;
 
     --accent: 0.8 0.14 85;
     --accent-foreground: 0.14 0.02 85;
@@ -970,11 +970,11 @@ video {
     --chart-5: 0.8 0.12 85;
 
     --sidebar: 0.15 0.012 255;
-    --sidebar-foreground: 0.9 0.01 85;
+    --sidebar-foreground: 0.72 0.16 85;
     --sidebar-primary: 0.72 0.16 85;
     --sidebar-primary-foreground: 0.14 0.02 85;
     --sidebar-accent: 0.205 0.016 255;
-    --sidebar-accent-foreground: 0.85 0.01 85;
+    --sidebar-accent-foreground: 0.72 0.16 85;
     --sidebar-border: 0.24 0.014 255;
     --sidebar-ring: 0.78 0.15 85;
 
@@ -998,7 +998,7 @@ video {
 body {
   --tw-bg-opacity: 1;
   background-color: oklch(var(--background) / var(--tw-bg-opacity, 1));
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-body), Noto Sans Arabic, Noto Sans Bengali, Noto Sans Devanagari, Vazirmatn, Noto Nastaliq Urdu, sans-serif;
   --tw-text-opacity: 1;
   color: oklch(var(--foreground) / var(--tw-text-opacity, 1));
   -webkit-font-smoothing: antialiased;
@@ -1614,8 +1614,14 @@ body {
 .-mt-4 {
   margin-top: -1rem;
 }
+.mb-12 {
+  margin-bottom: 3rem;
+}
 .mb-2 {
   margin-bottom: 0.5rem;
+}
+.mb-3 {
+  margin-bottom: 0.75rem;
 }
 .mb-4 {
   margin-bottom: 1rem;
@@ -1635,6 +1641,9 @@ body {
 .ml-auto {
   margin-left: auto;
 }
+.mr-2 {
+  margin-right: 0.5rem;
+}
 .mt-0\.5 {
   margin-top: 0.125rem;
 }
@@ -1643,6 +1652,9 @@ body {
 }
 .mt-10 {
   margin-top: 2.5rem;
+}
+.mt-12 {
+  margin-top: 3rem;
 }
 .mt-2 {
   margin-top: 0.5rem;
@@ -1674,6 +1686,9 @@ body {
 .block {
   display: block;
 }
+.inline {
+  display: inline;
+}
 .flex {
   display: flex;
 }
@@ -1694,6 +1709,9 @@ body {
 }
 .grid {
   display: grid;
+}
+.contents {
+  display: contents;
 }
 .hidden {
   display: none;
@@ -1972,6 +1990,9 @@ body {
 .max-w-3xl {
   max-width: 48rem;
 }
+.max-w-6xl {
+  max-width: 72rem;
+}
 .max-w-7xl {
   max-width: 80rem;
 }
@@ -2202,6 +2223,11 @@ body {
   --tw-space-y-reverse: 0;
   margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+}
+.space-y-5 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
 }
 .space-y-6 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-y-reverse: 0;
@@ -2570,6 +2596,10 @@ body {
   padding-top: 1rem;
   padding-bottom: 1rem;
 }
+.py-5 {
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
@@ -2635,6 +2665,9 @@ body {
 .text-center {
   text-align: center;
 }
+.text-right {
+  text-align: right;
+}
 .align-top {
   vertical-align: top;
 }
@@ -2642,13 +2675,17 @@ body {
   vertical-align: middle;
 }
 .font-body {
-  font-family: var(--font-body), sans-serif;
+  font-family: var(--font-body), Noto Sans Arabic, Noto Sans Bengali, Noto Sans Devanagari, Vazirmatn, Noto Nastaliq Urdu, sans-serif;
 }
 .font-display {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-display), Noto Naskh Arabic, Vazirmatn, Noto Nastaliq Urdu, serif;
 }
 .font-mono {
-  font-family: var(--font-mono), monospace;
+  font-family: var(--font-mono), Noto Sans Arabic, Noto Sans Mono, monospace;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
 }
 .text-3xl {
   font-size: 1.875rem;
@@ -2709,6 +2746,9 @@ body {
 }
 .uppercase {
   text-transform: uppercase;
+}
+.italic {
+  font-style: italic;
 }
 .tabular-nums {
   --tw-numeric-spacing: tabular-nums;
@@ -3067,6 +3107,63 @@ body {
       drop-shadow(5px 5px 0 oklch(0.2 0.05 70))
       drop-shadow(6px 8px 16px oklch(0.06 0.01 255 / 0.75));
   }
+/* ===== Right-to-Left (RTL) support =====
+     Arabic, Persian, and Urdu flip the document direction via dir="rtl".
+     Where possible components use logical properties (ms/me/ps/pe/start/end,
+     text-start, border-s/e) so the layout flips automatically. The overrides
+     below mirror the remaining LTR-biased physical utilities so the gold
+     identity holds identically in RTL. Colors and tokens are untouched. */
+[dir="rtl"] .text-extruded-gold {
+    /* Flip the stepped emboss from stepping down-right to down-left so the
+       light source reads from the upper-right in RTL, mirroring the LTR
+       upper-left treatment. Top highlight and grounding shadow unchanged. */
+    filter: drop-shadow(-1px -1px 0 oklch(0.96 0.05 95))
+      drop-shadow(-1px 1px 0 oklch(0.52 0.13 82))
+      drop-shadow(-2px 2px 0 oklch(0.44 0.11 80))
+      drop-shadow(-3px 3px 0 oklch(0.36 0.09 78))
+      drop-shadow(-4px 4px 0 oklch(0.28 0.07 75))
+      drop-shadow(-5px 5px 0 oklch(0.2 0.05 70))
+      drop-shadow(-6px 8px 16px oklch(0.06 0.01 255 / 0.75));
+  }
+/* Active gold indicator bars (Sidebar/Header) and timeline progress —
+     flip the absolute inset from the left edge to the right edge. */
+[dir="rtl"] .absolute.left-0 {
+    left: auto;
+    right: 0;
+  }
+/* Hairline dividers flip with direction. */
+[dir="rtl"] .border-r {
+    border-right-width: 0;
+    border-left-width: 1px;
+  }
+[dir="rtl"] .border-l {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
+/* Directional spacing flips so gutters hug the inline-start edge. */
+[dir="rtl"] .ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
+  }
+[dir="rtl"] .mr-2 {
+    margin-right: 0;
+    margin-left: 0.5rem;
+  }
+[dir="rtl"] .pl-3 {
+    padding-left: 0;
+    padding-right: 0.75rem;
+  }
+[dir="rtl"] .pr-8 {
+    padding-right: 0;
+    padding-left: 2rem;
+  }
+/* Table headers and any explicit text alignment follow reading direction. */
+[dir="rtl"] .text-left {
+    text-align: right;
+  }
+[dir="rtl"] .text-right {
+    text-align: left;
+  }
 .\[--cell-size\:--spacing\(8\)\] {
   --cell-size: var(--spacing(8));
 }
@@ -3168,6 +3265,11 @@ body {
   --tw-translate-x: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+[dir="rtl"] .after\:absolute.left-0::after {
+    content: var(--tw-content);
+    left: auto;
+    right: 0;
+  }
 .first\:rounded-l-md:first-child {
   border-top-left-radius: calc(var(--radius) - 2px);
   border-bottom-left-radius: calc(var(--radius) - 2px);
@@ -3175,6 +3277,10 @@ body {
 .first\:border-l:first-child {
   border-left-width: 1px;
 }
+[dir="rtl"] .first\:border-l:first-child {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
 .last\:rounded-r-md:last-child {
   border-top-right-radius: calc(var(--radius) - 2px);
   border-bottom-right-radius: calc(var(--radius) - 2px);
@@ -3231,6 +3337,9 @@ body {
 }
 .hover\:underline:hover {
   text-decoration-line: underline;
+}
+.hover\:no-underline:hover {
+  text-decoration-line: none;
 }
 .hover\:opacity-100:hover {
   opacity: 1;
@@ -3880,6 +3989,18 @@ body {
 .data-\[state\=open\]\:duration-500[data-state="open"] {
   animation-duration: 500ms;
 }
+[dir="rtl"] .data-\[vaul-drawer-direction\=left\]\:left-0[data-vaul-drawer-direction="left"].absolute {
+    left: auto;
+    right: 0;
+  }
+[dir="rtl"] .data-\[vaul-drawer-direction\=left\]\:border-r[data-vaul-drawer-direction="left"] {
+    border-right-width: 0;
+    border-left-width: 1px;
+  }
+[dir="rtl"] .data-\[vaul-drawer-direction\=right\]\:border-l[data-vaul-drawer-direction="right"] {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
 .\*\:data-\[slot\=select-value\]\:line-clamp-1[data-slot="select-value"] > * {
   overflow: hidden;
   display: -webkit-box;
@@ -3920,9 +4041,18 @@ body {
   --tw-translate-x: 0px;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+[dir="rtl"] .data-\[panel-group-direction\=vertical\]\:after\:left-0[data-panel-group-direction="vertical"].absolute::after {
+    content: var(--tw-content);
+    left: auto;
+    right: 0;
+  }
 .data-\[variant\=outline\]\:first\:border-l:first-child[data-variant="outline"] {
   border-left-width: 1px;
 }
+[dir="rtl"] .data-\[variant\=outline\]\:first\:border-l:first-child[data-variant="outline"] {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
 .data-\[active\=true\]\:hover\:bg-accent:hover[data-active="true"] {
   --tw-bg-opacity: 1;
   background-color: oklch(var(--accent) / var(--tw-bg-opacity, 1));
@@ -4080,6 +4210,18 @@ body {
   transition-duration: 200ms;
   animation-duration: 200ms;
 }
+[dir="rtl"] .group[data-side="right"] .group-data-\[side\=right\]\:left-0.absolute {
+    left: auto;
+    right: 0;
+  }
+[dir="rtl"] .group[data-side="left"] .group-data-\[side\=left\]\:border-r {
+    border-right-width: 0;
+    border-left-width: 1px;
+  }
+[dir="rtl"] .group[data-side="right"] .group-data-\[side\=right\]\:border-l {
+    border-left-width: 0;
+    border-right-width: 1px;
+  }
 .group[data-collapsible="offcanvas"] .group-data-\[collapsible\=offcanvas\]\:after\:left-full::after {
   content: var(--tw-content);
   left: 100%;
@@ -4234,11 +4376,12 @@ body {
   .sm\:text-left {
     text-align: left;
   }
-
+  [dir="rtl"] .sm\:text-left {
+    text-align: right;
+  }
   .data-\[vaul-drawer-direction\=left\]\:sm\:max-w-sm[data-vaul-drawer-direction="left"] {
     max-width: 24rem;
   }
-
   .data-\[vaul-drawer-direction\=right\]\:sm\:max-w-sm[data-vaul-drawer-direction="right"] {
     max-width: 24rem;
   }
@@ -4273,6 +4416,10 @@ body {
     width: auto;
   }
 
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .md\:grid-cols-3 {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
@@ -4292,6 +4439,11 @@ body {
   .md\:text-2xl {
     font-size: 1.5rem;
     line-height: 2rem;
+  }
+
+  .md\:text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
   }
 
   .md\:text-5xl {
@@ -4322,32 +4474,37 @@ body {
   .md\:opacity-0 {
     opacity: 0;
   }
-
+  [dir="rtl"] .md\:absolute.left-0 {
+    left: auto;
+    right: 0;
+  }
+  [dir="rtl"] .md\:text-left {
+    text-align: right;
+  }
   .md\:after\:hidden::after {
     content: var(--tw-content);
     display: none;
   }
-
   .peer[data-variant="inset"] ~ .md\:peer-data-\[variant\=inset\]\:m-2 {
     margin: 0.5rem;
   }
-
   .peer[data-variant="inset"] ~ .md\:peer-data-\[variant\=inset\]\:ml-0 {
     margin-left: 0px;
   }
-
   .peer[data-variant="inset"][data-state="collapsed"] ~ .md\:peer-data-\[variant\=inset\]\:peer-data-\[state\=collapsed\]\:ml-2 {
     margin-left: 0.5rem;
   }
-
   .peer[data-variant="inset"] ~ .md\:peer-data-\[variant\=inset\]\:rounded-xl {
     border-radius: 0.75rem;
   }
-
   .peer[data-variant="inset"] ~ .md\:peer-data-\[variant\=inset\]\:shadow-sm {
     --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
     --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+  [dir="rtl"] .peer[data-variant="inset"][data-state="collapsed"] ~ .md\:peer-data-\[variant\=inset\]\:peer-data-\[state\=collapsed\]\:ml-2 {
+    margin-left: 0;
+    margin-right: 0.5rem;
   }
 }
 @media (min-width: 1024px) {

@@ -35,14 +35,14 @@ describe("DashboardPage", () => {
         id: 0n,
         name: "Ada",
         allocationShare: 60n,
-        walletAddress: "addr-1",
+        walletAddress: "rrkah-fqaaa-aaaaa-aaaaq-cai",
         createdAt: 1n,
       },
       {
         id: 1n,
         name: "Bob",
         allocationShare: 40n,
-        walletAddress: "addr-2",
+        walletAddress: "2vxsx-fae",
         createdAt: 2n,
       },
     ]);
@@ -61,16 +61,18 @@ describe("DashboardPage", () => {
     expect(
       within(balanceCard).getByText((content) => content.startsWith("1.25")),
     ).toBeInTheDocument();
-    expect(within(balanceCard).getByText("1 asset held")).toBeInTheDocument();
+    expect(
+      within(balanceCard).getByText("1 asset(s) held"),
+    ).toBeInTheDocument();
 
     const beneficiariesCard = screen.getByTestId("dashboard.beneficiaries");
     expect(
       within(beneficiariesCard).getByText("Beneficiaries"),
     ).toBeInTheDocument();
     // Assert the count is shown with the corrected pluralization
-    // (production renders "2 beneficiaries sealed").
+    // (production renders "2 beneficiary(ies) sealed").
     expect(
-      within(beneficiariesCard).getByText(/2 beneficiaries? sealed/),
+      within(beneficiariesCard).getByText(/2 beneficiary\(ies\) sealed/),
     ).toBeInTheDocument();
 
     const allocationCard = screen.getByTestId("dashboard.allocation");
@@ -92,7 +94,7 @@ describe("DashboardPage", () => {
         id: 0n,
         name: "Ada",
         allocationShare: 100n,
-        walletAddress: "addr-1",
+        walletAddress: "rrkah-fqaaa-aaaaa-aaaaq-cai",
         createdAt: 1n,
       },
     ]);
@@ -108,7 +110,7 @@ describe("DashboardPage", () => {
       "dashboard.beneficiaries",
     );
     expect(
-      within(beneficiariesCard).getByText("1 beneficiary sealed"),
+      within(beneficiariesCard).getByText("1 beneficiary(ies) sealed"),
     ).toBeInTheDocument();
     expect(
       within(beneficiariesCard).queryByText(/beneficiaries sealed/),

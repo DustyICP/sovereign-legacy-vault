@@ -1,5 +1,6 @@
 import { createActor } from "@/backend";
 import type { Asset, Beneficiary, SwitchState } from "@/backend";
+import { useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
 
@@ -63,10 +64,13 @@ function totalBalance(assets: Asset[] | undefined): string {
     .join(" + ");
 }
 
-function formatDateTime(timestamp: bigint): string {
+function formatDateTime(
+  timestamp: bigint,
+  formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) => string,
+): string {
   const date = new Date(Number(timestamp / 1_000_000n));
   if (Number.isNaN(date.getTime())) return "—";
-  return date.toLocaleString(undefined, {
+  return formatDate(date, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -95,6 +99,7 @@ function SummarySkeleton() {
  * the backend via React Query, with loading skeletons and empty/zero states.
  */
 export function DashboardPage() {
+  const { t, formatDate } = useTranslation();
   const balanceQuery = useWalletBalance();
   const beneficiariesQuery = useBeneficiaries();
   const switchQuery = useSwitchState();
@@ -118,10 +123,10 @@ export function DashboardPage() {
     <div data-ocid="dashboard" className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
       <header className="mb-8 animate-fade-rise">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          Dashboard
+          {t("dashboard.eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground">
-          The Vault
+          {t("dashboard.title")}
         </h1>
       </header>
 
@@ -134,7 +139,7 @@ export function DashboardPage() {
             className="animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow"
           >
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Vault Balance
+              {t("dashboard.balance")}
             </p>
             <p className="mt-4 font-display text-5xl font-semibold tracking-tight text-foreground">
               {totalBalance(assets)}
@@ -144,8 +149,8 @@ export function DashboardPage() {
             </p>
             <p className="mt-3 font-mono text-xs text-muted-foreground">
               {assets && assets.length > 0
-                ? `${assets.length} asset${assets.length === 1 ? "" : "s"} held`
-                : "No assets held yet"}
+                ? t("dashboard.assetsHeld", { count: assets.length })
+                : t("dashboard.noAssets")}
             </p>
           </section>
 
@@ -154,18 +159,18 @@ export function DashboardPage() {
             className="animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]"
           >
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Beneficiaries
+              {t("dashboard.beneficiaries")}
             </p>
             <p className="mt-4 font-display text-5xl font-semibold tracking-tight text-foreground">
               {beneficiaries.length}
               <span className="ml-2 font-mono text-lg font-medium text-muted-foreground">
-                named
+                {t("dashboard.named")}
               </span>
             </p>
             <p className="mt-3 font-mono text-xs text-muted-foreground">
               {beneficiaries.length > 0
-                ? `${beneficiaries.length} ${beneficiaries.length === 1 ? "beneficiary" : "beneficiaries"} sealed`
-                : "No beneficiaries yet"}
+                ? t("dashboard.sealed", { count: beneficiaries.length })
+                : t("dashboard.none")}
             </p>
           </section>
 
@@ -174,18 +179,18 @@ export function DashboardPage() {
             className="animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:120ms]"
           >
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Beneficiary Allocation
+              {t("dashboard.allocation")}
             </p>
             {beneficiaries.length === 0 ? (
               <p className="mt-6 font-mono text-xs text-muted-foreground">
-                No allocations yet. Add a beneficiary to begin.
+                {t("dashboard.allocationNone")}
               </p>
             ) : (
               <>
                 <div
                   className="mt-6 flex h-3 w-full overflow-hidden rounded-full bg-surface-raised"
                   role="img"
-                  aria-label="Beneficiary allocation shares"
+                  aria-label={t("dashboard.allocationAria")}
                 >
                   {beneficiaries.map((b, index) => {
                     const width =
@@ -230,7 +235,7 @@ export function DashboardPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              The Switch
+              {t("dashboard.switch")}
             </p>
             <div className="mt-3 flex items-center gap-3">
               <span
@@ -240,14 +245,16 @@ export function DashboardPage() {
               <span
                 className={`font-mono text-sm font-semibold uppercase tracking-[0.16em] ${isArmed ? "text-extruded-gold" : "text-muted-foreground"}`}
               >
-                {isArmed ? "Armed" : "Disarmed"}
+                {isArmed ? t("common.armed") : t("common.disarmed")}
               </span>
             </div>
           </div>
           <p className="font-mono text-xs text-muted-foreground">
             {switchState?.lastCheckIn
-              ? `Last verified · ${formatDateTime(switchState.lastCheckIn)}`
-              : "Not yet verified"}
+              ? t("dashboard.lastVerified", {
+                  time: formatDateTime(switchState.lastCheckIn, formatDate),
+                })
+              : t("dashboard.notVerified")}
           </p>
         </div>
       </section>

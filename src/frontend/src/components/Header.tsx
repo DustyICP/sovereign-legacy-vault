@@ -8,6 +8,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useTranslation } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu } from "lucide-react";
@@ -19,6 +20,7 @@ import { Menu } from "lucide-react";
  * section stays reachable on small screens.
  */
 export function Header() {
+  const { t } = useTranslation();
   const pathname = useRouterState({
     select: (state) => state.location.pathname,
   });
@@ -27,14 +29,17 @@ export function Header() {
   return (
     <header
       data-ocid="header"
-      className="sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-sm"
+      className={cn(
+        "border-b border-border bg-background/90 backdrop-blur-sm",
+        !isLanding && "sticky top-0 z-40",
+      )}
     >
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-8">
         <Link
           to="/"
           data-ocid="header.wordmark"
           className="group flex items-center gap-3"
-          aria-label="Sovereign Legacy home"
+          aria-label={t("header.home")}
         >
           <span className="text-extruded-gold font-display text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
             Sovereign Legacy
@@ -51,7 +56,7 @@ export function Header() {
               className="h-1.5 w-1.5 rounded-full bg-success"
               aria-hidden="true"
             />
-            Network · Identity
+            {t("header.networkBadge")}
           </span>
 
           {!isLanding && (
@@ -62,7 +67,7 @@ export function Header() {
                   variant="outline"
                   size="icon"
                   className="md:hidden"
-                  aria-label="Open navigation menu"
+                  aria-label={t("header.mobileMenu")}
                 >
                   <Menu className="size-5" aria-hidden="true" />
                 </Button>
@@ -75,7 +80,7 @@ export function Header() {
                 </SheetHeader>
                 <nav
                   className="flex flex-col gap-1 px-4"
-                  aria-label="Mobile primary"
+                  aria-label={t("header.mobilePrimary")}
                 >
                   {NAV_ITEMS.map((item) => (
                     <Link
@@ -99,7 +104,7 @@ export function Header() {
                               isActive ? "opacity-100" : "opacity-0",
                             )}
                           />
-                          {item.label}
+                          {t(item.labelKey)}
                         </>
                       )}
                     </Link>

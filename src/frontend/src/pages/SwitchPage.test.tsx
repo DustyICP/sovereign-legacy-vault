@@ -119,6 +119,20 @@ describe("SwitchPage", () => {
     expect(await screen.findByText("DISARMED")).toBeInTheDocument();
   });
 
+  it("shows the error state when the switch is unreachable", async () => {
+    const actor = createMockActor();
+    actor.getSwitchState.mockRejectedValue(new Error("boom"));
+    actor.getSwitchTimeline.mockRejectedValue(new Error("boom"));
+    setActor(actor);
+
+    renderPage(<SwitchPage />);
+
+    expect(await screen.findByText("Switch unreachable")).toBeInTheDocument();
+    expect(
+      screen.getByText(/couldn't read the switch state/i),
+    ).toBeInTheDocument();
+  });
+
   it("shows the release timeline when armed", async () => {
     const actor = createMockActor();
     actor.getSwitchState.mockResolvedValue({

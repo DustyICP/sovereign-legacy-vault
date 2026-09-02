@@ -1,6 +1,8 @@
 import List "mo:core/List";
+import Time "mo:core/Time";
 import AccessControl "mo:caffeineai-authorization/access-control";
 import MixinAuthorization "mo:caffeineai-authorization/MixinAuthorization";
+import Verify "mo:identity-attributes/Internal/Verify";
 import OQL "mo:caffeineai-oql";
 import Expose "mo:caffeineai-oql/Expose";
 import Entity "mo:caffeineai-oql/Entity";
@@ -11,6 +13,7 @@ import TextValue "mo:caffeineai-oql/TextValue";
 import IntValue "mo:caffeineai-oql/IntValue";
 import BlobValue "mo:caffeineai-oql/BlobValue";
 import Types "types/vault";
+import VaultLib "lib/vault";
 import SwitchApi "mixins/switch-api";
 import VaultApi "mixins/vault-api";
 import ApiDocMixin "mixins/api-doc";
@@ -22,7 +25,13 @@ actor {
   let assets : List.List<Types.Asset>;
   let auditEvents : List.List<Types.AuditEvent>;
   let ids : Types.VaultIds;
-  include MixinAuthorization(accessControlState, null);
+
+  func onLogin(_ : Principal, _ : Verify.IdentityAttributes) {
+    ignore VaultLib.appendAuditEvent(auditEvents, ids.nextAuditEventId, "login", "User signed in", Time.now());
+    ids.nextAuditEventId += 1;
+  };
+
+  include MixinAuthorization(accessControlState, ?onLogin);
   include Expose({
     entities = [
       OQL.Entity.manual<Types.SwitchStateInternal>(
@@ -57,7 +66,7 @@ actor {
         .build(),
     ];
   });
-  include SwitchApi(accessControlState, switchState);
+  include SwitchApi(accessControlState, switchState, auditEvents, ids);
   include VaultApi(accessControlState, beneficiaries, assets, auditEvents, ids);
   include ApiDocMixin();
 };

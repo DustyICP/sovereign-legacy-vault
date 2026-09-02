@@ -1,20 +1,17 @@
 {
-  "overview": "A self-sovereign digital inheritance vault — a dead man's switch for crypto assets on the Internet Computer, with beneficiaries, allocations, and a tamper-evident audit log.",
+  "overview": "Sovereign Legacy is a digital dead man's switch for crypto — a vault that releases to your beneficiaries if you stop checking in, built natively on the Internet Computer.",
   "features": [
-    "Sign in with Internet Identity",
-    "Track your wallet balance and allocations",
-    "Manage beneficiaries and their shares",
-    "Arm or disarm the dead man's switch and check in",
-    "Review a tamper-evident audit log",
-    "Switch between 22 languages"
+    "22-language switcher with right-to-left support for Arabic, Persian, and Urdu",
+    "Translated landing, dashboard, and navigation copy",
+    "Persistent language choice applied before first paint",
+    "RTL layout flipping and glyph-covering fonts"
   ],
   "category": "productivity",
   "tags": [
-    "inheritance",
     "crypto",
-    "security",
-    "finance",
-    "dead-mans-switch"
+    "inheritance",
+    "dead-mans-switch",
+    "i18n"
   ],
-  "last_updated": "2026-08-31T20:04:50.082Z"
+  "last_updated": "2026-09-01T22:49:13.406Z"
 }

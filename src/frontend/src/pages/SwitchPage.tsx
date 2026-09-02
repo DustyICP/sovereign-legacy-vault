@@ -9,16 +9,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShieldCheck, ShieldOff, Timer } from "lucide-react";
 import { useState } from "react";
 
 const CADENCE_OPTIONS = [
-  { label: "24 hours", seconds: 86400n },
-  { label: "7 days", seconds: 604800n },
-  { label: "30 days", seconds: 2592000n },
-];
+  { labelKey: "switch.cadence24h", seconds: 86400n },
+  { labelKey: "switch.cadence7d", seconds: 604800n },
+  { labelKey: "switch.cadence30d", seconds: 2592000n },
+] as const;
 
 const DEFAULT_CADENCE = "604800";
 
@@ -104,10 +105,13 @@ function formatDuration(seconds: bigint): string {
 }
 
 /** Format a nanosecond backend timestamp as a short local date-time string. */
-function formatDateTime(timestamp: bigint): string {
+function formatDateTime(
+  timestamp: bigint,
+  formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) => string,
+): string {
   const date = new Date(Number(timestamp / 1_000_000n));
   if (Number.isNaN(date.getTime())) return "—";
-  return date.toLocaleString(undefined, {
+  return formatDate(date, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -122,6 +126,7 @@ function formatDateTime(timestamp: bigint): string {
  * switch through the backend.
  */
 export function SwitchPage() {
+  const { t, formatDate } = useTranslation();
   const stateQuery = useSwitchState();
   const timelineQuery = useSwitchTimeline();
   const armMutation = useArmSwitch();
@@ -129,6 +134,7 @@ export function SwitchPage() {
   const checkInMutation = useCheckIn();
 
   const [cadence, setCadence] = useState(DEFAULT_CADENCE);
+  const [cadenceError, setCadenceError] = useState<string | null>(null);
 
   const state = stateQuery.data;
   const timeline = timelineQuery.data;
@@ -147,6 +153,12 @@ export function SwitchPage() {
   const ticks = [0, 0.25, 0.5, 0.75, 1];
 
   const handleArm = () => {
+    const parsed = Number(cadence);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      setCadenceError(t("switch.cadenceError"));
+      return;
+    }
+    setCadenceError(null);
     armMutation.mutate(BigInt(cadence));
   };
 
@@ -167,14 +179,13 @@ export function SwitchPage() {
     <div data-ocid="switch" className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
       <header className="mb-8 animate-fade-rise">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          The Switch
+          {t("switch.eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground">
-          The Switch
+          {t("switch.title")}
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          The single control that hands the vault over. Armed, verified, and
-          deliberate.
+          {t("switch.subtitle")}
         </p>
       </header>
 
@@ -197,10 +208,10 @@ export function SwitchPage() {
           className="rounded border border-destructive/40 bg-surface p-10 text-center shadow-subtle"
         >
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-destructive">
-            Switch unreachable
+            {t("switch.errorEyebrow")}
           </p>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-            We couldn&apos;t read the switch state. Please try again.
+            {t("switch.errorBody")}
           </p>
         </section>
       ) : (
@@ -220,7 +231,7 @@ export function SwitchPage() {
                     aria-hidden="true"
                   />
                   <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-                    {isArmed ? "Active · Dead man's switch" : "Standing down"}
+                    {isArmed ? t("switch.active") : t("switch.standingDown")}
                   </p>
                 </div>
                 <p
@@ -229,7 +240,7 @@ export function SwitchPage() {
                     isArmed ? "text-extruded-gold" : "text-muted-foreground"
                   }`}
                 >
-                  {isArmed ? "ARMED" : "DISARMED"}
+                  {isArmed ? t("switch.armed") : t("switch.disarmed")}
                 </p>
               </div>
 
@@ -242,7 +253,7 @@ export function SwitchPage() {
                     className="bg-gradient-gold px-6 text-primary-foreground hover:opacity-90"
                   >
                     <ShieldCheck />
-                    I&apos;m still here
+                    {t("switch.checkIn")}
                   </Button>
                 ) : (
                   <Button
@@ -252,7 +263,7 @@ export function SwitchPage() {
                     className="bg-gradient-gold px-6 text-primary-foreground hover:opacity-90"
                   >
                     <ShieldCheck />
-                    Arm the switch
+                    {t("switch.arm")}
                   </Button>
                 )}
                 {isArmed && (
@@ -264,7 +275,7 @@ export function SwitchPage() {
                     className="text-muted-foreground"
                   >
                     <ShieldOff />
-                    Disarm
+                    {t("switch.disarm")}
                   </Button>
                 )}
               </div>
@@ -275,11 +286,15 @@ export function SwitchPage() {
               <div className="flex items-center justify-between font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
                 <span className="flex items-center gap-2">
                   <Timer className="size-3.5" aria-hidden="true" />
-                  Cadence · {formatDuration(cadenceSeconds)}
+                  {t("switch.cadence", {
+                    duration: formatDuration(cadenceSeconds),
+                  })}
                 </span>
                 {isArmed && timeline?.timeUntilRelease != null && (
                   <span data-ocid="switch.time_until_release">
-                    Release in {formatDuration(timeline.timeUntilRelease)}
+                    {t("switch.releaseIn", {
+                      duration: formatDuration(timeline.timeUntilRelease),
+                    })}
                   </span>
                 )}
               </div>
@@ -289,8 +304,10 @@ export function SwitchPage() {
                 role="img"
                 aria-label={
                   isArmed
-                    ? `Dead man's switch timeline, ${Math.round(progress * 100)}% of cadence elapsed`
-                    : "Dead man's switch timeline, disarmed"
+                    ? t("switch.timelineAriaArmed", {
+                        percent: Math.round(progress * 100),
+                      })
+                    : t("switch.timelineAriaDisarmed")
                 }
               >
                 <div className="absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-surface-raised" />
@@ -324,23 +341,27 @@ export function SwitchPage() {
             <div className="mt-8 grid gap-4 border-t border-border pt-6 sm:grid-cols-3">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Last check-in
+                  {t("switch.lastCheckIn")}
                 </p>
                 <p className="mt-2 font-mono text-sm text-foreground">
-                  {state?.lastCheckIn ? formatDateTime(state.lastCheckIn) : "—"}
+                  {state?.lastCheckIn
+                    ? formatDateTime(state.lastCheckIn, formatDate)
+                    : "—"}
                 </p>
               </div>
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Armed at
+                  {t("switch.armedAt")}
                 </p>
                 <p className="mt-2 font-mono text-sm text-foreground">
-                  {state?.armedAt ? formatDateTime(state.armedAt) : "—"}
+                  {state?.armedAt
+                    ? formatDateTime(state.armedAt, formatDate)
+                    : "—"}
                 </p>
               </div>
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Cadence
+                  {t("switch.cadenceLabel")}
                 </p>
                 <p className="mt-2 font-mono text-sm text-foreground">
                   {formatDuration(cadenceSeconds)}
@@ -358,12 +379,10 @@ export function SwitchPage() {
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                    Standing down
+                    {t("switch.standingDownTitle")}
                   </p>
                   <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                    Disarming halts the dead man&apos;s switch. The vault stays
-                    sealed, but it will no longer release to your beneficiaries
-                    on a missed check-in.
+                    {t("switch.standingDownBody")}
                   </p>
                 </div>
                 <Button
@@ -374,28 +393,35 @@ export function SwitchPage() {
                   className="text-muted-foreground"
                 >
                   <ShieldOff />
-                  Disarm the switch
+                  {t("switch.disarmTheSwitch")}
                 </Button>
               </div>
             ) : (
               <div className="flex flex-wrap items-end justify-between gap-6">
                 <div className="min-w-0">
                   <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                    Arm the switch
+                    {t("switch.armTitle")}
                   </p>
                   <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-                    Choose how long the vault waits for your next check-in. If
-                    you miss it, the vault releases to your beneficiaries.
+                    {t("switch.armBody")}
                   </p>
                   <div className="mt-5 grid gap-2">
-                    <Label htmlFor="switch-cadence">Check-in cadence</Label>
-                    <Select value={cadence} onValueChange={setCadence}>
+                    <Label htmlFor="switch-cadence">
+                      {t("common.checkInCadence")}
+                    </Label>
+                    <Select
+                      value={cadence}
+                      onValueChange={(value) => {
+                        setCadence(value);
+                        setCadenceError(null);
+                      }}
+                    >
                       <SelectTrigger
                         id="switch-cadence"
                         data-ocid="switch.cadence_select"
                         className="w-48"
                       >
-                        <SelectValue placeholder="Select cadence" />
+                        <SelectValue placeholder={t("common.selectCadence")} />
                       </SelectTrigger>
                       <SelectContent>
                         {CADENCE_OPTIONS.map((option) => (
@@ -403,11 +429,19 @@ export function SwitchPage() {
                             key={option.seconds.toString()}
                             value={option.seconds.toString()}
                           >
-                            {option.label}
+                            {t(option.labelKey)}
                           </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
+                    {cadenceError && (
+                      <p
+                        data-ocid="switch.cadence_error"
+                        className="text-sm text-destructive"
+                      >
+                        {cadenceError}
+                      </p>
+                    )}
                   </div>
                 </div>
                 <Button
@@ -417,7 +451,7 @@ export function SwitchPage() {
                   className="bg-gradient-gold px-6 text-primary-foreground hover:opacity-90"
                 >
                   <ShieldCheck />
-                  Arm the switch
+                  {t("switch.arm")}
                 </Button>
               </div>
             )}

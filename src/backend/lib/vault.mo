@@ -1,10 +1,42 @@
 import Blob "mo:core/Blob";
 import List "mo:core/List";
 import Nat "mo:core/Nat";
+import Principal "mo:core/Principal";
+import Runtime "mo:core/Runtime";
 import Sha256 "mo:sha2/Sha256";
 import Types "../types/vault";
 
 module {
+  // A wallet address is optional (blank means no wallet is set). When present it
+  // must be either a 64-hex-character ICP account identifier or a valid ICP
+  // principal. Anything else is rejected as malformed (hard block).
+  public func validateWalletAddress(address : Text) {
+    if (address.size() == 0) {
+      return;
+    };
+    if (address.size() == 64) {
+      for (c in address.chars()) {
+        let code = c.toNat32();
+        let isHex = (code >= 0x30 and code <= 0x39) or (code >= 0x61 and code <= 0x66) or (code >= 0x41 and code <= 0x46);
+        if (not isHex) {
+          Runtime.trap("Invalid wallet address: account identifier must be exactly 64 hexadecimal characters");
+        };
+      };
+      return;
+    };
+    // Not blank and not a 64-hex account identifier: must be a valid ICP
+    // principal. Principal.fromText traps on malformed input.
+    ignore Principal.fromText(address);
+  };
+
+  public func totalAllocationShare(beneficiaries : List.List<Types.Beneficiary>, excludeId : ?Nat) : Nat {
+    var total = 0;
+    for (b in beneficiaries.toArray().values()) {
+      let excluded = switch (excludeId) { case (?id) b.id == id; case null false };
+      if (not excluded) { total += b.allocationShare };
+    };
+    total
+  };
   public func getSwitchState(state : Types.SwitchStateInternal) : Types.SwitchState {
     {
       status = state.status;
@@ -14,7 +46,14 @@ module {
     };
   };
 
-  public func armSwitch(state : Types.SwitchStateInternal, cadenceSeconds : Nat, now : Types.Timestamp) : Types.SwitchState {
+  public func armSwitch(
+    state : Types.SwitchStateInternal,
+    cadenceSeconds : Nat,
+    now : Types.Timestamp,
+  ) : Types.SwitchState {
+    if (cadenceSeconds == 0 or cadenceSeconds > 31_536_000) {
+      Runtime.trap("Invalid cadence: must be between 1 and 31536000 seconds");
+    };
     state.status := #armed;
     state.cadenceSeconds := cadenceSeconds;
     state.lastCheckIn := ?now;
@@ -65,6 +104,11 @@ module {
     walletAddress : Text,
     now : Types.Timestamp,
   ) : Types.Beneficiary {
+    validateWalletAddress(walletAddress);
+    let total = totalAllocationShare(beneficiaries, null);
+    if (total + allocationShare > 100) {
+      Runtime.trap("Invalid allocation: total allocation share would exceed 100%");
+    };
     let beneficiary : Types.Beneficiary = {
       id = nextId;
       name;
@@ -89,6 +133,11 @@ module {
   ) : ?Types.Beneficiary {
     switch (beneficiaries.find(func b = b.id == id)) {
       case (?b) {
+        validateWalletAddress(walletAddress);
+        let total = totalAllocationShare(beneficiaries, ?id);
+        if (total + allocationShare > 100) {
+          Runtime.trap("Invalid allocation: total allocation share would exceed 100%");
+        };
         let updated : Types.Beneficiary = {
           id = b.id;
           name;
@@ -111,7 +160,11 @@ module {
     };
   };
 
-  public func removeBeneficiary(beneficiaries : List.List<Types.Beneficiary>, id : Nat) : Bool {
+  public func removeBeneficiary(
+    beneficiaries : List.List<Types.Beneficiary>,
+    assets : List.List<Types.Asset>,
+    id : Nat,
+  ) : Bool {
     var removed = false;
     let snapshot = beneficiaries.toArray();
     beneficiaries.clear();
@@ -120,6 +173,14 @@ module {
         removed := true;
       } else {
         beneficiaries.add(beneficiary);
+      };
+    };
+    if (removed) {
+      let assetSnapshot = assets.toArray();
+      assets.clear();
+      for (asset in assetSnapshot.values()) {
+        let filtered = asset.allocations.filter(func a = a.beneficiaryId != id);
+        assets.add({ asset with allocations = filtered });
       };
     };
     removed

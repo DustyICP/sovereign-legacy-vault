@@ -500,8 +500,8 @@ function getCrc32(buf) {
   let crc = -1;
   for (let i = 0; i < buf.length; i++) {
     const byte = buf[i];
-    const t = (byte ^ crc) & 255;
-    crc = lookUpTable[t] ^ crc >>> 8;
+    const t2 = (byte ^ crc) & 255;
+    crc = lookUpTable[t2] ^ crc >>> 8;
   }
   return (crc ^ -1) >>> 0;
 }
@@ -579,12 +579,12 @@ function hexToBytes(hex) {
   if (hl % 2)
     throw new Error("hex string expected, got unpadded hex of length " + hl);
   const array = new Uint8Array(al);
-  for (let ai = 0, hi = 0; ai < al; ai++, hi += 2) {
-    const n1 = asciiToBase16(hex.charCodeAt(hi));
-    const n2 = asciiToBase16(hex.charCodeAt(hi + 1));
+  for (let ai = 0, hi2 = 0; ai < al; ai++, hi2 += 2) {
+    const n1 = asciiToBase16(hex.charCodeAt(hi2));
+    const n2 = asciiToBase16(hex.charCodeAt(hi2 + 1));
     if (n1 === void 0 || n2 === void 0) {
-      const char = hex[hi] + hex[hi + 1];
-      throw new Error('hex string expected, got non-hex character "' + char + '" at index ' + hi);
+      const char = hex[hi2] + hex[hi2 + 1];
+      throw new Error('hex string expected, got non-hex character "' + char + '" at index ' + hi2);
     }
     array[ai] = n1 * 16 + n2;
   }
@@ -2387,72 +2387,72 @@ class Visitor {
   visitType(_t2, _data) {
     throw new Error("Not implemented");
   }
-  visitPrimitive(t, data) {
-    return this.visitType(t, data);
+  visitPrimitive(t2, data) {
+    return this.visitType(t2, data);
   }
-  visitEmpty(t, data) {
-    return this.visitPrimitive(t, data);
+  visitEmpty(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitBool(t, data) {
-    return this.visitPrimitive(t, data);
+  visitBool(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitNull(t, data) {
-    return this.visitPrimitive(t, data);
+  visitNull(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitReserved(t, data) {
-    return this.visitPrimitive(t, data);
+  visitReserved(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitText(t, data) {
-    return this.visitPrimitive(t, data);
+  visitText(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitNumber(t, data) {
-    return this.visitPrimitive(t, data);
+  visitNumber(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitInt(t, data) {
-    return this.visitNumber(t, data);
+  visitInt(t2, data) {
+    return this.visitNumber(t2, data);
   }
-  visitNat(t, data) {
-    return this.visitNumber(t, data);
+  visitNat(t2, data) {
+    return this.visitNumber(t2, data);
   }
-  visitFloat(t, data) {
-    return this.visitPrimitive(t, data);
+  visitFloat(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitFixedInt(t, data) {
-    return this.visitNumber(t, data);
+  visitFixedInt(t2, data) {
+    return this.visitNumber(t2, data);
   }
-  visitFixedNat(t, data) {
-    return this.visitNumber(t, data);
+  visitFixedNat(t2, data) {
+    return this.visitNumber(t2, data);
   }
-  visitPrincipal(t, data) {
-    return this.visitPrimitive(t, data);
+  visitPrincipal(t2, data) {
+    return this.visitPrimitive(t2, data);
   }
-  visitConstruct(t, data) {
-    return this.visitType(t, data);
+  visitConstruct(t2, data) {
+    return this.visitType(t2, data);
   }
-  visitVec(t, _ty, data) {
-    return this.visitConstruct(t, data);
+  visitVec(t2, _ty, data) {
+    return this.visitConstruct(t2, data);
   }
-  visitOpt(t, _ty, data) {
-    return this.visitConstruct(t, data);
+  visitOpt(t2, _ty, data) {
+    return this.visitConstruct(t2, data);
   }
-  visitRecord(t, _fields, data) {
-    return this.visitConstruct(t, data);
+  visitRecord(t2, _fields, data) {
+    return this.visitConstruct(t2, data);
   }
-  visitTuple(t, components, data) {
+  visitTuple(t2, components, data) {
     const fields = components.map((ty, i) => [`_${i}_`, ty]);
-    return this.visitRecord(t, fields, data);
+    return this.visitRecord(t2, fields, data);
   }
-  visitVariant(t, _fields, data) {
-    return this.visitConstruct(t, data);
+  visitVariant(t2, _fields, data) {
+    return this.visitConstruct(t2, data);
   }
   visitRec(_t2, ty, data) {
     return this.visitConstruct(ty, data);
   }
-  visitFunc(t, data) {
-    return this.visitConstruct(t, data);
+  visitFunc(t2, data) {
+    return this.visitConstruct(t2, data);
   }
-  visitService(t, data) {
-    return this.visitConstruct(t, data);
+  visitService(t2, data) {
+    return this.visitConstruct(t2, data);
   }
 }
 var IdlTypeName;
@@ -2494,25 +2494,25 @@ class Type {
   }
 }
 class PrimitiveType extends Type {
-  checkType(t) {
-    if (this.name !== t.name) {
-      throw new Error(`type mismatch: type on the wire ${t.name}, expect type ${this.name}`);
+  checkType(t2) {
+    if (this.name !== t2.name) {
+      throw new Error(`type mismatch: type on the wire ${t2.name}, expect type ${this.name}`);
     }
-    return t;
+    return t2;
   }
   _buildTypeTableImpl(_typeTable) {
   }
 }
 class ConstructType extends Type {
-  checkType(t) {
-    if (t instanceof RecClass) {
-      const ty = t.getType();
+  checkType(t2) {
+    if (t2 instanceof RecClass) {
+      const ty = t2.getType();
       if (typeof ty === "undefined") {
         throw new CandidDecodeError("Type mismatch: cannot decode from uninitialized recursive type");
       }
       return ty;
     }
-    throw new Error(`type mismatch: type on the wire ${t.name}, expect type ${this.name}`);
+    throw new Error(`type mismatch: type on the wire ${t2.name}, expect type ${this.name}`);
   }
   encodeType(typeTable) {
     return typeTable.indexOf(this.name);
@@ -2572,16 +2572,16 @@ class UnknownClass extends Type {
   encodeType() {
     throw new Error("Unknown cannot be serialized");
   }
-  decodeValue(b2, t) {
-    let decodedValue = t.decodeValue(b2, t);
+  decodeValue(b2, t2) {
+    let decodedValue = t2.decodeValue(b2, t2);
     if (Object(decodedValue) !== decodedValue) {
       decodedValue = Object(decodedValue);
     }
     let typeFunc;
-    if (t instanceof RecClass) {
-      typeFunc = () => t.getType();
+    if (t2 instanceof RecClass) {
+      typeFunc = () => t2.getType();
     } else {
-      typeFunc = () => t;
+      typeFunc = () => t2;
     }
     Object.defineProperty(decodedValue, "type", {
       value: typeFunc,
@@ -2620,8 +2620,8 @@ class BoolClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Bool);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     switch (safeReadUint8(b2)) {
       case 0:
         return false;
@@ -2657,8 +2657,8 @@ class NullClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Null);
   }
-  decodeValue(_b2, t) {
-    this.checkType(t);
+  decodeValue(_b2, t2) {
+    this.checkType(t2);
     return null;
   }
   get name() {
@@ -2684,9 +2684,9 @@ class ReservedClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Reserved);
   }
-  decodeValue(b2, t) {
-    if (t.name !== this.name) {
-      t.decodeValue(b2, t);
+  decodeValue(b2, t2) {
+    if (t2.name !== this.name) {
+      t2.decodeValue(b2, t2);
     }
     return null;
   }
@@ -2718,8 +2718,8 @@ class TextClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Text);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     const len = lebDecode(b2);
     const buf = safeRead(b2, Number(len));
     const decoder = new TextDecoder("utf8", { fatal: true });
@@ -2754,8 +2754,8 @@ class IntClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Int);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     return slebDecode(b2);
   }
   get name() {
@@ -2787,8 +2787,8 @@ class NatClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Nat);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     return lebDecode(b2);
   }
   get name() {
@@ -2835,8 +2835,8 @@ class FloatClass extends PrimitiveType {
     const opcode = this._bits === 32 ? IDLTypeIds.Float32 : IDLTypeIds.Float64;
     return slebEncode(opcode);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     const bytes = safeRead(b2, this._bits / 8);
     const view = uint8ToDataView(bytes);
     if (this._bits === 32) {
@@ -2887,8 +2887,8 @@ class FixedIntClass extends PrimitiveType {
     const offset2 = Math.log2(this._bits) - 3;
     return slebEncode(-9 - offset2);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     const num = readIntLE(b2, this._bits / 8);
     if (this._bits <= 32) {
       return Number(num);
@@ -2937,8 +2937,8 @@ class FixedNatClass extends PrimitiveType {
     const offset2 = Math.log2(this._bits) - 3;
     return slebEncode(-5 - offset2);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     const num = readUIntLE(b2, this._bits / 8);
     if (this._bits <= 32) {
       return Number(num);
@@ -3040,8 +3040,8 @@ index ${idx} -> ${e.message}`, { cause: e });
     const buffer = this._type.encodeType(typeTable);
     typeTable.add(this, concat(opCode, buffer));
   }
-  decodeValue(b2, t) {
-    const vec = this.checkType(t);
+  decodeValue(b2, t2) {
+    const vec = this.checkType(t2);
     if (!(vec instanceof VecClass)) {
       throw new CandidDecodeError(`Expected type '${this.display()}', but received non-vector type '${vec.display()}'`);
     }
@@ -3151,16 +3151,16 @@ class OptClass extends ConstructType {
     const buffer = this._type.encodeType(typeTable);
     typeTable.add(this, concat(opCode, buffer));
   }
-  decodeValue(b2, t) {
-    if (t instanceof NullClass) {
+  decodeValue(b2, t2) {
+    if (t2 instanceof NullClass) {
       return [];
     }
-    if (t instanceof ReservedClass) {
+    if (t2 instanceof ReservedClass) {
       return [];
     }
-    let wireType = t;
-    if (t instanceof RecClass) {
-      const ty = t.getType();
+    let wireType = t2;
+    if (t2 instanceof RecClass) {
+      const ty = t2.getType();
       if (typeof ty === "undefined") {
         throw new CandidDecodeError("Type mismatch: cannot decode from uninitialized recursive type");
       } else {
@@ -3194,11 +3194,11 @@ class OptClass extends ConstructType {
     } else {
       const checkpoint = b2.save();
       try {
-        const v2 = this._type.decodeValue(b2, t);
+        const v2 = this._type.decodeValue(b2, t2);
         return [v2];
       } catch (e) {
         b2.restore(checkpoint);
-        wireType.decodeValue(b2, t);
+        wireType.decodeValue(b2, t2);
         return [];
       }
     }
@@ -3242,12 +3242,12 @@ class RecordClass extends ConstructType {
     return res;
   }
   covariant(x3) {
-    if (typeof x3 === "object" && this._fields.every(([k2, t]) => {
+    if (typeof x3 === "object" && this._fields.every(([k2, t2]) => {
       if (!x3.hasOwnProperty(k2)) {
         throw new Error(`Record is missing key "${k2}".`);
       }
       try {
-        return t.covariant(x3[k2]);
+        return t2.covariant(x3[k2]);
       } catch (e) {
         throw new Error(`Invalid ${this.display()} argument: 
 
@@ -3272,8 +3272,8 @@ field ${k2} -> ${e.message}`, {
     const fields = this._fields.map(([key, value]) => concat(lebEncode(idlLabelToId(key)), value.encodeType(T2)));
     T2.add(this, concat(opCode, len, concat(...fields)));
   }
-  decodeValue(b2, t) {
-    const record = this.checkType(t);
+  decodeValue(b2, t2) {
+    const record = this.checkType(t2);
     if (!(record instanceof RecordClass)) {
       throw new CandidDecodeError(`Expected type '${this.display()}', but received non-record type '${record.display()}'`);
     }
@@ -3357,9 +3357,9 @@ class TupleClass extends RecordClass {
     return v2.visitTuple(this, this._components, d2);
   }
   covariant(x3) {
-    if (Array.isArray(x3) && x3.length >= this._fields.length && this._components.every((t, i) => {
+    if (Array.isArray(x3) && x3.length >= this._fields.length && this._components.every((t2, i) => {
       try {
-        return t.covariant(x3[i]);
+        return t2.covariant(x3[i]);
       } catch (e) {
         throw new Error(`Invalid ${this.display()} argument: 
 
@@ -3376,8 +3376,8 @@ index ${i} -> ${e.message}`, {
     const bufs = zipWith(this._components, x3, (c2, d2) => c2.encodeValue(d2));
     return concat(...bufs);
   }
-  decodeValue(b2, t) {
-    const tuple = this.checkType(t);
+  decodeValue(b2, t2) {
+    const tuple = this.checkType(t2);
     if (!(tuple instanceof TupleClass)) {
       throw new CandidDecodeError(`Expected type '${this.display()}', but received non-tuple type '${tuple.display()}'`);
     }
@@ -3453,8 +3453,8 @@ variant ${k2} -> ${e.message}`, {
     const fields = this._fields.map(([key, value]) => concat(lebEncode(idlLabelToId(key)), value.encodeType(typeTable)));
     typeTable.add(this, concat(opCode, len, ...fields));
   }
-  decodeValue(b2, t) {
-    const variant = this.checkType(t);
+  decodeValue(b2, t2) {
+    const variant = this.checkType(t2);
     if (!(variant instanceof VariantClass)) {
       throw new CandidDecodeError(`Expected type '${this.display()}', but received non-variant type '${variant.display()}'`);
     }
@@ -3517,8 +3517,8 @@ const _RecClass = class _RecClass extends ConstructType {
     }
     return v2.visitRec(this, this._type, d2);
   }
-  fill(t) {
-    this._type = t;
+  fill(t2) {
+    this._type = t2;
   }
   getType() {
     return this._type;
@@ -3543,11 +3543,11 @@ const _RecClass = class _RecClass extends ConstructType {
     this._type.buildTypeTable(typeTable);
     typeTable.merge(this, this._type.name);
   }
-  decodeValue(b2, t) {
+  decodeValue(b2, t2) {
     if (!this._type) {
       throw Error("Recursive type uninitialized.");
     }
-    return this._type.decodeValue(b2, t);
+    return this._type.decodeValue(b2, t2);
   }
   get name() {
     return `rec_${this._id}`;
@@ -3599,8 +3599,8 @@ class PrincipalClass extends PrimitiveType {
   encodeType() {
     return slebEncode(IDLTypeIds.Principal);
   }
-  decodeValue(b2, t) {
-    this.checkType(t);
+  decodeValue(b2, t2) {
+    this.checkType(t2);
     return decodePrincipalId(b2);
   }
   get name() {
@@ -3621,7 +3621,7 @@ class FuncClass extends ConstructType {
     if (types.length !== v2.length) {
       throw new Error("arity mismatch");
     }
-    return `(${types.map((t, i) => t.valueToString(v2[i])).join(", ")})`;
+    return `(${types.map((t2, i) => t2.valueToString(v2[i])).join(", ")})`;
   }
   constructor(argTypes, retTypes, annotations = []) {
     super();
@@ -3658,8 +3658,8 @@ class FuncClass extends ConstructType {
     const anns = concat(...this.annotations.map((a2) => this.encodeAnnotation(a2)));
     T2.add(this, concat(opCode, argLen, args, retLen, rets, annLen, anns));
   }
-  decodeValue(b2, t) {
-    const tt2 = t instanceof RecClass ? t.getType() ?? t : t;
+  decodeValue(b2, t2) {
+    const tt2 = t2 instanceof RecClass ? t2.getType() ?? t2 : t2;
     if (!subtype(tt2, this)) {
       throw new Error(`Cannot decode function reference at type ${this.display()} from wire type ${tt2.display()}`);
     }
@@ -3746,8 +3746,8 @@ class ServiceClass extends ConstructType {
     });
     T2.add(this, concat(opCode, len, ...meths));
   }
-  decodeValue(b2, t) {
-    const tt2 = t instanceof RecClass ? t.getType() ?? t : t;
+  decodeValue(b2, t2) {
+    const tt2 = t2 instanceof RecClass ? t2.getType() ?? t2 : t2;
     if (!subtype(tt2, this)) {
       throw new Error(`Cannot decode service reference at type ${this.display()} from wire type ${tt2.display()}`);
     }
@@ -3777,20 +3777,20 @@ function encode$2(argTypes, args) {
     throw Error("Wrong number of message arguments");
   }
   const typeTable = new TypeTable();
-  argTypes.forEach((t) => t.buildTypeTable(typeTable));
+  argTypes.forEach((t2) => t2.buildTypeTable(typeTable));
   const table = typeTable.encode();
   const len = lebEncode(args.length);
-  const typs = concat(...argTypes.map((t) => t.encodeType(typeTable)));
-  const vals = concat(...zipWith(argTypes, args, (t, x3) => {
+  const typs = concat(...argTypes.map((t2) => t2.encodeType(typeTable)));
+  const vals = concat(...zipWith(argTypes, args, (t2, x3) => {
     try {
-      t.covariant(x3);
+      t2.covariant(x3);
     } catch (e) {
       const err = new Error(`${e.message}
 
 `);
       throw err;
     }
-    return t.encodeValue(x3);
+    return t2.encodeValue(x3);
   }));
   return concat(magicNumberBytes, table, len, typs, vals);
 }
@@ -3812,8 +3812,8 @@ function decode$2(retTypes, bytes) {
       switch (ty) {
         case IDLTypeIds.Opt:
         case IDLTypeIds.Vector: {
-          const t = Number(slebDecode(pipe));
-          typeTable.push([ty, t]);
+          const t2 = Number(slebDecode(pipe));
+          typeTable.push([ty, t2]);
           break;
         }
         case IDLTypeIds.Record:
@@ -3830,8 +3830,8 @@ function decode$2(retTypes, bytes) {
               throw new Error("field id collision or not sorted");
             }
             prevHash = hash;
-            const t = Number(slebDecode(pipe));
-            fields.push([hash, t]);
+            const t2 = Number(slebDecode(pipe));
+            fields.push([hash, t2]);
           }
           typeTable.push([ty, fields]);
           break;
@@ -3899,12 +3899,12 @@ function decode$2(retTypes, bytes) {
     throw new Error("Wrong number of return values");
   }
   const table = rawTable.map((_2) => Rec());
-  function getType(t) {
-    if (t < -24) {
+  function getType(t2) {
+    if (t2 < -24) {
       throw new Error("future value not supported");
     }
-    if (t < 0) {
-      switch (t) {
+    if (t2 < 0) {
+      switch (t2) {
         case -1:
           return Null;
         case -2:
@@ -3942,13 +3942,13 @@ function decode$2(retTypes, bytes) {
         case -24:
           return Principal2;
         default:
-          throw new Error(`Illegal op_code: ${t}`);
+          throw new Error(`Illegal op_code: ${t2}`);
       }
     }
-    if (t >= rawTable.length) {
+    if (t2 >= rawTable.length) {
       throw new Error("type index out of range");
     }
-    return table[t];
+    return table[t2];
   }
   function buildType(entry) {
     switch (entry[0]) {
@@ -3983,7 +3983,7 @@ function decode$2(retTypes, bytes) {
       }
       case IDLTypeIds.Func: {
         const [args, returnValues, annotations] = entry[1];
-        return Func(args.map((t) => getType(t)), returnValues.map((t) => getType(t)), annotations);
+        return Func(args.map((t2) => getType(t2)), returnValues.map((t2) => getType(t2)), annotations);
       }
       case IDLTypeIds.Service: {
         const rec = {};
@@ -4006,21 +4006,21 @@ function decode$2(retTypes, bytes) {
   }
   rawTable.forEach((entry, i) => {
     if (entry[0] === IDLTypeIds.Func) {
-      const t = buildType(entry);
-      table[i].fill(t);
+      const t2 = buildType(entry);
+      table[i].fill(t2);
     }
   });
   rawTable.forEach((entry, i) => {
     if (entry[0] !== IDLTypeIds.Func) {
-      const t = buildType(entry);
-      table[i].fill(t);
+      const t2 = buildType(entry);
+      table[i].fill(t2);
     }
   });
   resetSubtypeCache();
-  const types = rawTypes.map((t) => getType(t));
+  const types = rawTypes.map((t2) => getType(t2));
   try {
-    const output = retTypes.map((t, i) => {
-      return t.decodeValue(b2, types[i]);
+    const output = retTypes.map((t2, i) => {
+      return t2.decodeValue(b2, types[i]);
     });
     for (let ind = retTypes.length; ind < types.length; ind++) {
       types[ind].decodeValue(b2, types[ind]);
@@ -4055,14 +4055,14 @@ const Principal2 = new PrincipalClass();
 function Tuple(...types) {
   return new TupleClass(types);
 }
-function Vec(t) {
-  return new VecClass(t);
+function Vec(t2) {
+  return new VecClass(t2);
 }
-function Opt(t) {
-  return new OptClass(t);
+function Opt(t2) {
+  return new OptClass(t2);
 }
-function Record(t) {
-  return new RecordClass(t);
+function Record(t2) {
+  return new RecordClass(t2);
 }
 function Variant(fields) {
   return new VariantClass(fields);
@@ -4073,8 +4073,8 @@ function Rec() {
 function Func(args, ret, annotations = []) {
   return new FuncClass(args, ret, annotations);
 }
-function Service(t) {
-  return new ServiceClass(t);
+function Service(t2) {
+  return new ServiceClass(t2);
 }
 class Relations {
   constructor(relations = /* @__PURE__ */ new Map()) {
@@ -4139,8 +4139,8 @@ function eqFunctionAnnotations(t1, t2) {
   }
   return true;
 }
-function canBeOmmitted(t) {
-  return t instanceof OptClass || t instanceof NullClass || t instanceof ReservedClass;
+function canBeOmmitted(t2) {
+  return t2 instanceof OptClass || t2 instanceof NullClass || t2 instanceof ReservedClass;
 }
 function subtype(t1, t2) {
   const relations = subtypeCache.copy();
@@ -4444,31 +4444,31 @@ class w extends Error {
   }
 }
 const L = 55799, R = /* @__PURE__ */ Symbol("CBOR_STOP_CODE");
-var u = /* @__PURE__ */ ((t) => (t[t.False = 20] = "False", t[t.True = 21] = "True", t[t.Null = 22] = "Null", t[t.Undefined = 23] = "Undefined", t[t.Break = 31] = "Break", t))(u || {}), c = /* @__PURE__ */ ((t) => (t[t.UnsignedInteger = 0] = "UnsignedInteger", t[t.NegativeInteger = 1] = "NegativeInteger", t[t.ByteString = 2] = "ByteString", t[t.TextString = 3] = "TextString", t[t.Array = 4] = "Array", t[t.Map = 5] = "Map", t[t.Tag = 6] = "Tag", t[t.Simple = 7] = "Simple", t))(c || {});
+var u = /* @__PURE__ */ ((t2) => (t2[t2.False = 20] = "False", t2[t2.True = 21] = "True", t2[t2.Null = 22] = "Null", t2[t2.Undefined = 23] = "Undefined", t2[t2.Break = 31] = "Break", t2))(u || {}), c = /* @__PURE__ */ ((t2) => (t2[t2.UnsignedInteger = 0] = "UnsignedInteger", t2[t2.NegativeInteger = 1] = "NegativeInteger", t2[t2.ByteString = 2] = "ByteString", t2[t2.TextString = 3] = "TextString", t2[t2.Array = 4] = "Array", t2[t2.Map = 5] = "Map", t2[t2.Tag = 6] = "Tag", t2[t2.Simple = 7] = "Simple", t2))(c || {});
 const Y = 23, G = 255, P = 65535, H$1 = 4294967295, W$1 = BigInt("0xffffffffffffffff");
-var f = /* @__PURE__ */ ((t) => (t[t.Value = 23] = "Value", t[t.OneByte = 24] = "OneByte", t[t.TwoBytes = 25] = "TwoBytes", t[t.FourBytes = 26] = "FourBytes", t[t.EightBytes = 27] = "EightBytes", t[t.Indefinite = 31] = "Indefinite", t))(f || {});
+var f = /* @__PURE__ */ ((t2) => (t2[t2.Value = 23] = "Value", t2[t2.OneByte = 24] = "OneByte", t2[t2.TwoBytes = 25] = "TwoBytes", t2[t2.FourBytes = 26] = "FourBytes", t2[t2.EightBytes = 27] = "EightBytes", t2[t2.Indefinite = 31] = "Indefinite", t2))(f || {});
 const l = false;
-function K(t) {
-  return t == null;
+function K(t2) {
+  return t2 == null;
 }
-function Z(t, e) {
+function Z(t2, e) {
   const n = new Uint8Array(e);
-  return n.set(t), n;
+  return n.set(t2), n;
 }
 const q = new TextDecoder();
-function J$1(t) {
-  return (t & 224) >> 5;
+function J$1(t2) {
+  return (t2 & 224) >> 5;
 }
-function Q(t) {
-  return t & 31;
+function Q(t2) {
+  return t2 & 31;
 }
 let S = new Uint8Array(), U$1, d = 0;
-function ut(t, e) {
-  S = t, d = 0;
+function ut(t2, e) {
+  S = t2, d = 0;
   const n = B();
   return (e == null ? void 0 : e(n)) ?? n;
 }
-function B(t) {
+function B(t2) {
   const [e, n] = N$1();
   switch (e) {
     case c.UnsignedInteger:
@@ -4491,14 +4491,14 @@ function B(t) {
   throw new w(`Unsupported major type: ${e}`);
 }
 function N$1() {
-  const t = S.at(d);
-  if (K(t))
+  const t2 = S.at(d);
+  if (K(t2))
     throw new w("Provided CBOR data is empty");
-  const e = J$1(t), n = Q(t);
+  const e = J$1(t2), n = Q(t2);
   return d++, [e, n];
 }
-function p(t, e) {
-  const n = h(t);
+function p(t2, e) {
+  const n = h(t2);
   if (n === 1 / 0) {
     const o = [];
     let i = B();
@@ -4513,8 +4513,8 @@ function p(t, e) {
   }
   return s;
 }
-function b$1(t) {
-  switch (t) {
+function b$1(t2) {
+  switch (t2) {
     case u.False:
       return false;
     case u.True:
@@ -4526,10 +4526,10 @@ function b$1(t) {
     case u.Break:
       return R;
   }
-  throw new w(`Unrecognized simple type: ${t.toString(2)}`);
+  throw new w(`Unrecognized simple type: ${t2.toString(2)}`);
 }
-function j(t, e) {
-  const n = h(t), s = {};
+function j(t2, e) {
+  const n = h(t2), s = {};
   if (n === 1 / 0) {
     let [o, i] = N$1();
     for (; o !== c.Simple && i !== u.Break; ) {
@@ -4547,10 +4547,10 @@ function j(t, e) {
   }
   return s;
 }
-function h(t) {
-  if (t <= f.Value)
-    return t;
-  switch (U$1 = new DataView(S.buffer, S.byteOffset + d), t) {
+function h(t2) {
+  if (t2 <= f.Value)
+    return t2;
+  switch (U$1 = new DataView(S.buffer, S.byteOffset + d), t2) {
     case f.OneByte:
       return d++, U$1.getUint8(0);
     case f.TwoBytes:
@@ -4562,26 +4562,26 @@ function h(t) {
     case f.Indefinite:
       return 1 / 0;
     default:
-      throw new w(`Unsupported integer info: ${t.toString(2)}`);
+      throw new w(`Unsupported integer info: ${t2.toString(2)}`);
   }
 }
-function M$2(t) {
-  const e = h(t);
+function M$2(t2) {
+  const e = h(t2);
   return typeof e == "number" ? -1 - e : -1n - e;
 }
-function $(t) {
-  const e = h(t);
+function $(t2) {
+  const e = h(t2);
   if (e > Number.MAX_SAFE_INTEGER)
     throw new w("Byte length is too large");
   const n = Number(e);
   return d += n, S.slice(d - n, d);
 }
-function F(t) {
-  const e = $(t);
+function F(t2) {
+  const e = $(t2);
   return q.decode(e);
 }
-function v$1(t, e) {
-  const n = h(t);
+function v$1(t2, e) {
+  const n = h(t2);
   if (n === L)
     return B();
   throw new w(`Unsupported tag: ${n}.`);
@@ -4592,140 +4592,140 @@ let x$1 = class x extends Error {
   }
 };
 const C = 2 * 1024, V$1 = 100, tt$1 = new TextEncoder();
-function y(t) {
-  return t << 5;
+function y(t2) {
+  return t2 << 5;
 }
 let a = new Uint8Array(C), g = new DataView(a.buffer), r$1 = 0, O$1 = [];
-function gt(t, e) {
+function gt(t2, e) {
   r$1 = 0;
-  const n = (e == null ? void 0 : e(t)) ?? t;
+  const n = (e == null ? void 0 : e(t2)) ?? t2;
   return ft(L, n, e), a.slice(0, r$1);
 }
-function k(t) {
+function k(t2) {
   let e = a.length * 2;
-  for (; e < t; )
+  for (; e < t2; )
     e *= 2;
   a = Z(a, e), g = new DataView(a.buffer);
 }
-function _$1(t, e) {
-  if (t === false || t === true || t === null || t === void 0) {
-    rt(t);
+function _$1(t2, e) {
+  if (t2 === false || t2 === true || t2 === null || t2 === void 0) {
+    rt(t2);
     return;
   }
-  if (typeof t == "number" || typeof t == "bigint") {
-    ot(t);
+  if (typeof t2 == "number" || typeof t2 == "bigint") {
+    ot(t2);
     return;
   }
-  if (typeof t == "string") {
-    z$1(t);
+  if (typeof t2 == "string") {
+    z$1(t2);
     return;
   }
-  if (t instanceof Uint8Array) {
-    m(t);
+  if (t2 instanceof Uint8Array) {
+    m(t2);
     return;
   }
-  if (t instanceof ArrayBuffer) {
-    m(new Uint8Array(t));
+  if (t2 instanceof ArrayBuffer) {
+    m(new Uint8Array(t2));
     return;
   }
-  if (Array.isArray(t)) {
-    et(t, e);
+  if (Array.isArray(t2)) {
+    et(t2, e);
     return;
   }
-  if (typeof t == "object") {
-    nt(t, e);
+  if (typeof t2 == "object") {
+    nt(t2, e);
     return;
   }
-  throw new x$1(`Unsupported type: ${typeof t}`);
+  throw new x$1(`Unsupported type: ${typeof t2}`);
 }
-function et(t, e) {
-  E$1(c.Array, t.length), t.forEach((n, s) => {
+function et(t2, e) {
+  E$1(c.Array, t2.length), t2.forEach((n, s) => {
     _$1((e == null ? void 0 : e(n, s.toString())) ?? n, e);
   });
 }
-function nt(t, e) {
-  O$1 = Object.entries(t), E$1(c.Map, O$1.length), O$1.forEach(([n, s]) => {
+function nt(t2, e) {
+  O$1 = Object.entries(t2), E$1(c.Map, O$1.length), O$1.forEach(([n, s]) => {
     z$1(n), _$1((e == null ? void 0 : e(s, n)) ?? s, e);
   });
 }
-function E$1(t, e) {
+function E$1(t2, e) {
   if (r$1 > a.length - V$1 && k(r$1 + V$1), e <= Y) {
     g.setUint8(
       r$1++,
-      y(t) | Number(e)
+      y(t2) | Number(e)
     );
     return;
   }
   if (e <= G) {
     g.setUint8(
       r$1++,
-      y(t) | f.OneByte
+      y(t2) | f.OneByte
     ), g.setUint8(r$1, Number(e)), r$1 += 1;
     return;
   }
   if (e <= P) {
     g.setUint8(
       r$1++,
-      y(t) | f.TwoBytes
+      y(t2) | f.TwoBytes
     ), g.setUint16(r$1, Number(e), l), r$1 += 2;
     return;
   }
   if (e <= H$1) {
     g.setUint8(
       r$1++,
-      y(t) | f.FourBytes
+      y(t2) | f.FourBytes
     ), g.setUint32(r$1, Number(e), l), r$1 += 4;
     return;
   }
   if (e <= W$1) {
     g.setUint8(
       r$1++,
-      y(t) | f.EightBytes
+      y(t2) | f.EightBytes
     ), g.setBigUint64(r$1, BigInt(e), l), r$1 += 8;
     return;
   }
   throw new x$1(`Value too large to encode: ${e}`);
 }
-function rt(t) {
-  E$1(c.Simple, ct(t));
+function rt(t2) {
+  E$1(c.Simple, ct(t2));
 }
-function ct(t) {
-  if (t === false)
+function ct(t2) {
+  if (t2 === false)
     return u.False;
-  if (t === true)
+  if (t2 === true)
     return u.True;
-  if (t === null)
+  if (t2 === null)
     return u.Null;
-  if (t === void 0)
+  if (t2 === void 0)
     return u.Undefined;
-  throw new x$1(`Unrecognized simple value: ${t.toString()}`);
+  throw new x$1(`Unrecognized simple value: ${t2.toString()}`);
 }
-function T(t, e) {
-  E$1(t, e.length), r$1 > a.length - e.length && k(r$1 + e.length), a.set(e, r$1), r$1 += e.length;
+function T(t2, e) {
+  E$1(t2, e.length), r$1 > a.length - e.length && k(r$1 + e.length), a.set(e, r$1), r$1 += e.length;
 }
-function X$1(t, e) {
-  E$1(t, e);
+function X$1(t2, e) {
+  E$1(t2, e);
 }
-function it(t) {
-  X$1(c.UnsignedInteger, t);
+function it$1(t2) {
+  X$1(c.UnsignedInteger, t2);
 }
-function st(t) {
+function st(t2) {
   X$1(
     c.NegativeInteger,
-    typeof t == "bigint" ? -1n - t : -1 - t
+    typeof t2 == "bigint" ? -1n - t2 : -1 - t2
   );
 }
-function ot(t) {
-  t >= 0 ? it(t) : st(t);
+function ot(t2) {
+  t2 >= 0 ? it$1(t2) : st(t2);
 }
-function z$1(t) {
-  T(c.TextString, tt$1.encode(t));
+function z$1(t2) {
+  T(c.TextString, tt$1.encode(t2));
 }
-function m(t) {
-  T(c.ByteString, t);
+function m(t2) {
+  T(c.ByteString, t2);
 }
-function ft(t, e, n) {
-  E$1(c.Tag, t), _$1(e, n);
+function ft(t2, e, n) {
+  E$1(c.Tag, t2), _$1(e, n);
 }
 const JSON_KEY_EXPIRY = "__expiry__";
 const SECONDS_TO_MILLISECONDS = BigInt(1e3);
@@ -5118,13 +5118,13 @@ function tonelliShanks(P2) {
       throw new Error("Cannot find square root");
     let M2 = S2;
     let c2 = Fp3.mul(Fp3.ONE, cc);
-    let t = Fp3.pow(n, Q2);
+    let t2 = Fp3.pow(n, Q2);
     let R2 = Fp3.pow(n, Q1div2);
-    while (!Fp3.eql(t, Fp3.ONE)) {
-      if (Fp3.is0(t))
+    while (!Fp3.eql(t2, Fp3.ONE)) {
+      if (Fp3.is0(t2))
         return Fp3.ZERO;
       let i = 1;
-      let t_tmp = Fp3.sqr(t);
+      let t_tmp = Fp3.sqr(t2);
       while (!Fp3.eql(t_tmp, Fp3.ONE)) {
         i++;
         t_tmp = Fp3.sqr(t_tmp);
@@ -5135,7 +5135,7 @@ function tonelliShanks(P2) {
       const b2 = Fp3.pow(c2, exponent);
       M2 = i;
       c2 = Fp3.sqr(b2);
-      t = Fp3.mul(t, c2);
+      t2 = Fp3.mul(t2, c2);
       R2 = Fp3.mul(R2, b2);
     }
     return R2;
@@ -7164,14 +7164,14 @@ class _Field6 {
       c2: Fp22.cmov(c2, r2, c3)
     };
   }
-  fromBigSix(t) {
+  fromBigSix(t2) {
     const { Fp2: Fp22 } = this;
-    if (!Array.isArray(t) || t.length !== 6)
+    if (!Array.isArray(t2) || t2.length !== 6)
       throw new Error("invalid Fp6 usage");
     return {
-      c0: Fp22.fromBigTuple(t.slice(0, 2)),
-      c1: Fp22.fromBigTuple(t.slice(2, 4)),
-      c2: Fp22.fromBigTuple(t.slice(4, 6))
+      c0: Fp22.fromBigTuple(t2.slice(0, 2)),
+      c1: Fp22.fromBigTuple(t2.slice(2, 4)),
+      c2: Fp22.fromBigTuple(t2.slice(4, 6))
     };
   }
   frobeniusMap({ c0, c1, c2 }, power) {
@@ -7261,8 +7261,8 @@ class _Field12 {
   }
   inv({ c0, c1 }) {
     const { Fp6: Fp62 } = this;
-    let t = Fp62.inv(Fp62.sub(Fp62.sqr(c0), Fp62.mulByNonresidue(Fp62.sqr(c1))));
-    return { c0: Fp62.mul(c0, t), c1: Fp62.neg(Fp62.mul(c1, t)) };
+    let t2 = Fp62.inv(Fp62.sub(Fp62.sqr(c0), Fp62.mulByNonresidue(Fp62.sqr(c1))));
+    return { c0: Fp62.mul(c0, t2), c1: Fp62.neg(Fp62.mul(c1, t2)) };
   }
   div(lhs, rhs) {
     const { Fp6: Fp62 } = this;
@@ -7355,11 +7355,11 @@ class _Field12 {
   // fromTuple(c: [Fp6, Fp6]) {
   //   return new Fp12(...c);
   // }
-  fromBigTwelve(t) {
+  fromBigTwelve(t2) {
     const { Fp6: Fp62 } = this;
     return {
-      c0: Fp62.fromBigSix(t.slice(0, 6)),
-      c1: Fp62.fromBigSix(t.slice(6, 12))
+      c0: Fp62.fromBigSix(t2.slice(0, 6)),
+      c1: Fp62.fromBigSix(t2.slice(6, 12))
     };
   }
   // Raises to q**i -th power
@@ -8223,18 +8223,18 @@ function lookupResultToBuffer(result) {
   }
   return void 0;
 }
-async function reconstruct(t) {
-  switch (t[0]) {
+async function reconstruct(t2) {
+  switch (t2[0]) {
     case NodeType.Empty:
       return sha256(domain_sep("ic-hashtree-empty"));
     case NodeType.Pruned:
-      return t[1];
+      return t2[1];
     case NodeType.Leaf:
-      return sha256(concatBytes(domain_sep("ic-hashtree-leaf"), t[1]));
+      return sha256(concatBytes(domain_sep("ic-hashtree-leaf"), t2[1]));
     case NodeType.Labeled:
-      return sha256(concatBytes(domain_sep("ic-hashtree-labeled"), t[1], await reconstruct(t[2])));
+      return sha256(concatBytes(domain_sep("ic-hashtree-labeled"), t2[1], await reconstruct(t2[2])));
     case NodeType.Fork:
-      return sha256(concatBytes(domain_sep("ic-hashtree-fork"), await reconstruct(t[1]), await reconstruct(t[2])));
+      return sha256(concatBytes(domain_sep("ic-hashtree-fork"), await reconstruct(t2[1]), await reconstruct(t2[2])));
     default:
       throw UNREACHABLE_ERROR;
   }
@@ -8357,14 +8357,14 @@ function lookup_subtree(path, tree) {
     }
   }
 }
-function flatten_forks(t) {
-  switch (t[0]) {
+function flatten_forks(t2) {
+  switch (t2[0]) {
     case NodeType.Empty:
       return [];
     case NodeType.Fork:
-      return flatten_forks(t[1]).concat(flatten_forks(t[2]));
+      return flatten_forks(t2[1]).concat(flatten_forks(t2[2]));
     default:
-      return [t];
+      return [t2];
   }
 }
 function find_label(label, tree) {
@@ -10239,14 +10239,14 @@ const _HttpAgent = class _HttpAgent {
    */
   async call(canisterId, options, identity) {
     const callSync = options.callSync ?? true;
-    const id = await (identity ?? __privateGet(this, _identity));
-    if (!id) {
+    const id2 = await (identity ?? __privateGet(this, _identity));
+    if (!id2) {
       throw ExternalError.fromCode(new IdentityInvalidErrorCode());
     }
     const canister = Principal$1.from(canisterId);
     const ecid = options.effectiveCanisterId ? Principal$1.from(options.effectiveCanisterId) : canister;
     await __privateMethod(this, _HttpAgent_instances, asyncGuard_fn).call(this, ecid);
-    const sender = id.getPrincipal();
+    const sender = id2.getPrincipal();
     const ingress_expiry = calculateIngressExpiry(__privateGet(this, _maxIngressExpiryInMinutes), __privateGet(this, _timeDiffMsecs));
     const submit = {
       request_type: SubmitRequestType.Call,
@@ -10280,7 +10280,7 @@ const _HttpAgent = class _HttpAgent {
     function toNonce(buf) {
       return Object.assign(buf, { __nonce__: void 0 });
     }
-    transformedRequest = await id.transformRequest(transformedRequest);
+    transformedRequest = await id2.transformRequest(transformedRequest);
     const requestId = requestIdOf(transformedRequest.body.content ?? submit);
     const body = encode$1(transformedRequest.body);
     const backoff2 = __privateGet(this, _backoffStrategy).call(this);
@@ -10385,12 +10385,12 @@ const _HttpAgent = class _HttpAgent {
     this.log.print(`ecid ${ecid.toString()}`);
     this.log.print(`canisterId ${canisterId.toString()}`);
     let transformedRequest;
-    const id = await (identity ?? __privateGet(this, _identity));
-    if (!id) {
+    const id2 = await (identity ?? __privateGet(this, _identity));
+    if (!id2) {
       throw ExternalError.fromCode(new IdentityInvalidErrorCode());
     }
     const canister = Principal$1.from(canisterId);
-    const sender = id.getPrincipal();
+    const sender = id2.getPrincipal();
     const ingressExpiry = calculateIngressExpiry(__privateGet(this, _maxIngressExpiryInMinutes), __privateGet(this, _timeDiffMsecs));
     const request2 = {
       request_type: ReadRequestType.Query,
@@ -10411,7 +10411,7 @@ const _HttpAgent = class _HttpAgent {
       endpoint: Endpoint.Query,
       body: request2
     });
-    transformedRequest = await id.transformRequest(transformedRequest);
+    transformedRequest = await id2.transformRequest(transformedRequest);
     const requestId = requestIdOf(transformedRequest.body.content ?? request2);
     const body = encode$1(transformedRequest.body);
     const args = {
@@ -10469,11 +10469,11 @@ const _HttpAgent = class _HttpAgent {
   }
   async createReadStateRequest(fields, identity) {
     await __privateMethod(this, _HttpAgent_instances, asyncGuard_fn).call(this);
-    const id = await (identity ?? __privateGet(this, _identity));
-    if (!id) {
+    const id2 = await (identity ?? __privateGet(this, _identity));
+    if (!id2) {
       throw ExternalError.fromCode(new IdentityInvalidErrorCode());
     }
-    const sender = id.getPrincipal();
+    const sender = id2.getPrincipal();
     const transformedRequest = await this._transform({
       request: {
         method: "POST",
@@ -10490,7 +10490,7 @@ const _HttpAgent = class _HttpAgent {
         ingress_expiry: calculateIngressExpiry(__privateGet(this, _maxIngressExpiryInMinutes), __privateGet(this, _timeDiffMsecs))
       }
     });
-    return id.transformRequest(transformedRequest);
+    return id2.transformRequest(transformedRequest);
   }
   async readState(canisterId, fields, _identity3, request2) {
     await __privateMethod(this, _HttpAgent_instances, rootKeyGuard_fn).call(this);
@@ -14377,12 +14377,12 @@ class FileTypeParser {
             ++ic;
             mask >>= 1;
           }
-          const id = new Uint8Array(ic + 1);
-          await safeReadBuffer(tokenizer, id, void 0, {
-            maximumLength: id.length,
+          const id2 = new Uint8Array(ic + 1);
+          await safeReadBuffer(tokenizer, id2, void 0, {
+            maximumLength: id2.length,
             reason: "EBML field"
           });
-          return id;
+          return id2;
         }
         async function readElement() {
           const idField = await readField();
@@ -19087,10 +19087,10 @@ react_production.version = "19.1.5";
   react.exports = react_production;
 }
 var reactExports = react.exports;
-const React2 = /* @__PURE__ */ getDefaultExportFromCjs(reactExports);
-const React$4 = /* @__PURE__ */ _mergeNamespaces({
+const React$4 = /* @__PURE__ */ getDefaultExportFromCjs(reactExports);
+const React$5 = /* @__PURE__ */ _mergeNamespaces({
   __proto__: null,
-  default: React2
+  default: React$4
 }, [reactExports]);
 var QueryClientContext = reactExports.createContext(
   void 0
@@ -19716,11 +19716,11 @@ class DelegationChain {
           _parseBlob(pubkey),
           BigInt(`0x${expiration}`),
           // expiration in JSON is an hexa string (See toJSON() below).
-          targets && targets.map((t) => {
-            if (typeof t !== "string") {
+          targets && targets.map((t2) => {
+            if (typeof t2 !== "string") {
               throw new Error("Invalid target.");
             }
-            return Principal$1.fromHex(t);
+            return Principal$1.fromHex(t2);
           })
         ),
         signature: _parseBlob(signature)
@@ -19750,7 +19750,7 @@ class DelegationChain {
             expiration: delegation.expiration.toString(16),
             pubkey: safeBytesToHex(delegation.pubkey),
             ...targets && {
-              targets: targets.map((t) => t.toHex())
+              targets: targets.map((t2) => t2.toHex())
             }
           },
           signature: safeBytesToHex(signature)
@@ -20219,7 +20219,7 @@ class Signer {
         var _a2;
         return {
           publicKey: toBase64$1(new Uint8Array(v2.publicKey.toDer())),
-          targets: (_a2 = v2.targets) == null ? void 0 : _a2.map((t) => t.toText()),
+          targets: (_a2 = v2.targets) == null ? void 0 : _a2.map((t2) => t2.toText()),
           maxTimeToLive: v2.maxTimeToLive !== void 0 ? String(v2.maxTimeToLive) : void 0
         };
       },
@@ -20241,7 +20241,7 @@ class Signer {
           }
           const targets = asArray(del == null ? void 0 : del.targets);
           return {
-            delegation: new Delegation(fromBase64$1(pubkey), BigInt(expiration), targets == null ? void 0 : targets.map((t) => Principal$1.fromText(t))),
+            delegation: new Delegation(fromBase64$1(pubkey), BigInt(expiration), targets == null ? void 0 : targets.map((t2) => Principal$1.fromText(t2))),
             signature: fromBase64$1(signature)
           };
         }), fromBase64$1(publicKey));
@@ -20358,9 +20358,9 @@ _HeartbeatClient_instances = new WeakSet();
 establish_fn = function() {
   let pending = [];
   const create = () => {
-    const id = __privateGet(this, _options2).crypto.randomUUID();
-    pending.push(id);
-    return id;
+    const id2 = __privateGet(this, _options2).crypto.randomUUID();
+    pending.push(id2);
+    return id2;
   };
   const listener = __privateMethod(this, _HeartbeatClient_instances, receiveStatusResponse_fn).call(this, (response) => {
     if ("result" in response.data && response.data.id !== null && pending.includes(response.data.id)) {
@@ -20383,19 +20383,19 @@ establish_fn = function() {
 maintain_fn = function(origin, status) {
   let timeout2;
   let pending = [];
-  const consume = (id) => {
-    const index2 = pending.findIndex((entry) => entry.id === id);
+  const consume = (id2) => {
+    const index2 = pending.findIndex((entry) => entry.id === id2);
     if (index2 > -1) {
       pending.splice(index2, 1);
     }
     return index2 > -1;
   };
   const create = () => {
-    const id = __privateGet(this, _options2).crypto.randomUUID();
+    const id2 = __privateGet(this, _options2).crypto.randomUUID();
     const time = Date.now();
     pending = pending.filter((entry) => time - __privateGet(this, _options2).disconnectTimeout > entry.time);
-    pending.push({ id, time });
-    return id;
+    pending.push({ id: id2, time });
+    return id2;
   };
   const resetTimeout = (status2) => {
     clearTimeout(timeout2);
@@ -20426,8 +20426,8 @@ receiveStatusResponse_fn = function(handler) {
   __privateGet(this, _options2).window.addEventListener("message", listener);
   return () => __privateGet(this, _options2).window.removeEventListener("message", listener);
 };
-sendStatusRequest_fn = function(id) {
-  __privateGet(this, _options2).signerWindow.postMessage({ jsonrpc: "2.0", id, method: "icrc29_status" }, "*");
+sendStatusRequest_fn = function(id2) {
+  __privateGet(this, _options2).signerWindow.postMessage({ jsonrpc: "2.0", id: id2, method: "icrc29_status" }, "*");
 };
 const NON_CLICK_ESTABLISHMENT_LINK = "https://github.com/slide-computer/signer-js/blob/main/packages/signer-web/README.md#channels-must-be-established-in-a-click-handler";
 class PostMessageTransportError extends Error {
@@ -29169,9 +29169,9 @@ function commitPassiveMountOnFiber(finishedRoot, finishedWork, committedLanes, c
         );
         finishedRoot = finishedWork.stateNode;
         try {
-          var _finishedWork$memoize2 = finishedWork.memoizedProps, id = _finishedWork$memoize2.id, onPostCommit = _finishedWork$memoize2.onPostCommit;
+          var _finishedWork$memoize2 = finishedWork.memoizedProps, id2 = _finishedWork$memoize2.id, onPostCommit = _finishedWork$memoize2.onPostCommit;
           "function" === typeof onPostCommit && onPostCommit(
-            id,
+            id2,
             null === finishedWork.alternate ? "mount" : "update",
             finishedRoot.passiveEffectDuration,
             -0
@@ -29199,7 +29199,7 @@ function commitPassiveMountOnFiber(finishedRoot, finishedWork, committedLanes, c
       break;
     case 22:
       _finishedWork$memoize2 = finishedWork.stateNode;
-      id = finishedWork.alternate;
+      id2 = finishedWork.alternate;
       null !== finishedWork.memoizedState ? _finishedWork$memoize2._visibility & 2 ? recursivelyTraversePassiveMountEffects(
         finishedRoot,
         finishedWork,
@@ -29217,7 +29217,7 @@ function commitPassiveMountOnFiber(finishedRoot, finishedWork, committedLanes, c
         committedTransitions,
         0 !== (finishedWork.subtreeFlags & 10256)
       ));
-      flags & 2048 && commitOffscreenPassiveMountEffects(id, finishedWork);
+      flags & 2048 && commitOffscreenPassiveMountEffects(id2, finishedWork);
       break;
     case 24:
       recursivelyTraversePassiveMountEffects(
@@ -33283,84 +33283,84 @@ var jt = (n) => {
     default:
       return null;
   }
-}, te = Array(12).fill(0), Yt = ({ visible: n, className: e }) => React2.createElement("div", { className: ["sonner-loading-wrapper", e].filter(Boolean).join(" "), "data-visible": n }, React2.createElement("div", { className: "sonner-spinner" }, te.map((t, a2) => React2.createElement("div", { className: "sonner-loading-bar", key: `spinner-bar-${a2}` })))), ee = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", clipRule: "evenodd" })), oe = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z", clipRule: "evenodd" })), ae = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z", clipRule: "evenodd" })), se = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React2.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z", clipRule: "evenodd" })), Ot = React2.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, React2.createElement("line", { x1: "18", y1: "6", x2: "6", y2: "18" }), React2.createElement("line", { x1: "6", y1: "6", x2: "18", y2: "18" }));
+}, te = Array(12).fill(0), Yt = ({ visible: n, className: e }) => React$4.createElement("div", { className: ["sonner-loading-wrapper", e].filter(Boolean).join(" "), "data-visible": n }, React$4.createElement("div", { className: "sonner-spinner" }, te.map((t2, a2) => React$4.createElement("div", { className: "sonner-loading-bar", key: `spinner-bar-${a2}` })))), ee = React$4.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React$4.createElement("path", { fillRule: "evenodd", d: "M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z", clipRule: "evenodd" })), oe = React$4.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 24 24", fill: "currentColor", height: "20", width: "20" }, React$4.createElement("path", { fillRule: "evenodd", d: "M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z", clipRule: "evenodd" })), ae = React$4.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React$4.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a.75.75 0 000 1.5h.253a.25.25 0 01.244.304l-.459 2.066A1.75 1.75 0 0010.747 15H11a.75.75 0 000-1.5h-.253a.25.25 0 01-.244-.304l.459-2.066A1.75 1.75 0 009.253 9H9z", clipRule: "evenodd" })), se = React$4.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", viewBox: "0 0 20 20", fill: "currentColor", height: "20", width: "20" }, React$4.createElement("path", { fillRule: "evenodd", d: "M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z", clipRule: "evenodd" })), Ot = React$4.createElement("svg", { xmlns: "http://www.w3.org/2000/svg", width: "12", height: "12", viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: "1.5", strokeLinecap: "round", strokeLinejoin: "round" }, React$4.createElement("line", { x1: "18", y1: "6", x2: "6", y2: "18" }), React$4.createElement("line", { x1: "6", y1: "6", x2: "18", y2: "18" }));
 var Ft = () => {
-  let [n, e] = React2.useState(document.hidden);
-  return React2.useEffect(() => {
-    let t = () => {
+  let [n, e] = React$4.useState(document.hidden);
+  return React$4.useEffect(() => {
+    let t2 = () => {
       e(document.hidden);
     };
-    return document.addEventListener("visibilitychange", t), () => window.removeEventListener("visibilitychange", t);
+    return document.addEventListener("visibilitychange", t2), () => window.removeEventListener("visibilitychange", t2);
   }, []), n;
 };
 var bt = 1, yt = class {
   constructor() {
     this.subscribe = (e) => (this.subscribers.push(e), () => {
-      let t = this.subscribers.indexOf(e);
-      this.subscribers.splice(t, 1);
+      let t2 = this.subscribers.indexOf(e);
+      this.subscribers.splice(t2, 1);
     });
     this.publish = (e) => {
-      this.subscribers.forEach((t) => t(e));
+      this.subscribers.forEach((t2) => t2(e));
     };
     this.addToast = (e) => {
       this.publish(e), this.toasts = [...this.toasts, e];
     };
     this.create = (e) => {
       var S2;
-      let { message: t, ...a2 } = e, u2 = typeof (e == null ? void 0 : e.id) == "number" || ((S2 = e.id) == null ? void 0 : S2.length) > 0 ? e.id : bt++, f2 = this.toasts.find((g2) => g2.id === u2), w2 = e.dismissible === void 0 ? true : e.dismissible;
-      return this.dismissedToasts.has(u2) && this.dismissedToasts.delete(u2), f2 ? this.toasts = this.toasts.map((g2) => g2.id === u2 ? (this.publish({ ...g2, ...e, id: u2, title: t }), { ...g2, ...e, id: u2, dismissible: w2, title: t }) : g2) : this.addToast({ title: t, ...a2, dismissible: w2, id: u2 }), u2;
+      let { message: t2, ...a2 } = e, u2 = typeof (e == null ? void 0 : e.id) == "number" || ((S2 = e.id) == null ? void 0 : S2.length) > 0 ? e.id : bt++, f2 = this.toasts.find((g2) => g2.id === u2), w2 = e.dismissible === void 0 ? true : e.dismissible;
+      return this.dismissedToasts.has(u2) && this.dismissedToasts.delete(u2), f2 ? this.toasts = this.toasts.map((g2) => g2.id === u2 ? (this.publish({ ...g2, ...e, id: u2, title: t2 }), { ...g2, ...e, id: u2, dismissible: w2, title: t2 }) : g2) : this.addToast({ title: t2, ...a2, dismissible: w2, id: u2 }), u2;
     };
-    this.dismiss = (e) => (this.dismissedToasts.add(e), e || this.toasts.forEach((t) => {
-      this.subscribers.forEach((a2) => a2({ id: t.id, dismiss: true }));
-    }), this.subscribers.forEach((t) => t({ id: e, dismiss: true })), e);
-    this.message = (e, t) => this.create({ ...t, message: e });
-    this.error = (e, t) => this.create({ ...t, message: e, type: "error" });
-    this.success = (e, t) => this.create({ ...t, type: "success", message: e });
-    this.info = (e, t) => this.create({ ...t, type: "info", message: e });
-    this.warning = (e, t) => this.create({ ...t, type: "warning", message: e });
-    this.loading = (e, t) => this.create({ ...t, type: "loading", message: e });
-    this.promise = (e, t) => {
-      if (!t) return;
+    this.dismiss = (e) => (this.dismissedToasts.add(e), e || this.toasts.forEach((t2) => {
+      this.subscribers.forEach((a2) => a2({ id: t2.id, dismiss: true }));
+    }), this.subscribers.forEach((t2) => t2({ id: e, dismiss: true })), e);
+    this.message = (e, t2) => this.create({ ...t2, message: e });
+    this.error = (e, t2) => this.create({ ...t2, message: e, type: "error" });
+    this.success = (e, t2) => this.create({ ...t2, type: "success", message: e });
+    this.info = (e, t2) => this.create({ ...t2, type: "info", message: e });
+    this.warning = (e, t2) => this.create({ ...t2, type: "warning", message: e });
+    this.loading = (e, t2) => this.create({ ...t2, type: "loading", message: e });
+    this.promise = (e, t2) => {
+      if (!t2) return;
       let a2;
-      t.loading !== void 0 && (a2 = this.create({ ...t, promise: e, type: "loading", message: t.loading, description: typeof t.description != "function" ? t.description : void 0 }));
+      t2.loading !== void 0 && (a2 = this.create({ ...t2, promise: e, type: "loading", message: t2.loading, description: typeof t2.description != "function" ? t2.description : void 0 }));
       let u2 = e instanceof Promise ? e : e(), f2 = a2 !== void 0, w2, S2 = u2.then(async (i) => {
-        if (w2 = ["resolve", i], React2.isValidElement(i)) f2 = false, this.create({ id: a2, type: "default", message: i });
+        if (w2 = ["resolve", i], React$4.isValidElement(i)) f2 = false, this.create({ id: a2, type: "default", message: i });
         else if (ie(i) && !i.ok) {
           f2 = false;
-          let T2 = typeof t.error == "function" ? await t.error(`HTTP error! status: ${i.status}`) : t.error, F2 = typeof t.description == "function" ? await t.description(`HTTP error! status: ${i.status}`) : t.description;
+          let T2 = typeof t2.error == "function" ? await t2.error(`HTTP error! status: ${i.status}`) : t2.error, F2 = typeof t2.description == "function" ? await t2.description(`HTTP error! status: ${i.status}`) : t2.description;
           this.create({ id: a2, type: "error", message: T2, description: F2 });
-        } else if (t.success !== void 0) {
+        } else if (t2.success !== void 0) {
           f2 = false;
-          let T2 = typeof t.success == "function" ? await t.success(i) : t.success, F2 = typeof t.description == "function" ? await t.description(i) : t.description;
+          let T2 = typeof t2.success == "function" ? await t2.success(i) : t2.success, F2 = typeof t2.description == "function" ? await t2.description(i) : t2.description;
           this.create({ id: a2, type: "success", message: T2, description: F2 });
         }
       }).catch(async (i) => {
-        if (w2 = ["reject", i], t.error !== void 0) {
+        if (w2 = ["reject", i], t2.error !== void 0) {
           f2 = false;
-          let D = typeof t.error == "function" ? await t.error(i) : t.error, T2 = typeof t.description == "function" ? await t.description(i) : t.description;
+          let D = typeof t2.error == "function" ? await t2.error(i) : t2.error, T2 = typeof t2.description == "function" ? await t2.description(i) : t2.description;
           this.create({ id: a2, type: "error", message: D, description: T2 });
         }
       }).finally(() => {
         var i;
-        f2 && (this.dismiss(a2), a2 = void 0), (i = t.finally) == null || i.call(t);
+        f2 && (this.dismiss(a2), a2 = void 0), (i = t2.finally) == null || i.call(t2);
       }), g2 = () => new Promise((i, D) => S2.then(() => w2[0] === "reject" ? D(w2[1]) : i(w2[1])).catch(D));
       return typeof a2 != "string" && typeof a2 != "number" ? { unwrap: g2 } : Object.assign(a2, { unwrap: g2 });
     };
-    this.custom = (e, t) => {
-      let a2 = (t == null ? void 0 : t.id) || bt++;
-      return this.create({ jsx: e(a2), id: a2, ...t }), a2;
+    this.custom = (e, t2) => {
+      let a2 = (t2 == null ? void 0 : t2.id) || bt++;
+      return this.create({ jsx: e(a2), id: a2, ...t2 }), a2;
     };
     this.getActiveToasts = () => this.toasts.filter((e) => !this.dismissedToasts.has(e.id));
     this.subscribers = [], this.toasts = [], this.dismissedToasts = /* @__PURE__ */ new Set();
   }
 }, v = new yt(), ne = (n, e) => {
-  let t = (e == null ? void 0 : e.id) || bt++;
-  return v.addToast({ title: n, ...e, id: t }), t;
-}, ie = (n) => n && typeof n == "object" && "ok" in n && typeof n.ok == "boolean" && "status" in n && typeof n.status == "number", le = ne, ce = () => v.toasts, de = () => v.getActiveToasts(), ue = Object.assign(le, { success: v.success, info: v.info, warning: v.warning, error: v.error, custom: v.custom, message: v.message, promise: v.promise, dismiss: v.dismiss, loading: v.loading }, { getHistory: ce, getToasts: de });
+  let t2 = (e == null ? void 0 : e.id) || bt++;
+  return v.addToast({ title: n, ...e, id: t2 }), t2;
+}, ie = (n) => n && typeof n == "object" && "ok" in n && typeof n.ok == "boolean" && "status" in n && typeof n.status == "number", le = ne, ce = () => v.toasts, de$1 = () => v.getActiveToasts(), ue = Object.assign(le, { success: v.success, info: v.info, warning: v.warning, error: v.error, custom: v.custom, message: v.message, promise: v.promise, dismiss: v.dismiss, loading: v.loading }, { getHistory: ce, getToasts: de$1 });
 function wt(n, { insertAt: e } = {}) {
   if (typeof document == "undefined") return;
-  let t = document.head || document.getElementsByTagName("head")[0], a2 = document.createElement("style");
-  a2.type = "text/css", e === "top" && t.firstChild ? t.insertBefore(a2, t.firstChild) : t.appendChild(a2), a2.styleSheet ? a2.styleSheet.cssText = n : a2.appendChild(document.createTextNode(n));
+  let t2 = document.head || document.getElementsByTagName("head")[0], a2 = document.createElement("style");
+  a2.type = "text/css", e === "top" && t2.firstChild ? t2.insertBefore(a2, t2.firstChild) : t2.appendChild(a2), a2.styleSheet ? a2.styleSheet.cssText = n : a2.appendChild(document.createTextNode(n));
 }
 wt(`:where(html[dir="ltr"]),:where([data-sonner-toaster][dir="ltr"]){--toast-icon-margin-start: -3px;--toast-icon-margin-end: 4px;--toast-svg-margin-start: -1px;--toast-svg-margin-end: 0px;--toast-button-margin-start: auto;--toast-button-margin-end: 0;--toast-close-button-start: 0;--toast-close-button-end: unset;--toast-close-button-transform: translate(-35%, -35%)}:where(html[dir="rtl"]),:where([data-sonner-toaster][dir="rtl"]){--toast-icon-margin-start: 4px;--toast-icon-margin-end: -3px;--toast-svg-margin-start: 0px;--toast-svg-margin-end: -1px;--toast-button-margin-start: 0;--toast-button-margin-end: auto;--toast-close-button-start: unset;--toast-close-button-end: 0;--toast-close-button-transform: translate(35%, -35%)}:where([data-sonner-toaster]){position:fixed;width:var(--width);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;--gray1: hsl(0, 0%, 99%);--gray2: hsl(0, 0%, 97.3%);--gray3: hsl(0, 0%, 95.1%);--gray4: hsl(0, 0%, 93%);--gray5: hsl(0, 0%, 90.9%);--gray6: hsl(0, 0%, 88.7%);--gray7: hsl(0, 0%, 85.8%);--gray8: hsl(0, 0%, 78%);--gray9: hsl(0, 0%, 56.1%);--gray10: hsl(0, 0%, 52.3%);--gray11: hsl(0, 0%, 43.5%);--gray12: hsl(0, 0%, 9%);--border-radius: 8px;box-sizing:border-box;padding:0;margin:0;list-style:none;outline:none;z-index:999999999;transition:transform .4s ease}:where([data-sonner-toaster][data-lifted="true"]){transform:translateY(-10px)}@media (hover: none) and (pointer: coarse){:where([data-sonner-toaster][data-lifted="true"]){transform:none}}:where([data-sonner-toaster][data-x-position="right"]){right:var(--offset-right)}:where([data-sonner-toaster][data-x-position="left"]){left:var(--offset-left)}:where([data-sonner-toaster][data-x-position="center"]){left:50%;transform:translate(-50%)}:where([data-sonner-toaster][data-y-position="top"]){top:var(--offset-top)}:where([data-sonner-toaster][data-y-position="bottom"]){bottom:var(--offset-bottom)}:where([data-sonner-toast]){--y: translateY(100%);--lift-amount: calc(var(--lift) * var(--gap));z-index:var(--z-index);position:absolute;opacity:0;transform:var(--y);filter:blur(0);touch-action:none;transition:transform .4s,opacity .4s,height .4s,box-shadow .2s;box-sizing:border-box;outline:none;overflow-wrap:anywhere}:where([data-sonner-toast][data-styled="true"]){padding:16px;background:var(--normal-bg);border:1px solid var(--normal-border);color:var(--normal-text);border-radius:var(--border-radius);box-shadow:0 4px 12px #0000001a;width:var(--width);font-size:13px;display:flex;align-items:center;gap:6px}:where([data-sonner-toast]:focus-visible){box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast][data-y-position="top"]){top:0;--y: translateY(-100%);--lift: 1;--lift-amount: calc(1 * var(--gap))}:where([data-sonner-toast][data-y-position="bottom"]){bottom:0;--y: translateY(100%);--lift: -1;--lift-amount: calc(var(--lift) * var(--gap))}:where([data-sonner-toast]) :where([data-description]){font-weight:400;line-height:1.4;color:inherit}:where([data-sonner-toast]) :where([data-title]){font-weight:500;line-height:1.5;color:inherit}:where([data-sonner-toast]) :where([data-icon]){display:flex;height:16px;width:16px;position:relative;justify-content:flex-start;align-items:center;flex-shrink:0;margin-left:var(--toast-icon-margin-start);margin-right:var(--toast-icon-margin-end)}:where([data-sonner-toast][data-promise="true"]) :where([data-icon])>svg{opacity:0;transform:scale(.8);transform-origin:center;animation:sonner-fade-in .3s ease forwards}:where([data-sonner-toast]) :where([data-icon])>*{flex-shrink:0}:where([data-sonner-toast]) :where([data-icon]) svg{margin-left:var(--toast-svg-margin-start);margin-right:var(--toast-svg-margin-end)}:where([data-sonner-toast]) :where([data-content]){display:flex;flex-direction:column;gap:2px}[data-sonner-toast][data-styled=true] [data-button]{border-radius:4px;padding-left:8px;padding-right:8px;height:24px;font-size:12px;color:var(--normal-bg);background:var(--normal-text);margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end);border:none;cursor:pointer;outline:none;display:flex;align-items:center;flex-shrink:0;transition:opacity .4s,box-shadow .2s}:where([data-sonner-toast]) :where([data-button]):focus-visible{box-shadow:0 0 0 2px #0006}:where([data-sonner-toast]) :where([data-button]):first-of-type{margin-left:var(--toast-button-margin-start);margin-right:var(--toast-button-margin-end)}:where([data-sonner-toast]) :where([data-cancel]){color:var(--normal-text);background:rgba(0,0,0,.08)}:where([data-sonner-toast][data-theme="dark"]) :where([data-cancel]){background:rgba(255,255,255,.3)}:where([data-sonner-toast]) :where([data-close-button]){position:absolute;left:var(--toast-close-button-start);right:var(--toast-close-button-end);top:0;height:20px;width:20px;display:flex;justify-content:center;align-items:center;padding:0;color:var(--gray12);border:1px solid var(--gray4);transform:var(--toast-close-button-transform);border-radius:50%;cursor:pointer;z-index:1;transition:opacity .1s,background .2s,border-color .2s}[data-sonner-toast] [data-close-button]{background:var(--gray1)}:where([data-sonner-toast]) :where([data-close-button]):focus-visible{box-shadow:0 4px 12px #0000001a,0 0 0 2px #0003}:where([data-sonner-toast]) :where([data-disabled="true"]){cursor:not-allowed}:where([data-sonner-toast]):hover :where([data-close-button]):hover{background:var(--gray2);border-color:var(--gray5)}:where([data-sonner-toast][data-swiping="true"]):before{content:"";position:absolute;left:-50%;right:-50%;height:100%;z-index:-1}:where([data-sonner-toast][data-y-position="top"][data-swiping="true"]):before{bottom:50%;transform:scaleY(3) translateY(50%)}:where([data-sonner-toast][data-y-position="bottom"][data-swiping="true"]):before{top:50%;transform:scaleY(3) translateY(-50%)}:where([data-sonner-toast][data-swiping="false"][data-removed="true"]):before{content:"";position:absolute;inset:0;transform:scaleY(2)}:where([data-sonner-toast]):after{content:"";position:absolute;left:0;height:calc(var(--gap) + 1px);bottom:100%;width:100%}:where([data-sonner-toast][data-mounted="true"]){--y: translateY(0);opacity:1}:where([data-sonner-toast][data-expanded="false"][data-front="false"]){--scale: var(--toasts-before) * .05 + 1;--y: translateY(calc(var(--lift-amount) * var(--toasts-before))) scale(calc(-1 * var(--scale)));height:var(--front-toast-height)}:where([data-sonner-toast])>*{transition:opacity .4s}:where([data-sonner-toast][data-expanded="false"][data-front="false"][data-styled="true"])>*{opacity:0}:where([data-sonner-toast][data-visible="false"]){opacity:0;pointer-events:none}:where([data-sonner-toast][data-mounted="true"][data-expanded="true"]){--y: translateY(calc(var(--lift) * var(--offset)));height:var(--initial-height)}:where([data-sonner-toast][data-removed="true"][data-front="true"][data-swipe-out="false"]){--y: translateY(calc(var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="true"]){--y: translateY(calc(var(--lift) * var(--offset) + var(--lift) * -100%));opacity:0}:where([data-sonner-toast][data-removed="true"][data-front="false"][data-swipe-out="false"][data-expanded="false"]){--y: translateY(40%);opacity:0;transition:transform .5s,opacity .2s}:where([data-sonner-toast][data-removed="true"][data-front="false"]):before{height:calc(var(--initial-height) + 20%)}[data-sonner-toast][data-swiping=true]{transform:var(--y) translateY(var(--swipe-amount-y, 0px)) translate(var(--swipe-amount-x, 0px));transition:none}[data-sonner-toast][data-swiped=true]{user-select:none}[data-sonner-toast][data-swipe-out=true][data-y-position=bottom],[data-sonner-toast][data-swipe-out=true][data-y-position=top]{animation-duration:.2s;animation-timing-function:ease-out;animation-fill-mode:forwards}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=left]{animation-name:swipe-out-left}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=right]{animation-name:swipe-out-right}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=up]{animation-name:swipe-out-up}[data-sonner-toast][data-swipe-out=true][data-swipe-direction=down]{animation-name:swipe-out-down}@keyframes swipe-out-left{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) - 100%));opacity:0}}@keyframes swipe-out-right{0%{transform:var(--y) translate(var(--swipe-amount-x));opacity:1}to{transform:var(--y) translate(calc(var(--swipe-amount-x) + 100%));opacity:0}}@keyframes swipe-out-up{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) - 100%));opacity:0}}@keyframes swipe-out-down{0%{transform:var(--y) translateY(var(--swipe-amount-y));opacity:1}to{transform:var(--y) translateY(calc(var(--swipe-amount-y) + 100%));opacity:0}}@media (max-width: 600px){[data-sonner-toaster]{position:fixed;right:var(--mobile-offset-right);left:var(--mobile-offset-left);width:100%}[data-sonner-toaster][dir=rtl]{left:calc(var(--mobile-offset-left) * -1)}[data-sonner-toaster] [data-sonner-toast]{left:0;right:0;width:calc(100% - var(--mobile-offset-left) * 2)}[data-sonner-toaster][data-x-position=left]{left:var(--mobile-offset-left)}[data-sonner-toaster][data-y-position=bottom]{bottom:var(--mobile-offset-bottom)}[data-sonner-toaster][data-y-position=top]{top:var(--mobile-offset-top)}[data-sonner-toaster][data-x-position=center]{left:var(--mobile-offset-left);right:var(--mobile-offset-right);transform:none}}[data-sonner-toaster][data-theme=light]{--normal-bg: #fff;--normal-border: var(--gray4);--normal-text: var(--gray12);--success-bg: hsl(143, 85%, 96%);--success-border: hsl(145, 92%, 91%);--success-text: hsl(140, 100%, 27%);--info-bg: hsl(208, 100%, 97%);--info-border: hsl(221, 91%, 91%);--info-text: hsl(210, 92%, 45%);--warning-bg: hsl(49, 100%, 97%);--warning-border: hsl(49, 91%, 91%);--warning-text: hsl(31, 92%, 45%);--error-bg: hsl(359, 100%, 97%);--error-border: hsl(359, 100%, 94%);--error-text: hsl(360, 100%, 45%)}[data-sonner-toaster][data-theme=light] [data-sonner-toast][data-invert=true]{--normal-bg: #000;--normal-border: hsl(0, 0%, 20%);--normal-text: var(--gray1)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast][data-invert=true]{--normal-bg: #fff;--normal-border: var(--gray3);--normal-text: var(--gray12)}[data-sonner-toaster][data-theme=dark]{--normal-bg: #000;--normal-bg-hover: hsl(0, 0%, 12%);--normal-border: hsl(0, 0%, 20%);--normal-border-hover: hsl(0, 0%, 25%);--normal-text: var(--gray1);--success-bg: hsl(150, 100%, 6%);--success-border: hsl(147, 100%, 12%);--success-text: hsl(150, 86%, 65%);--info-bg: hsl(215, 100%, 6%);--info-border: hsl(223, 100%, 12%);--info-text: hsl(216, 87%, 65%);--warning-bg: hsl(64, 100%, 6%);--warning-border: hsl(60, 100%, 12%);--warning-text: hsl(46, 87%, 65%);--error-bg: hsl(358, 76%, 10%);--error-border: hsl(357, 89%, 16%);--error-text: hsl(358, 100%, 81%)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]{background:var(--normal-bg);border-color:var(--normal-border);color:var(--normal-text)}[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]:hover{background:var(--normal-bg-hover);border-color:var(--normal-border-hover)}[data-rich-colors=true][data-sonner-toast][data-type=success],[data-rich-colors=true][data-sonner-toast][data-type=success] [data-close-button]{background:var(--success-bg);border-color:var(--success-border);color:var(--success-text)}[data-rich-colors=true][data-sonner-toast][data-type=info],[data-rich-colors=true][data-sonner-toast][data-type=info] [data-close-button]{background:var(--info-bg);border-color:var(--info-border);color:var(--info-text)}[data-rich-colors=true][data-sonner-toast][data-type=warning],[data-rich-colors=true][data-sonner-toast][data-type=warning] [data-close-button]{background:var(--warning-bg);border-color:var(--warning-border);color:var(--warning-text)}[data-rich-colors=true][data-sonner-toast][data-type=error],[data-rich-colors=true][data-sonner-toast][data-type=error] [data-close-button]{background:var(--error-bg);border-color:var(--error-border);color:var(--error-text)}.sonner-loading-wrapper{--size: 16px;height:var(--size);width:var(--size);position:absolute;inset:0;z-index:10}.sonner-loading-wrapper[data-visible=false]{transform-origin:center;animation:sonner-fade-out .2s ease forwards}.sonner-spinner{position:relative;top:50%;left:50%;height:var(--size);width:var(--size)}.sonner-loading-bar{animation:sonner-spin 1.2s linear infinite;background:var(--gray11);border-radius:6px;height:8%;left:-10%;position:absolute;top:-3.9%;width:24%}.sonner-loading-bar:nth-child(1){animation-delay:-1.2s;transform:rotate(.0001deg) translate(146%)}.sonner-loading-bar:nth-child(2){animation-delay:-1.1s;transform:rotate(30deg) translate(146%)}.sonner-loading-bar:nth-child(3){animation-delay:-1s;transform:rotate(60deg) translate(146%)}.sonner-loading-bar:nth-child(4){animation-delay:-.9s;transform:rotate(90deg) translate(146%)}.sonner-loading-bar:nth-child(5){animation-delay:-.8s;transform:rotate(120deg) translate(146%)}.sonner-loading-bar:nth-child(6){animation-delay:-.7s;transform:rotate(150deg) translate(146%)}.sonner-loading-bar:nth-child(7){animation-delay:-.6s;transform:rotate(180deg) translate(146%)}.sonner-loading-bar:nth-child(8){animation-delay:-.5s;transform:rotate(210deg) translate(146%)}.sonner-loading-bar:nth-child(9){animation-delay:-.4s;transform:rotate(240deg) translate(146%)}.sonner-loading-bar:nth-child(10){animation-delay:-.3s;transform:rotate(270deg) translate(146%)}.sonner-loading-bar:nth-child(11){animation-delay:-.2s;transform:rotate(300deg) translate(146%)}.sonner-loading-bar:nth-child(12){animation-delay:-.1s;transform:rotate(330deg) translate(146%)}@keyframes sonner-fade-in{0%{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}@keyframes sonner-fade-out{0%{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.8)}}@keyframes sonner-spin{0%{opacity:1}to{opacity:.15}}@media (prefers-reduced-motion){[data-sonner-toast],[data-sonner-toast]>*,.sonner-loading-bar{transition:none!important;animation:none!important}}.sonner-loader{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);transform-origin:center;transition:opacity .2s,transform .2s}.sonner-loader[data-visible=false]{opacity:0;transform:scale(.8) translate(-50%,-50%)}
 `);
@@ -33372,39 +33372,39 @@ function M(...n) {
   return n.filter(Boolean).join(" ");
 }
 function xe(n) {
-  let [e, t] = n.split("-"), a2 = [];
-  return e && a2.push(e), t && a2.push(t), a2;
+  let [e, t2] = n.split("-"), a2 = [];
+  return e && a2.push(e), t2 && a2.push(t2), a2;
 }
 var ve = (n) => {
   var Dt, Pt, Nt, Bt, Ct, kt, It, Mt, Ht, At, Lt;
-  let { invert: e, toast: t, unstyled: a2, interacting: u2, setHeights: f2, visibleToasts: w2, heights: S2, index: g2, toasts: i, expanded: D, removeToast: T2, defaultRichColors: F2, closeButton: et2, style: ut2, cancelButtonStyle: ft2, actionButtonStyle: l2, className: ot2 = "", descriptionClassName: at = "", duration: X2, position: st2, gap: pt, loadingIcon: rt2, expandByDefault: B2, classNames: s, icons: P2, closeButtonAriaLabel: nt2 = "Close toast", pauseWhenPageIsHidden: it2 } = n, [Y2, C2] = React2.useState(null), [lt, J2] = React2.useState(null), [W2, H2] = React2.useState(false), [A, mt] = React2.useState(false), [L2, z2] = React2.useState(false), [ct2, d2] = React2.useState(false), [h2, y2] = React2.useState(false), [R2, j2] = React2.useState(0), [p2, _2] = React2.useState(0), O2 = React2.useRef(t.duration || X2 || Wt), G2 = React2.useRef(null), k2 = React2.useRef(null), Vt = g2 === 0, Ut = g2 + 1 <= w2, N2 = t.type, V2 = t.dismissible !== false, Kt = t.className || "", Xt = t.descriptionClassName || "", dt = React2.useMemo(() => S2.findIndex((r2) => r2.toastId === t.id) || 0, [S2, t.id]), Jt = React2.useMemo(() => {
+  let { invert: e, toast: t2, unstyled: a2, interacting: u2, setHeights: f2, visibleToasts: w2, heights: S2, index: g2, toasts: i, expanded: D, removeToast: T2, defaultRichColors: F2, closeButton: et2, style: ut2, cancelButtonStyle: ft2, actionButtonStyle: l2, className: ot2 = "", descriptionClassName: at = "", duration: X2, position: st2, gap: pt2, loadingIcon: rt2, expandByDefault: B2, classNames: s, icons: P2, closeButtonAriaLabel: nt2 = "Close toast", pauseWhenPageIsHidden: it2 } = n, [Y2, C2] = React$4.useState(null), [lt, J2] = React$4.useState(null), [W2, H2] = React$4.useState(false), [A, mt] = React$4.useState(false), [L2, z2] = React$4.useState(false), [ct2, d2] = React$4.useState(false), [h2, y2] = React$4.useState(false), [R2, j2] = React$4.useState(0), [p2, _2] = React$4.useState(0), O2 = React$4.useRef(t2.duration || X2 || Wt), G2 = React$4.useRef(null), k2 = React$4.useRef(null), Vt = g2 === 0, Ut = g2 + 1 <= w2, N2 = t2.type, V2 = t2.dismissible !== false, Kt = t2.className || "", Xt = t2.descriptionClassName || "", dt = React$4.useMemo(() => S2.findIndex((r2) => r2.toastId === t2.id) || 0, [S2, t2.id]), Jt = React$4.useMemo(() => {
     var r2;
-    return (r2 = t.closeButton) != null ? r2 : et2;
-  }, [t.closeButton, et2]), Tt = React2.useMemo(() => t.duration || X2 || Wt, [t.duration, X2]), gt2 = React2.useRef(0), U2 = React2.useRef(0), St = React2.useRef(0), K2 = React2.useRef(null), [Gt, Qt] = st2.split("-"), Rt = React2.useMemo(() => S2.reduce((r2, m2, c2) => c2 >= dt ? r2 : r2 + m2.height, 0), [S2, dt]), Et = Ft(), qt = t.invert || e, ht = N2 === "loading";
-  U2.current = React2.useMemo(() => dt * pt + Rt, [dt, Rt]), React2.useEffect(() => {
+    return (r2 = t2.closeButton) != null ? r2 : et2;
+  }, [t2.closeButton, et2]), Tt = React$4.useMemo(() => t2.duration || X2 || Wt, [t2.duration, X2]), gt2 = React$4.useRef(0), U2 = React$4.useRef(0), St = React$4.useRef(0), K2 = React$4.useRef(null), [Gt, Qt] = st2.split("-"), Rt = React$4.useMemo(() => S2.reduce((r2, m2, c2) => c2 >= dt ? r2 : r2 + m2.height, 0), [S2, dt]), Et = Ft(), qt = t2.invert || e, ht = N2 === "loading";
+  U2.current = React$4.useMemo(() => dt * pt2 + Rt, [dt, Rt]), React$4.useEffect(() => {
     O2.current = Tt;
-  }, [Tt]), React2.useEffect(() => {
+  }, [Tt]), React$4.useEffect(() => {
     H2(true);
-  }, []), React2.useEffect(() => {
+  }, []), React$4.useEffect(() => {
     let r2 = k2.current;
     if (r2) {
       let m2 = r2.getBoundingClientRect().height;
-      return _2(m2), f2((c2) => [{ toastId: t.id, height: m2, position: t.position }, ...c2]), () => f2((c2) => c2.filter((b2) => b2.toastId !== t.id));
+      return _2(m2), f2((c2) => [{ toastId: t2.id, height: m2, position: t2.position }, ...c2]), () => f2((c2) => c2.filter((b2) => b2.toastId !== t2.id));
     }
-  }, [f2, t.id]), React2.useLayoutEffect(() => {
+  }, [f2, t2.id]), React$4.useLayoutEffect(() => {
     if (!W2) return;
     let r2 = k2.current, m2 = r2.style.height;
     r2.style.height = "auto";
     let c2 = r2.getBoundingClientRect().height;
-    r2.style.height = m2, _2(c2), f2((b2) => b2.find((x3) => x3.toastId === t.id) ? b2.map((x3) => x3.toastId === t.id ? { ...x3, height: c2 } : x3) : [{ toastId: t.id, height: c2, position: t.position }, ...b2]);
-  }, [W2, t.title, t.description, f2, t.id]);
-  let $2 = React2.useCallback(() => {
-    mt(true), j2(U2.current), f2((r2) => r2.filter((m2) => m2.toastId !== t.id)), setTimeout(() => {
-      T2(t);
+    r2.style.height = m2, _2(c2), f2((b2) => b2.find((x3) => x3.toastId === t2.id) ? b2.map((x3) => x3.toastId === t2.id ? { ...x3, height: c2 } : x3) : [{ toastId: t2.id, height: c2, position: t2.position }, ...b2]);
+  }, [W2, t2.title, t2.description, f2, t2.id]);
+  let $2 = React$4.useCallback(() => {
+    mt(true), j2(U2.current), f2((r2) => r2.filter((m2) => m2.toastId !== t2.id)), setTimeout(() => {
+      T2(t2);
     }, we);
-  }, [t, T2, f2, U2]);
-  React2.useEffect(() => {
-    if (t.promise && N2 === "loading" || t.duration === 1 / 0 || t.type === "loading") return;
+  }, [t2, T2, f2, U2]);
+  React$4.useEffect(() => {
+    if (t2.promise && N2 === "loading" || t2.duration === 1 / 0 || t2.type === "loading") return;
     let r2;
     return D || u2 || it2 && Et ? (() => {
       if (St.current < gt2.current) {
@@ -33415,17 +33415,17 @@ var ve = (n) => {
     })() : (() => {
       O2.current !== 1 / 0 && (gt2.current = (/* @__PURE__ */ new Date()).getTime(), r2 = setTimeout(() => {
         var b2;
-        (b2 = t.onAutoClose) == null || b2.call(t, t), $2();
+        (b2 = t2.onAutoClose) == null || b2.call(t2, t2), $2();
       }, O2.current));
     })(), () => clearTimeout(r2);
-  }, [D, u2, t, N2, it2, Et, $2]), React2.useEffect(() => {
-    t.delete && $2();
-  }, [$2, t.delete]);
+  }, [D, u2, t2, N2, it2, Et, $2]), React$4.useEffect(() => {
+    t2.delete && $2();
+  }, [$2, t2.delete]);
   function Zt() {
     var r2, m2, c2;
-    return P2 != null && P2.loading ? React2.createElement("div", { className: M(s == null ? void 0 : s.loader, (r2 = t == null ? void 0 : t.classNames) == null ? void 0 : r2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, P2.loading) : rt2 ? React2.createElement("div", { className: M(s == null ? void 0 : s.loader, (m2 = t == null ? void 0 : t.classNames) == null ? void 0 : m2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, rt2) : React2.createElement(Yt, { className: M(s == null ? void 0 : s.loader, (c2 = t == null ? void 0 : t.classNames) == null ? void 0 : c2.loader), visible: N2 === "loading" });
+    return P2 != null && P2.loading ? React$4.createElement("div", { className: M(s == null ? void 0 : s.loader, (r2 = t2 == null ? void 0 : t2.classNames) == null ? void 0 : r2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, P2.loading) : rt2 ? React$4.createElement("div", { className: M(s == null ? void 0 : s.loader, (m2 = t2 == null ? void 0 : t2.classNames) == null ? void 0 : m2.loader, "sonner-loader"), "data-visible": N2 === "loading" }, rt2) : React$4.createElement(Yt, { className: M(s == null ? void 0 : s.loader, (c2 = t2 == null ? void 0 : t2.classNames) == null ? void 0 : c2.loader), visible: N2 === "loading" });
   }
-  return React2.createElement("li", { tabIndex: 0, ref: k2, className: M(ot2, Kt, s == null ? void 0 : s.toast, (Dt = t == null ? void 0 : t.classNames) == null ? void 0 : Dt.toast, s == null ? void 0 : s.default, s == null ? void 0 : s[N2], (Pt = t == null ? void 0 : t.classNames) == null ? void 0 : Pt[N2]), "data-sonner-toast": "", "data-rich-colors": (Nt = t.richColors) != null ? Nt : F2, "data-styled": !(t.jsx || t.unstyled || a2), "data-mounted": W2, "data-promise": !!t.promise, "data-swiped": h2, "data-removed": A, "data-visible": Ut, "data-y-position": Gt, "data-x-position": Qt, "data-index": g2, "data-front": Vt, "data-swiping": L2, "data-dismissible": V2, "data-type": N2, "data-invert": qt, "data-swipe-out": ct2, "data-swipe-direction": lt, "data-expanded": !!(D || B2 && W2), style: { "--index": g2, "--toasts-before": g2, "--z-index": i.length - g2, "--offset": `${A ? R2 : U2.current}px`, "--initial-height": B2 ? "auto" : `${p2}px`, ...ut2, ...t.style }, onDragEnd: () => {
+  return React$4.createElement("li", { tabIndex: 0, ref: k2, className: M(ot2, Kt, s == null ? void 0 : s.toast, (Dt = t2 == null ? void 0 : t2.classNames) == null ? void 0 : Dt.toast, s == null ? void 0 : s.default, s == null ? void 0 : s[N2], (Pt = t2 == null ? void 0 : t2.classNames) == null ? void 0 : Pt[N2]), "data-sonner-toast": "", "data-rich-colors": (Nt = t2.richColors) != null ? Nt : F2, "data-styled": !(t2.jsx || t2.unstyled || a2), "data-mounted": W2, "data-promise": !!t2.promise, "data-swiped": h2, "data-removed": A, "data-visible": Ut, "data-y-position": Gt, "data-x-position": Qt, "data-index": g2, "data-front": Vt, "data-swiping": L2, "data-dismissible": V2, "data-type": N2, "data-invert": qt, "data-swipe-out": ct2, "data-swipe-direction": lt, "data-expanded": !!(D || B2 && W2), style: { "--index": g2, "--toasts-before": g2, "--z-index": i.length - g2, "--offset": `${A ? R2 : U2.current}px`, "--initial-height": B2 ? "auto" : `${p2}px`, ...ut2, ...t2.style }, onDragEnd: () => {
     z2(false), C2(null), K2.current = null;
   }, onPointerDown: (r2) => {
     ht || !V2 || (G2.current = /* @__PURE__ */ new Date(), j2(U2.current), r2.target.setPointerCapture(r2.pointerId), r2.target.tagName !== "BUTTON" && (z2(true), K2.current = { x: r2.clientX, y: r2.clientY }));
@@ -33435,7 +33435,7 @@ var ve = (n) => {
     K2.current = null;
     let r2 = Number(((x3 = k2.current) == null ? void 0 : x3.style.getPropertyValue("--swipe-amount-x").replace("px", "")) || 0), m2 = Number(((Q2 = k2.current) == null ? void 0 : Q2.style.getPropertyValue("--swipe-amount-y").replace("px", "")) || 0), c2 = (/* @__PURE__ */ new Date()).getTime() - ((q2 = G2.current) == null ? void 0 : q2.getTime()), b2 = Y2 === "x" ? r2 : m2, I2 = Math.abs(b2) / c2;
     if (Math.abs(b2) >= ye || I2 > 0.11) {
-      j2(U2.current), (Z2 = t.onDismiss) == null || Z2.call(t, t), J2(Y2 === "x" ? r2 > 0 ? "right" : "left" : m2 > 0 ? "down" : "up"), $2(), d2(true), y2(false);
+      j2(U2.current), (Z2 = t2.onDismiss) == null || Z2.call(t2, t2), J2(Y2 === "x" ? r2 > 0 ? "right" : "left" : m2 > 0 ? "down" : "up"), $2(), d2(true), y2(false);
       return;
     }
     z2(false), C2(null);
@@ -33446,17 +33446,17 @@ var ve = (n) => {
     !Y2 && (Math.abs(b2) > 1 || Math.abs(c2) > 1) && C2(Math.abs(b2) > Math.abs(c2) ? "x" : "y");
     let x3 = { x: 0, y: 0 };
     Y2 === "y" ? (I2.includes("top") || I2.includes("bottom")) && (I2.includes("top") && c2 < 0 || I2.includes("bottom") && c2 > 0) && (x3.y = c2) : Y2 === "x" && (I2.includes("left") || I2.includes("right")) && (I2.includes("left") && b2 < 0 || I2.includes("right") && b2 > 0) && (x3.x = b2), (Math.abs(x3.x) > 0 || Math.abs(x3.y) > 0) && y2(true), (Z2 = k2.current) == null || Z2.style.setProperty("--swipe-amount-x", `${x3.x}px`), (zt = k2.current) == null || zt.style.setProperty("--swipe-amount-y", `${x3.y}px`);
-  } }, Jt && !t.jsx ? React2.createElement("button", { "aria-label": nt2, "data-disabled": ht, "data-close-button": true, onClick: ht || !V2 ? () => {
+  } }, Jt && !t2.jsx ? React$4.createElement("button", { "aria-label": nt2, "data-disabled": ht, "data-close-button": true, onClick: ht || !V2 ? () => {
   } : () => {
     var r2;
-    $2(), (r2 = t.onDismiss) == null || r2.call(t, t);
-  }, className: M(s == null ? void 0 : s.closeButton, (Bt = t == null ? void 0 : t.classNames) == null ? void 0 : Bt.closeButton) }, (Ct = P2 == null ? void 0 : P2.close) != null ? Ct : Ot) : null, t.jsx || reactExports.isValidElement(t.title) ? t.jsx ? t.jsx : typeof t.title == "function" ? t.title() : t.title : React2.createElement(React2.Fragment, null, N2 || t.icon || t.promise ? React2.createElement("div", { "data-icon": "", className: M(s == null ? void 0 : s.icon, (kt = t == null ? void 0 : t.classNames) == null ? void 0 : kt.icon) }, t.promise || t.type === "loading" && !t.icon ? t.icon || Zt() : null, t.type !== "loading" ? t.icon || (P2 == null ? void 0 : P2[N2]) || jt(N2) : null) : null, React2.createElement("div", { "data-content": "", className: M(s == null ? void 0 : s.content, (It = t == null ? void 0 : t.classNames) == null ? void 0 : It.content) }, React2.createElement("div", { "data-title": "", className: M(s == null ? void 0 : s.title, (Mt = t == null ? void 0 : t.classNames) == null ? void 0 : Mt.title) }, typeof t.title == "function" ? t.title() : t.title), t.description ? React2.createElement("div", { "data-description": "", className: M(at, Xt, s == null ? void 0 : s.description, (Ht = t == null ? void 0 : t.classNames) == null ? void 0 : Ht.description) }, typeof t.description == "function" ? t.description() : t.description) : null), reactExports.isValidElement(t.cancel) ? t.cancel : t.cancel && tt(t.cancel) ? React2.createElement("button", { "data-button": true, "data-cancel": true, style: t.cancelButtonStyle || ft2, onClick: (r2) => {
+    $2(), (r2 = t2.onDismiss) == null || r2.call(t2, t2);
+  }, className: M(s == null ? void 0 : s.closeButton, (Bt = t2 == null ? void 0 : t2.classNames) == null ? void 0 : Bt.closeButton) }, (Ct = P2 == null ? void 0 : P2.close) != null ? Ct : Ot) : null, t2.jsx || reactExports.isValidElement(t2.title) ? t2.jsx ? t2.jsx : typeof t2.title == "function" ? t2.title() : t2.title : React$4.createElement(React$4.Fragment, null, N2 || t2.icon || t2.promise ? React$4.createElement("div", { "data-icon": "", className: M(s == null ? void 0 : s.icon, (kt = t2 == null ? void 0 : t2.classNames) == null ? void 0 : kt.icon) }, t2.promise || t2.type === "loading" && !t2.icon ? t2.icon || Zt() : null, t2.type !== "loading" ? t2.icon || (P2 == null ? void 0 : P2[N2]) || jt(N2) : null) : null, React$4.createElement("div", { "data-content": "", className: M(s == null ? void 0 : s.content, (It = t2 == null ? void 0 : t2.classNames) == null ? void 0 : It.content) }, React$4.createElement("div", { "data-title": "", className: M(s == null ? void 0 : s.title, (Mt = t2 == null ? void 0 : t2.classNames) == null ? void 0 : Mt.title) }, typeof t2.title == "function" ? t2.title() : t2.title), t2.description ? React$4.createElement("div", { "data-description": "", className: M(at, Xt, s == null ? void 0 : s.description, (Ht = t2 == null ? void 0 : t2.classNames) == null ? void 0 : Ht.description) }, typeof t2.description == "function" ? t2.description() : t2.description) : null), reactExports.isValidElement(t2.cancel) ? t2.cancel : t2.cancel && tt(t2.cancel) ? React$4.createElement("button", { "data-button": true, "data-cancel": true, style: t2.cancelButtonStyle || ft2, onClick: (r2) => {
     var m2, c2;
-    tt(t.cancel) && V2 && ((c2 = (m2 = t.cancel).onClick) == null || c2.call(m2, r2), $2());
-  }, className: M(s == null ? void 0 : s.cancelButton, (At = t == null ? void 0 : t.classNames) == null ? void 0 : At.cancelButton) }, t.cancel.label) : null, reactExports.isValidElement(t.action) ? t.action : t.action && tt(t.action) ? React2.createElement("button", { "data-button": true, "data-action": true, style: t.actionButtonStyle || l2, onClick: (r2) => {
+    tt(t2.cancel) && V2 && ((c2 = (m2 = t2.cancel).onClick) == null || c2.call(m2, r2), $2());
+  }, className: M(s == null ? void 0 : s.cancelButton, (At = t2 == null ? void 0 : t2.classNames) == null ? void 0 : At.cancelButton) }, t2.cancel.label) : null, reactExports.isValidElement(t2.action) ? t2.action : t2.action && tt(t2.action) ? React$4.createElement("button", { "data-button": true, "data-action": true, style: t2.actionButtonStyle || l2, onClick: (r2) => {
     var m2, c2;
-    tt(t.action) && ((c2 = (m2 = t.action).onClick) == null || c2.call(m2, r2), !r2.defaultPrevented && $2());
-  }, className: M(s == null ? void 0 : s.actionButton, (Lt = t == null ? void 0 : t.classNames) == null ? void 0 : Lt.actionButton) }, t.action.label) : null));
+    tt(t2.action) && ((c2 = (m2 = t2.action).onClick) == null || c2.call(m2, r2), !r2.defaultPrevented && $2());
+  }, className: M(s == null ? void 0 : s.actionButton, (Lt = t2 == null ? void 0 : t2.classNames) == null ? void 0 : Lt.actionButton) }, t2.action.label) : null));
 };
 function _t() {
   if (typeof window == "undefined" || typeof document == "undefined") return "ltr";
@@ -33464,27 +33464,27 @@ function _t() {
   return n === "auto" || !n ? window.getComputedStyle(document.documentElement).direction : n;
 }
 function Te(n, e) {
-  let t = {};
+  let t2 = {};
   return [n, e].forEach((a2, u2) => {
     let f2 = u2 === 1, w2 = f2 ? "--mobile-offset" : "--offset", S2 = f2 ? ge : me;
     function g2(i) {
       ["top", "right", "bottom", "left"].forEach((D) => {
-        t[`${w2}-${D}`] = typeof i == "number" ? `${i}px` : i;
+        t2[`${w2}-${D}`] = typeof i == "number" ? `${i}px` : i;
       });
     }
     typeof a2 == "number" || typeof a2 == "string" ? g2(a2) : typeof a2 == "object" ? ["top", "right", "bottom", "left"].forEach((i) => {
-      a2[i] === void 0 ? t[`${w2}-${i}`] = S2 : t[`${w2}-${i}`] = typeof a2[i] == "number" ? `${a2[i]}px` : a2[i];
+      a2[i] === void 0 ? t2[`${w2}-${i}`] = S2 : t2[`${w2}-${i}`] = typeof a2[i] == "number" ? `${a2[i]}px` : a2[i];
     }) : g2(S2);
-  }), t;
+  }), t2;
 }
-var $e = reactExports.forwardRef(function(e, t) {
-  let { invert: a2, position: u2 = "bottom-right", hotkey: f2 = ["altKey", "KeyT"], expand: w2, closeButton: S2, className: g2, offset: i, mobileOffset: D, theme: T2 = "light", richColors: F2, duration: et2, style: ut2, visibleToasts: ft2 = pe, toastOptions: l2, dir: ot2 = _t(), gap: at = be, loadingIcon: X2, icons: st2, containerAriaLabel: pt = "Notifications", pauseWhenPageIsHidden: rt2 } = e, [B2, s] = React2.useState([]), P2 = React2.useMemo(() => Array.from(new Set([u2].concat(B2.filter((d2) => d2.position).map((d2) => d2.position)))), [B2, u2]), [nt2, it2] = React2.useState([]), [Y2, C2] = React2.useState(false), [lt, J2] = React2.useState(false), [W2, H2] = React2.useState(T2 !== "system" ? T2 : typeof window != "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"), A = React2.useRef(null), mt = f2.join("+").replace(/Key/g, "").replace(/Digit/g, ""), L2 = React2.useRef(null), z2 = React2.useRef(false), ct2 = React2.useCallback((d2) => {
+var $e = reactExports.forwardRef(function(e, t2) {
+  let { invert: a2, position: u2 = "bottom-right", hotkey: f2 = ["altKey", "KeyT"], expand: w2, closeButton: S2, className: g2, offset: i, mobileOffset: D, theme: T2 = "light", richColors: F2, duration: et2, style: ut2, visibleToasts: ft2 = pe, toastOptions: l2, dir: ot2 = _t(), gap: at = be, loadingIcon: X2, icons: st2, containerAriaLabel: pt2 = "Notifications", pauseWhenPageIsHidden: rt2 } = e, [B2, s] = React$4.useState([]), P2 = React$4.useMemo(() => Array.from(new Set([u2].concat(B2.filter((d2) => d2.position).map((d2) => d2.position)))), [B2, u2]), [nt2, it2] = React$4.useState([]), [Y2, C2] = React$4.useState(false), [lt, J2] = React$4.useState(false), [W2, H2] = React$4.useState(T2 !== "system" ? T2 : typeof window != "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"), A = React$4.useRef(null), mt = f2.join("+").replace(/Key/g, "").replace(/Digit/g, ""), L2 = React$4.useRef(null), z2 = React$4.useRef(false), ct2 = React$4.useCallback((d2) => {
     s((h2) => {
       var y2;
       return (y2 = h2.find((R2) => R2.id === d2.id)) != null && y2.delete || v.dismiss(d2.id), h2.filter(({ id: R2 }) => R2 !== d2.id);
     });
   }, []);
-  return React2.useEffect(() => v.subscribe((d2) => {
+  return React$4.useEffect(() => v.subscribe((d2) => {
     if (d2.dismiss) {
       s((h2) => h2.map((y2) => y2.id === d2.id ? { ...y2, delete: true } : y2));
       return;
@@ -33497,7 +33497,7 @@ var $e = reactExports.forwardRef(function(e, t) {
         });
       });
     });
-  }), []), React2.useEffect(() => {
+  }), []), React$4.useEffect(() => {
     if (T2 !== "system") {
       H2(T2);
       return;
@@ -33517,22 +33517,22 @@ var $e = reactExports.forwardRef(function(e, t) {
         }
       });
     }
-  }, [T2]), React2.useEffect(() => {
+  }, [T2]), React$4.useEffect(() => {
     B2.length <= 1 && C2(false);
-  }, [B2]), React2.useEffect(() => {
+  }, [B2]), React$4.useEffect(() => {
     let d2 = (h2) => {
       var R2, j2;
       f2.every((p2) => h2[p2] || h2.code === p2) && (C2(true), (R2 = A.current) == null || R2.focus()), h2.code === "Escape" && (document.activeElement === A.current || (j2 = A.current) != null && j2.contains(document.activeElement)) && C2(false);
     };
     return document.addEventListener("keydown", d2), () => document.removeEventListener("keydown", d2);
-  }, [f2]), React2.useEffect(() => {
+  }, [f2]), React$4.useEffect(() => {
     if (A.current) return () => {
       L2.current && (L2.current.focus({ preventScroll: true }), L2.current = null, z2.current = false);
     };
-  }, [A.current]), React2.createElement("section", { ref: t, "aria-label": `${pt} ${mt}`, tabIndex: -1, "aria-live": "polite", "aria-relevant": "additions text", "aria-atomic": "false", suppressHydrationWarning: true }, P2.map((d2, h2) => {
+  }, [A.current]), React$4.createElement("section", { ref: t2, "aria-label": `${pt2} ${mt}`, tabIndex: -1, "aria-live": "polite", "aria-relevant": "additions text", "aria-atomic": "false", suppressHydrationWarning: true }, P2.map((d2, h2) => {
     var j2;
     let [y2, R2] = d2.split("-");
-    return B2.length ? React2.createElement("ol", { key: d2, dir: ot2 === "auto" ? _t() : ot2, tabIndex: -1, ref: A, className: g2, "data-sonner-toaster": true, "data-theme": W2, "data-y-position": y2, "data-lifted": Y2 && B2.length > 1 && !w2, "data-x-position": R2, style: { "--front-toast-height": `${((j2 = nt2[0]) == null ? void 0 : j2.height) || 0}px`, "--width": `${he}px`, "--gap": `${at}px`, ...ut2, ...Te(i, D) }, onBlur: (p2) => {
+    return B2.length ? React$4.createElement("ol", { key: d2, dir: ot2 === "auto" ? _t() : ot2, tabIndex: -1, ref: A, className: g2, "data-sonner-toaster": true, "data-theme": W2, "data-y-position": y2, "data-lifted": Y2 && B2.length > 1 && !w2, "data-x-position": R2, style: { "--front-toast-height": `${((j2 = nt2[0]) == null ? void 0 : j2.height) || 0}px`, "--width": `${he}px`, "--gap": `${at}px`, ...ut2, ...Te(i, D) }, onBlur: (p2) => {
       z2.current && !p2.currentTarget.contains(p2.relatedTarget) && (z2.current = false, L2.current && (L2.current.focus({ preventScroll: true }), L2.current = null));
     }, onFocus: (p2) => {
       p2.target instanceof HTMLElement && p2.target.dataset.dismissible === "false" || z2.current || (z2.current = true, L2.current = p2.relatedTarget);
@@ -33542,7 +33542,7 @@ var $e = reactExports.forwardRef(function(e, t) {
       p2.target instanceof HTMLElement && p2.target.dataset.dismissible === "false" || J2(true);
     }, onPointerUp: () => J2(false) }, B2.filter((p2) => !p2.position && h2 === 0 || p2.position === d2).map((p2, _2) => {
       var O2, G2;
-      return React2.createElement(ve, { key: p2.id, icons: st2, index: _2, toast: p2, defaultRichColors: F2, duration: (O2 = l2 == null ? void 0 : l2.duration) != null ? O2 : et2, className: l2 == null ? void 0 : l2.className, descriptionClassName: l2 == null ? void 0 : l2.descriptionClassName, invert: a2, visibleToasts: ft2, closeButton: (G2 = l2 == null ? void 0 : l2.closeButton) != null ? G2 : S2, interacting: lt, position: d2, style: l2 == null ? void 0 : l2.style, unstyled: l2 == null ? void 0 : l2.unstyled, classNames: l2 == null ? void 0 : l2.classNames, cancelButtonStyle: l2 == null ? void 0 : l2.cancelButtonStyle, actionButtonStyle: l2 == null ? void 0 : l2.actionButtonStyle, removeToast: ct2, toasts: B2.filter((k2) => k2.position == p2.position), heights: nt2.filter((k2) => k2.position == p2.position), setHeights: it2, expandByDefault: w2, gap: at, loadingIcon: X2, expanded: Y2, pauseWhenPageIsHidden: rt2, swipeDirections: e.swipeDirections });
+      return React$4.createElement(ve, { key: p2.id, icons: st2, index: _2, toast: p2, defaultRichColors: F2, duration: (O2 = l2 == null ? void 0 : l2.duration) != null ? O2 : et2, className: l2 == null ? void 0 : l2.className, descriptionClassName: l2 == null ? void 0 : l2.descriptionClassName, invert: a2, visibleToasts: ft2, closeButton: (G2 = l2 == null ? void 0 : l2.closeButton) != null ? G2 : S2, interacting: lt, position: d2, style: l2 == null ? void 0 : l2.style, unstyled: l2 == null ? void 0 : l2.unstyled, classNames: l2 == null ? void 0 : l2.classNames, cancelButtonStyle: l2 == null ? void 0 : l2.cancelButtonStyle, actionButtonStyle: l2 == null ? void 0 : l2.actionButtonStyle, removeToast: ct2, toasts: B2.filter((k2) => k2.position == p2.position), heights: nt2.filter((k2) => k2.position == p2.position), setHeights: it2, expandByDefault: w2, gap: at, loadingIcon: X2, expanded: Y2, pauseWhenPageIsHidden: rt2, swipeDirections: e.swipeDirections });
     })) : null;
   }));
 });
@@ -33562,17 +33562,6 @@ const Toaster = ({ ...props }) => {
     }
   );
 };
-function Footer() {
-  const year = (/* @__PURE__ */ new Date()).getFullYear();
-  return /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { "data-ocid": "footer", className: "border-t border-border bg-surface", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-6 font-mono text-xs text-muted-foreground md:flex-row lg:px-8", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { "data-ocid": "footer.copyright", children: [
-      "© ",
-      year,
-      ". Sovereign Legacy — The Vault. All rights reserved."
-    ] }),
-    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[0.6875rem] uppercase tracking-[0.18em]", children: "Sealed until it isn't" })
-  ] }) });
-}
 const LANGUAGES = [
   { code: "en", name: "English", nativeName: "English", dir: "ltr" },
   { code: "es", name: "Spanish", nativeName: "Español", dir: "ltr" },
@@ -33619,6 +33608,7412 @@ function applyLanguageDirection(language) {
   if (typeof document === "undefined") return;
   document.documentElement.lang = language.code;
   document.documentElement.dir = language.dir;
+}
+const ar = {
+  meta: {
+    title: "Sovereign Legacy — الخزنة",
+    description: "Sovereign Legacy — الخزنة. خزنتك. مختومة حتى لا تكون كذلك."
+  },
+  common: {
+    cancel: "إلغاء",
+    saveChanges: "حفظ التغييرات",
+    edit: "تعديل",
+    remove: "إزالة",
+    name: "الاسم",
+    optional: "اختياري",
+    addBeneficiary: "إضافة مستفيد",
+    allocationShare: "حصة التخصيص (%)",
+    walletAddress: "عنوان المحفظة",
+    checkInCadence: "وتيرة تسجيل الدخول",
+    selectCadence: "اختر الوتيرة",
+    armed: "مفعّل",
+    disarmed: "معطّل",
+    arming: "جارٍ التفعيل…",
+    disarming: "جارٍ التعطيل…",
+    saving: "جارٍ الحفظ…",
+    removing: "جارٍ الإزالة…",
+    arm: "تفعيل",
+    disarm: "تعطيل"
+  },
+  nav: {
+    dashboard: "لوحة التحكم",
+    beneficiaries: "المستفيدون",
+    legacyAssets: "الإرث والأصول",
+    theSwitch: "المفتاح",
+    auditLogs: "سجلات التدقيق",
+    settings: "الإعدادات"
+  },
+  header: {
+    home: "الصفحة الرئيسية لـ Sovereign Legacy",
+    networkBadge: "الشبكة · الهوية",
+    mobileMenu: "فتح قائمة التنقل",
+    mobilePrimary: "التنقل الرئيسي للجوال"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — الخزنة. جميع الحقوق محفوظة.",
+    tagline: "مختومة حتى لا تكون كذلك"
+  },
+  loading: {
+    openingVault: "جارٍ فتح الخزنة…"
+  },
+  language: {
+    label: "اللغة"
+  },
+  landing: {
+    eyebrow: "إرث ذو سيادة ذاتية",
+    headline1: "خزنتك.",
+    headline2: "مختومة إلى أن يحين الوقت.",
+    login: "تسجيل الدخول عبر Internet Identity",
+    subhead: "مفتاح رجل ميت رقمي للعملات المشفرة، مبني بشكل أصلي على Internet Computer — بلا إجراءات ميراث رسمية، بلا تأخير، ولا مراقب سوى السلسلة نفسها.",
+    vaultDoorAlt: "باب خزنة بنكية من النحاس والصلب متآكل، مغلق، وفي وسطه شعار الحلقة اللانهائية لـ Internet Computer يتوهج بضعف.",
+    introduction: {
+      eyebrow: "مقدمة",
+      heading: "مفتاح الرجل الميت — وُلد في عصر البخار",
+      p1: "في العقود الأخيرة من القرن التاسع عشر، كان نوع جديد من الآلات يعيد تشكيل الحضارة. ترام الكهرباء يخترق الآن المدن المزدحمة، والمصاعد ترفع الركاب إلى مبانٍ بارتفاع غير مسبوق. كانت عجائب — وكانت خطيرة.",
+      p2: "كانت المشكلة بسيطة ومرعبة: ماذا يحدث عندما لا يعود الرجل المسيطر مسيطراً؟ قد يصاب سائق الترام بنوبة قلبية على المقود. قد يفقد مشغّل المصعد وعيه في منتصف الرحلة. والآلة، غير المبالية بمصير مشغّلها، كانت ببساطة تواصل — حتى تصطدم بشيء يوقفها.",
+      p3: "كان المهندس الأمريكي فرانك ج. سبراغ هو من قام، في عام 1888، بكهربة خطوط الترام في ريتشموند بولاية فرجينيا — أول سكة حديد كهربائية حضرية ناجحة في الولايات المتحدة. لم يتوقف ابتكاره عند المحرك. أدرك سبراغ أن المركبة التي تنقل الركاب بسرعة عالية تحتاج إلى وسيلة لإيقاف نفسها إذا أصبح المشغّل عاجزاً.",
+      p4: "أطلقوا عليه اسم مفتاح الرجل الميت. أمسك بالمقبض لمواصلة الحركة. أفلته — سواء بسبب التشتت أو المرض أو الموت — فتتوقف الآلة من تلقاء نفسها. لم يُختر الاسم من أجل الدراما. بل اختير من أجل الدقة. كان المفتاح يُفعَّل بغياب اليد الحية.",
+      p5: "انتشرت الفكرة بسرعة. تبنّتها مترو أنفاق نيويورك ولندن وطوكيو. ودمجتها محطات الطاقة النووية في قضبان التحكم الخاصة بها. وأدمجتها الطائرات التجارية في طيارها الآلي. في أي مكان تحمل فيه آلة أرواحاً، تبعها مفتاح الرجل الميت — صامتاً، صبوراً، منتظراً.",
+      h3a: "كيف يعمل مفتاح الرجل الميت في هذه الأزمنة؟",
+      p6: "لقد عملت بجد. جمعت أصولاً مشفرة — ICP وBitcoin وEthereum والعملات المستقرة. إنها في محافظ وcanisters، محمية بمفاتيح خاصة لا تملكها إلا أنت. ومثل سائق الترام الذي يقبض على المقبض، فإن حضورك الحي والنشط على الشبكة فقط هو ما يبقي الدائرة مغلقة.",
+      p7: "إليك كيف يطبّق Sovereign Legacy المبدأ نفسه. تودع الأصول في خزنة canister آمنة على السلسلة. تعيّن مستفيداً واحداً أو أكثر وتحدد فترة خمول في الشبكة. وطالما تسجل الدخول دورياً، يبقى المفتاح مغلقاً. في اللحظة التي يتوقف فيها هذا النشاط، يرسل لك Sovereign Legacy تنبيهات. وإذا لم تستجب، يُنفَّذ التحويل تلقائياً، ناقلاً أصولك إلى المستفيدين الذين اخترتهم دون محامين أو محاكم أو تأخير.",
+      h3b: "هل تريد تخصيص رغباتك؟",
+      p8: "إذا كنت ترغب في أكثر من مستلم واحد — زوج أو زوجة، أطفال، صديق موثوق، قضية خيرية — يتيح لك Sovereign Legacy تقسيم أصولك بالنسب المئوية. أنت تحدد الحصص. يحصل المستفيدون لديك على ما قصدته تماماً."
+    },
+    advantages: {
+      eyebrow: "لماذا ينجح",
+      heading: "المزايا مدمجة في كل خطوة",
+      card1: {
+        title: "لا محامين. لا وصاية. لا تأخير.",
+        body: "ينفّذ الـ canister تعليماتك في اللحظة التي يعمل فيها مفتاح الرجل الميت. لا تقف أي مؤسسة بين رغباتك والأشخاص الذين تحبهم."
+      },
+      card2: {
+        title: "تبقى أنت المسيطر.",
+        body: "غيّر المستفيدين، أو عدّل النسب، أو حدّث رسالتك في أي وقت. كل شيء يتحدث فوراً، على السلسلة."
+      },
+      card3: {
+        title: "يعمل بينما تنام.",
+        body: "إذا استمرت الحياة، يبقى Sovereign Legacy صامتاً. وإذا لم تستمر، يتقدم كل شيء تماماً كما خططت."
+      },
+      card4: {
+        title: "وصول عالمي.",
+        body: "يمكن أن يكون المستفيدون في أي مكان في العالم. يتحدث Sovereign Legacy لغات متعددة ويتولى الشرح حتى لا تضطر إلى ذلك."
+      },
+      card5: {
+        title: "بياناتك تبقى لك.",
+        body: "خزنتك هي canister على Internet Computer، محمية بهويتك عبر Internet Identity. لا يمكن لأي طرف ثالث — بما في ذلك Sovereign Legacy نفسه — الوصول إلى محتوياتها."
+      }
+    },
+    faq: {
+      eyebrow: "أسئلة",
+      heading: "الأسئلة الشائعة",
+      q1: {
+        q: "ما اللغات التي يدعمها Sovereign Legacy؟",
+        a: "يدعم التطبيق 22 لغة، بما في ذلك اللغات المكتوبة من اليمين إلى اليسار مثل العربية والفارسية والأردية، حتى يتمكن المستفيدون في أي مكان في العالم من فهم إشعار الإفراج بلغتهم الخاصة."
+      },
+      q2: {
+        q: "ما مدى أمان خزنتي؟",
+        a: "خزنتك هي canister على Internet Computer، محمية بهويتك عبر Internet Identity. يمكن لمعرّفك الموثَّق فقط عرض محتوياتها أو إدارتها."
+      },
+      q3: {
+        q: "هل يمكن أن أفقد خزنتي يوماً ما؟",
+        a: "طالما احتفظت بالوصول إلى هويتك عبر Internet Identity، تبقى خزنتك تحت سيطرتك. الخطر الرئيسي هو فقدان بيانات اعتماد Internet Identity، ولهذا فإن الاحتفاظ بنسخة احتياطية آمنة من طريقة الاسترداد أمر مهم."
+      },
+      q4: {
+        q: "كيف تُقسَّم الأصول بين المستفيدين؟",
+        a: "تخصص لكل مستفيد حصة مئوية. يمكن تعديل الحصص في أي وقت قبل الإفراج، ويجب ألا يتجاوز الإجمالي المخصص لجميع المستفيدين 100% أبداً."
+      },
+      q5: {
+        q: "كيف أعيد ضبط مؤقت الخمول في الشبكة؟",
+        a: "ببساطة سجّل الدخول عبر هويتك Internet Identity. أي تسجيل دخول موثَّق يعيد ضبط ساعة الخمول ويبقي مفتاح الرجل الميت مفعّلاً."
+      },
+      q6: {
+        q: "كيف أضيف مستفيداً؟",
+        a: "من لوحة التحكم، افتح لوحة المستفيدين وأضف اسماً ومعلومات الاتصال ونسبة التخصيص."
+      },
+      q7: {
+        q: "هل يمكنني تغيير المستفيدين بعد الإعداد؟",
+        a: "نعم. يمكن تحديث المستفيدين والتخصيصات والرسائل الشخصية في أي وقت — تسري التغييرات فوراً، على السلسلة."
+      },
+      q8: {
+        q: "من يمكنه رؤية المستفيدين لدي؟",
+        a: "أنت فقط، طالما كنت موثَّقاً بوصفك مالك الخزنة."
+      }
+    },
+    terms: {
+      eyebrow: "الشروط",
+      heading: "الشروط والأحكام",
+      card1: {
+        title: "1. نظرة عامة",
+        body: "ICP Sovereign Legacy هو منصة لا مركزية للميراث ومفتاح الرجل الميت، تعمل بالكامل على السلسلة، مبنية على بروتوكول Internet Computer (ICP). باستخدامك لهذه الخدمة، فإنك توافق على هذه الشروط."
+      },
+      card2: {
+        title: "2. عدم المسؤولية",
+        body: "المطورون غير مسؤولين عن أي خسارة في الأصول ناتجة عن إعداد غير صحيح، أو فقدان بيانات اعتماد Internet Identity، أو ظروف شبكة blockchain، أو أي سبب آخر. استخدم هذه الخدمة على مسؤوليتك الخاصة."
+      },
+      card3: {
+        title: "3. التنفيذ الذاتي",
+        body: "يتم توزيع الأصول تلقائياً بواسطة منطق العقود الذكية على السلسلة عندما يعمل مفتاح الرجل الميت لديك. لا حاجة لأي تدخل بشري بعد التفعيل، ولا يكون ممكناً."
+      },
+      card4: {
+        title: "4. الخصوصية",
+        body: "تُخزَّن قائمة المستفيدين لديك على السلسلة ولا يمكن الوصول إليها إلا من خلال معرّف Internet Identity الموثَّق الخاص بك. لا يمكن لأي طرف ثالث رؤية بياناتك."
+      },
+      card5: {
+        title: "5. الرسوم",
+        body: "تُقدَّم هذه الخدمة كما هو موصوف داخل التطبيق. تُعرض أي رسوم تنطبق على إجراء معين بوضوح في التطبيق قبل تأكيد ذلك الإجراء — لا رسوم خفية أو متكررة."
+      },
+      card6: {
+        title: "6. الأهلية",
+        body: "يجب أن يكون عمرك 18 عاماً على الأقل (أو سن الرشد في ولايتك القضائية) وأن تمتلك الأهلية القانونية للدخول في هذه الشروط لاستخدام هذه الخدمة."
+      },
+      card7: {
+        title: "7. عدم وجود ضمان",
+        body: "تُقدَّم هذه الخدمة «كما هي» و«كما هي متاحة»، دون أي ضمانات من أي نوع، سواء كانت صريحة أو ضمنية، بما في ذلك أي ضمان للتشغيل دون انقطاع أو خالٍ من الأخطاء."
+      },
+      card8: {
+        title: "8. تحمل المخاطر",
+        body: "تحمل العملات المشفرة وتقنية blockchain مخاطر كامنة، بما في ذلك تقلب الأسعار وازدحام الشبكة وثغرات العقود الذكية والتغييرات في البروتوكولات الأساسية. باستخدامك لهذه الخدمة، فإنك تقبل هذه المخاطر."
+      },
+      card9: {
+        title: "9. الإنهاء",
+        body: "قد يتم تعليق الوصول إلى هذه الخدمة أو إنهاؤه بسبب انتهاك هذه الشروط أو بسبب سلوك يحدده Sovereign Legacy، وفق تقديره، على أنه ضار بالمستخدمين الآخرين أو بالخدمة نفسها."
+      },
+      card10: {
+        title: "10. تعديلات على هذه الشروط",
+        body: "قد يتم تحديث هذه الشروط من وقت لآخر. سيتم عرض التغييرات الجوهرية داخل التطبيق، ويشكل استمرار استخدام الخدمة بعد هذه التغييرات قبولاً للشروط المحدثة."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "لوحة التحكم",
+    title: "الخزنة",
+    balance: "رصيد الخزنة",
+    assetsHeld: "يُحتفظ بـ {count} أصل",
+    noAssets: "لا توجد أصول محتفظ بها بعد",
+    beneficiaries: "المستفيدون",
+    named: "مُسمّى",
+    sealed: "تم إغلاق {count} مستفيد",
+    none: "لا يوجد مستفيدون بعد",
+    allocation: "تخصيص المستفيدين",
+    allocationNone: "لا توجد تخصيصات بعد. أضف مستفيداً للبدء.",
+    allocationAria: "حصص تخصيص المستفيدين",
+    switch: "المفتاح",
+    lastVerified: "آخر تحقق · {time}",
+    notVerified: "لم يتم التحقق بعد"
+  },
+  beneficiaries: {
+    eyebrow: "المستفيدون",
+    title: "المستفيدون",
+    subtitle: "الأشخاص والقضايا التي أُغلقت من أجلها ميراثك. التخصيص والترتيب والشروط تعيش هنا.",
+    allocation: "التخصيص",
+    count: "{count} مستفيد",
+    noAllocations: "لا توجد تخصيصات بعد. أضف مستفيداً للبدء.",
+    allocationAria: "حصص تخصيص المستفيدين",
+    manage: "إدارة",
+    manageBody: "أضف مستفيداً وخصص حصته من الخزنة. يمكن تعديل الحصص أو إلغاؤها في أي وقت.",
+    loadError: "تعذر تحميل المستفيدين. يرجى المحاولة مرة أخرى.",
+    emptyTitle: "لا يوجد مستفيدون بعد",
+    emptyBody: "ميراثك غير مخصص. أضف مستفيدك الأول لإغلاق الخزنة لشخص ما.",
+    noWallet: "لا يوجد عنوان محفظة",
+    editAria: "تعديل {name}",
+    removeAria: "إزالة {name}",
+    modal: {
+      editTitle: "تعديل المستفيد",
+      addTitle: "إضافة مستفيد",
+      editDesc: "حدّث اسم هذا المستفيد أو حصته أو عنوان محفظته.",
+      addDesc: "خصص اسماً وحصة تخصيص لمستفيد جديد."
+    },
+    namePlaceholder: "مثال: Elena Marchetti",
+    sharePlaceholder: "مثال: 40",
+    errors: {
+      nameRequired: "أدخل اسماً لهذا المستفيد.",
+      sharePositive: "يجب أن تكون حصة التخصيص أكبر من صفر.",
+      invalidChecksum: "معرّف حساب ICP هذا له مجموع اختباري غير صالح. تحقق من العنوان.",
+      invalidWallet: "أدخل عنوان محفظة ICP صالحاً — معرّف حساب من 64 حرفاً أو معرّف ICP.",
+      totalExceedsEdit: "سيؤدي هذا إلى رفع إجمالي التخصيص إلى {total}%، متجاوزاً حد 100%.",
+      totalExceedsAdd: "سيكون إجمالي التخصيص {total}%، متجاوزاً حد 100%.",
+      saveFailed: "تعذر حفظ التغييرات. يرجى المحاولة مرة أخرى.",
+      addFailed: "تعذر إضافة المستفيد. يرجى المحاولة مرة أخرى."
+    }
+  },
+  assets: {
+    eyebrow: "الإرث والأصول",
+    title: "الأصول المحتفظ بها",
+    subtitle: "كل ما هو محتفظ به في الخزنة — الأرصدة والمقتنيات والتعليمات التي تحكمها.",
+    assetsHeld: "الأصول المحتفظ بها",
+    beneficiaries: "المستفيدون",
+    allocationStatus: "حالة التخصيص",
+    sealed: "مُغلق",
+    unallocated: "غير مخصص",
+    beneficiaryFallback: "مستفيد #{id}",
+    errorEyebrow: "الخزنة غير قابلة للوصول",
+    errorBody: "تعذرت قراءة الأصول المحتفظ بها. يرجى المحاولة مرة أخرى.",
+    emptyEyebrow: "لا توجد أصول محتفظ بها",
+    emptyBody: "لا تحتوي الخزنة حالياً على أصول مشفرة. بمجرد إضافة الأصول، ستظهر أرصدتها وتخصيصاتها للمستفيدين هنا.",
+    allocationLabel: "تخصيص المستفيدين"
+  },
+  switch: {
+    eyebrow: "المفتاح",
+    title: "المفتاح",
+    subtitle: "عنصر التحكم الوحيد الذي يسلم الخزنة. مفعّل، وموثَّق، ومتعمَّد.",
+    active: "نشط · مفتاح الرجل الميت",
+    standingDown: "في وضع الانتظار",
+    armed: "مُفعَّل",
+    disarmed: "مُعطَّل",
+    checkIn: "ما زلت هنا",
+    arm: "تفعيل المفتاح",
+    disarm: "تعطيل",
+    cadence: "الوتيرة · {duration}",
+    releaseIn: "الإفراج خلال {duration}",
+    timelineAriaArmed: "الخط الزمني لمفتاح الرجل الميت، مر {percent}% من الوتيرة",
+    timelineAriaDisarmed: "الخط الزمني لمفتاح الرجل الميت، معطَّل",
+    lastCheckIn: "آخر تسجيل دخول",
+    armedAt: "تم التفعيل في",
+    cadenceLabel: "الوتيرة",
+    standingDownTitle: "في وضع الانتظار",
+    standingDownBody: "التعطيل يوقف مفتاح الرجل الميت. تبقى الخزنة مغلقة، لكنها لن تُفرج بعد الآن عن المستفيدين لديك عند تفويت تسجيل دخول.",
+    disarmTheSwitch: "تعطيل المفتاح",
+    armTitle: "تفعيل المفتاح",
+    armBody: "اختر المدة التي تنتظرها الخزنة لتسجيل دخولك التالي. إذا فاتك، تُفرج الخزنة عن المستفيدين لديك.",
+    cadenceError: "اختر وتيرة تسجيل دخول أكبر من صفر قبل تفعيل المفتاح.",
+    errorEyebrow: "المفتاح غير قابل للوصول",
+    errorBody: "تعذرت قراءة حالة المفتاح. يرجى المحاولة مرة أخرى.",
+    cadence24h: "24 ساعة",
+    cadence7d: "7 أيام",
+    cadence30d: "30 يوماً"
+  },
+  audit: {
+    eyebrow: "سجلات التدقيق",
+    title: "سجلات التدقيق",
+    ledger: "سجل الأحداث",
+    count: "تم إغلاق {count} حدث",
+    timestamp: "الطابع الزمني",
+    event: "الحدث",
+    description: "الوصف",
+    tableAria: "سجل تدقيق الخزنة",
+    errorEyebrow: "السجل غير قابل للوصول",
+    errorBody: "تعذرت قراءة سجل التدقيق. يرجى المحاولة مرة أخرى.",
+    emptyTitle: "لا توجد أحداث بعد",
+    emptyBody: "سيتم إغلاق كل إجراء يُتخذ ضد الخزنة هنا، بالترتيب، لحظة حدوثه.",
+    footer: "كل إدخال مغلق في السجل. لا يمكن تعديل الإدخالات أو إزالتها."
+  },
+  settings: {
+    eyebrow: "الإعدادات",
+    title: "إعداد الخزنة",
+    subtitle: "حافظ على الإعداد الذي يحكم ميراثك — حالة تفعيل/تعطيل المفتاح، ووتيرة تسجيل الدخول، والمستفيدين الذين أُغلقت من أجلهم.",
+    switchTitle: "المفتاح",
+    switchDesc: "فعّل أو عطّل الخزنة وحدد عدد مرات التحقق منها.",
+    beneficiariesTitle: "المستفيدون",
+    beneficiariesDesc: "عدّل الأشخاص والقضايا التي أُغلقت من أجلها ميراثك.",
+    cadence: "الوتيرة · {value}",
+    daily: "يومي",
+    weekly: "أسبوعي",
+    monthly: "شهري",
+    yearly: "سنوي",
+    h24: "24 ساعة",
+    h7d: "7 أيام",
+    h30d: "30 يوماً",
+    h365d: "365 يوماً",
+    emptyBeneficiaries: "لا يوجد مستفيدون مهيئون بعد",
+    editBeneficiary: "تعديل المستفيد",
+    editBeneficiaryDesc: "حدّث اسم هذا المستفيد وحصة التخصيص وعنوان محفظته.",
+    removeBeneficiary: "إزالة المستفيد",
+    removeBeneficiaryDesc: "إزالة {name} من الخزنة؟ لا يمكن التراجع عن هذا الإجراء.",
+    toast: {
+      armed: "تم تفعيل المفتاح",
+      armedDesc: "تم ضبط وتيرة تسجيل الدخول على {cadence}.",
+      armError: "تعذر تفعيل المفتاح",
+      armErrorDesc: "تعذر تفعيل الخزنة. يرجى المحاولة مرة أخرى.",
+      disarmed: "تم تعطيل المفتاح",
+      disarmedDesc: "الخزنة لم تعد مفعّلة.",
+      disarmError: "تعذر تعطيل المفتاح",
+      disarmErrorDesc: "تعذر تعطيل الخزنة. يرجى المحاولة مرة أخرى.",
+      beneficiaryUpdated: "تم تحديث المستفيد",
+      beneficiaryUpdatedDesc: "تم حفظ إعداد المستفيد.",
+      updateError: "تعذر تحديث المستفيد",
+      updateErrorDesc: "لم يتم حفظ التغييرات. يرجى المحاولة مرة أخرى.",
+      beneficiaryRemoved: "تمت إزالة المستفيد",
+      beneficiaryRemovedDesc: "تمت إزالة المستفيد من الخزنة.",
+      removeError: "تعذرت إزالة المستفيد",
+      removeErrorDesc: "تعذرت إزالة المستفيد. يرجى المحاولة مرة أخرى."
+    }
+  }
+};
+const bg = {
+  meta: {
+    title: "Sovereign Legacy — Сейфът",
+    description: "Sovereign Legacy — Сейфът. Твоят сейф. Запечатан, докато не престане да бъде."
+  },
+  common: {
+    cancel: "Отказ",
+    saveChanges: "Запазване на промените",
+    edit: "Редактиране",
+    remove: "Премахване",
+    name: "Име",
+    optional: "По избор",
+    addBeneficiary: "Добавяне на бенефициент",
+    allocationShare: "Дял на разпределението (%)",
+    walletAddress: "Адрес на портфейла",
+    checkInCadence: "Честота на проверка",
+    selectCadence: "Избор на честота",
+    armed: "Активиран",
+    disarmed: "Деактивиран",
+    arming: "Активиране…",
+    disarming: "Деактивиране…",
+    saving: "Запазване…",
+    removing: "Премахване…",
+    arm: "Активиране",
+    disarm: "Деактивиране"
+  },
+  nav: {
+    dashboard: "Табло",
+    beneficiaries: "Бенефициенти",
+    legacyAssets: "Наследство и активи",
+    theSwitch: "Превключвателят",
+    auditLogs: "Одитни регистри",
+    settings: "Настройки"
+  },
+  header: {
+    home: "Начало на Sovereign Legacy",
+    networkBadge: "Мрежа · Идентичност",
+    mobileMenu: "Отваряне на навигационното меню",
+    mobilePrimary: "Основна навигация за мобилни устройства"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Сейфът. Всички права запазени.",
+    tagline: "Запечатан, докато не престане да бъде"
+  },
+  loading: {
+    openingVault: "Отваряне на сейфа…"
+  },
+  language: {
+    label: "Език"
+  },
+  landing: {
+    eyebrow: "Самостоятелно суверенно наследство",
+    headline1: "Вашият трезор.",
+    headline2: "Запечатан, докато не настъпи моментът.",
+    login: "Вход с Internet Identity",
+    subhead: "Цифров превключвател на мъртвия човек за криптовалута, изграден нативно върху Internet Computer — без завещателни производства, без забавяния, без никой да наблюдава освен самата верига.",
+    vaultDoorAlt: "Потъмняла месингова и стоманена врата на банков трезор, затворена, с емблемата на безкрайната примка на Internet Computer, светеща слабо в центъра.",
+    introduction: {
+      eyebrow: "Въведение",
+      heading: "Прекъсвачът на мъртвеца — роден в ерата на парата",
+      p1: "В последните десетилетия на деветнадесети век нов вид машина преобразуваше цивилизацията. Електрическите трамваи вече преминаваха през пренаселените градове, а асансьорите издигаха пътниците в сгради с безпрецедентна височина. Те бяха чудеса — и бяха опасни.",
+      p2: "Проблемът беше прост и ужасяващ: какво се случва, когато човекът на кормилото вече не е на кормилото? Машинистът можеше да получи инфаркт на волана. Операторът на асансьор можеше да загуби съзнание по средата на пътуването. А машината, безразлична към съдбата на своя оператор, просто продължаваше — докато не удареше нещо, което я спре.",
+      p3: "Американският инженер Франк Дж. Спраг беше този, който през 1888 г. електрифицира трамвайните линии в Ричмънд, Вирджиния — първата успешна електрическа градска железница в Съединените щати. Неговата иновация не спря до мотора. Спраг разбра, че превозно средство, което превозва пътници с висока скорост, се нуждае от начин да спре само, ако операторът стане неспособен.",
+      p4: "Нарекоха го прекъсвач на мъртвеца. Дръж дръжката, за да продължиш. Пусни я — независимо дали от разсеяност, болест или смърт — и машината спира сама. Името не беше избрано за драма. То беше избрано за точност. Превключвателят се задействаше от отсъствието на живата ръка.",
+      p5: "Идеята се разпространи бързо. Метрото в Ню Йорк, Лондон и Токио я възприе. Атомните електроцентрали я вградиха в контролните си пръти. Търговските самолети я вградиха в автопилотите си. Навсякъде, където машина носеше животи, прекъсвачът на мъртвеца я следваше — мълчалив, търпелив, чакащ.",
+      h3a: "Как работи прекъсвачът на мъртвеца в наши дни?",
+      p6: "Работил си усърдно. Натрупал си крипто активи — ICP, Bitcoin, Ethereum, стабилни монети. Те се намират в портфейли и канистери, защитени от частни ключове, които само ти притежаваш. И като машиниста, който държи дръжката, само твоето живо и активно присъствие в мрежата държи веригата затворена.",
+      p7: "Ето как Sovereign Legacy прилага същия принцип. Депозираш активи в сигурен канистерен сейф върху веригата. Определяш един или повече бенефициенти и задаваш период на неактивност в мрежата. Докато влизаш периодично, прекъсвачът остава затворен. В момента, в който тази активност спре, Sovereign Legacy ти изпраща предупреждения. Ако не отговориш, трансферът се изпълнява автоматично, премествайки активите ти към избраните бенефициенти без адвокати, съдилища или забавяния.",
+      h3b: "Искаш ли да персонализираш желанията си?",
+      p8: "Ако искаш повече от един получател — съпруг/а, деца, доверен приятел, благотворителна кауза — Sovereign Legacy ти позволява да разделиш активите си по процент. Ти задаваш дяловете. Твоите бенефициенти получават точно това, което си възнамерявал."
+    },
+    advantages: {
+      eyebrow: "Защо работи",
+      heading: "Предимствата са вградени във всяка стъпка",
+      card1: {
+        title: "Без адвокати. Без наследствени процедури. Без забавяния.",
+        body: "Канистерът изпълнява инструкциите ти в момента, в който се задейства прекъсвачът на мъртвеца. Никоя институция не стои между желанията ти и хората, които обичаш."
+      },
+      card2: {
+        title: "Ти оставаш на контрол.",
+        body: "Променяй бенефициенти, коригирай проценти или обновявай съобщението си по всяко време. Всичко се обновява незабавно, върху веригата."
+      },
+      card3: {
+        title: "Работи, докато спиш.",
+        body: "Ако животът продължава, Sovereign Legacy остава тих. Ако не — всичко се движи напред точно както си планирал."
+      },
+      card4: {
+        title: "Глобален обхват.",
+        body: "Бенефициентите могат да бъдат навсякъде по света. Sovereign Legacy говори на множество езици и се грижи за обяснението, така че ти да не се налага."
+      },
+      card5: {
+        title: "Данните ти остават твои.",
+        body: "Твоят сейф е канистер върху Internet Computer, защитен от твоята Internet Identity. Никоя трета страна — включително самият Sovereign Legacy — няма достъп до съдържанието му."
+      }
+    },
+    faq: {
+      eyebrow: "Въпроси",
+      heading: "Често задавани въпроси",
+      q1: {
+        q: "Какви езици поддържа Sovereign Legacy?",
+        a: "Приложението поддържа 22 езика, включително езици от дясно наляво като арабски, персийски и урду, така че бенефициенти навсякъде по света да могат да разберат известие за освобождаване на собствения си език."
+      },
+      q2: {
+        q: "Колко сигурен е моят сейф?",
+        a: "Твоят сейф е канистер върху Internet Computer, защитен от твоята Internet Identity. Само твоят удостоверен принципал може да вижда или управлява съдържанието му."
+      },
+      q3: {
+        q: "Бих ли могъл някога да загубя сейфа си?",
+        a: "Докато запазваш достъп до своята Internet Identity, сейфът ти остава под твой контрол. Основният риск е загубата на данните за Internet Identity, поради което е важно да пазиш сигурен резервен метод за възстановяване."
+      },
+      q4: {
+        q: "Как се разделят активите между бенефициентите?",
+        a: "Задаваш на всеки бенефициент процентен дял. Дяловете могат да се коригират по всяко време преди освобождаването, а общият размер, разпределен между всички бенефициенти, никога не трябва да надвишава 100%."
+      },
+      q5: {
+        q: "Как да нулирам таймера за неактивност в мрежата?",
+        a: "Просто влез със своята Internet Identity. Всяка удостоверена проверка нулира часовника за неактивност и поддържа прекъсвача на мъртвеца активиран."
+      },
+      q6: {
+        q: "Как да добавя бенефициент?",
+        a: "От таблото си отвори панела Бенефициенти и добави име, информация за контакт и процент на разпределение."
+      },
+      q7: {
+        q: "Мога ли да променя бенефициентите си след настройката?",
+        a: "Да. Бенефициентите, разпределенията и личните съобщения могат да се актуализират по всяко време — промените влизат в сила незабавно, върху веригата."
+      },
+      q8: {
+        q: "Кой може да вижда моите бенефициенти?",
+        a: "Само ти, докато си удостоверен като собственик на сейфа."
+      }
+    },
+    terms: {
+      eyebrow: "Условия",
+      heading: "Условия за ползване",
+      card1: {
+        title: "1. Преглед",
+        body: "ICP Sovereign Legacy е децентрализирана, изцяло върху веригата платформа за наследство и прекъсвач на мъртвеца, изградена върху Internet Computer Protocol (ICP). С използването на тази услуга се съгласяваш с тези условия."
+      },
+      card2: {
+        title: "2. Без отговорност",
+        body: "Разработчиците не носят отговорност за каквато и да е загуба на активи в резултат на неправилна конфигурация, изгубени данни за Internet Identity, условия на блокчейн мрежата или друга причина. Използвай тази услуга на свой собствен риск."
+      },
+      card3: {
+        title: "3. Автономно изпълнение",
+        body: "Разпределението на активи се изпълнява автоматично от логиката на умните договори върху веригата, когато се задейства твоят прекъсвач на мъртвеца. Не се изисква и не е възможна човешка намеса, след като е задействан."
+      },
+      card4: {
+        title: "4. Поверителност",
+        body: "Твоят списък с бенефициенти се съхранява върху веригата и е достъпен само за твоя удостоверен Internet Identity принципал. Никоя трета страна не може да вижда данните ти."
+      },
+      card5: {
+        title: "5. Такси",
+        body: "Тази услуга се предоставя, както е описано в приложението. Всички такси, които се прилагат към конкретно действие, се показват ясно в приложението, преди да потвърдиш това действие — без скрити или повтарящи се такси."
+      },
+      card6: {
+        title: "6. Допустимост",
+        body: "Трябва да си навършил поне 18 години (или пълнолетие в твоята юрисдикция) и да имаш правоспособност да сключиш тези условия, за да използваш тази услуга."
+      },
+      card7: {
+        title: "7. Без гаранция",
+        body: 'Тази услуга се предоставя "както е" и "както е налична", без гаранции от какъвто и да е вид, изрични или подразбиращи се, включително всякаква гаранция за непрекъсната или безгрешна работа.'
+      },
+      card8: {
+        title: "8. Поемане на риск",
+        body: "Криптовалутите и блокчейн технологията носят присъщи рискове, включително ценова волатилност, претоварване на мрежата, уязвимости в умните договори и промени в основните протоколи. С използването на тази услуга приемаш тези рискове."
+      },
+      card9: {
+        title: "9. Прекратяване",
+        body: "Достъпът до тази услуга може да бъде спрян или прекратен при нарушение на тези условия или при поведение, което Sovereign Legacy определи по своя преценка като вредно за други потребители или за самата услуга."
+      },
+      card10: {
+        title: "10. Промени в тези условия",
+        body: "Тези условия могат да бъдат актуализирани от време на време. Съществените промени ще бъдат представени в приложението, а продължаващото използване на услугата след такива промени представлява приемане на актуализираните условия."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Табло",
+    title: "Сейфът",
+    balance: "Баланс на сейфа",
+    assetsHeld: "{count} актив(а) се държат",
+    noAssets: "Все още няма държани активи",
+    beneficiaries: "Бенефициенти",
+    named: "наименувани",
+    sealed: "{count} бенефициент(и) запечатани",
+    none: "Все още няма бенефициенти",
+    allocation: "Разпределение на бенефициентите",
+    allocationNone: "Все още няма разпределения. Добави бенефициент, за да започнеш.",
+    allocationAria: "Дялове на разпределението на бенефициентите",
+    switch: "Превключвателят",
+    lastVerified: "Последна проверка · {time}",
+    notVerified: "Все още не е проверено"
+  },
+  beneficiaries: {
+    eyebrow: "Бенефициенти",
+    title: "Бенефициенти",
+    subtitle: "Хората и каузите, за които е запечатано наследството ти. Разпределението, редът и условията живеят тук.",
+    allocation: "Разпределение",
+    count: "{count} бенефициент(и)",
+    noAllocations: "Все още няма разпределения. Добави бенефициент, за да започнеш.",
+    allocationAria: "Дялове на разпределението на бенефициентите",
+    manage: "Управление",
+    manageBody: "Добави бенефициент и задай неговия дял от сейфа. Дяловете могат да се редактират или оттеглят по всяко време.",
+    loadError: "Не можахме да заредим бенефициентите. Моля, опитай отново.",
+    emptyTitle: "Все още няма бенефициенти",
+    emptyBody: "Наследството ти е неразпределено. Добави първия си бенефициент, за да запечаташ сейфа за някого.",
+    noWallet: "Няма адрес на портфейла",
+    editAria: "Редактиране на {name}",
+    removeAria: "Премахване на {name}",
+    modal: {
+      editTitle: "Редактиране на бенефициент",
+      addTitle: "Добавяне на бенефициент",
+      editDesc: "Актуализирай името, дела или адреса на портфейла на този бенефициент.",
+      addDesc: "Задай име и дял на разпределение на нов бенефициент."
+    },
+    namePlaceholder: "напр. Elena Marchetti",
+    sharePlaceholder: "напр. 40",
+    errors: {
+      nameRequired: "Въведи име за този бенефициент.",
+      sharePositive: "Делът на разпределението трябва да е по-голям от нула.",
+      invalidChecksum: "Този ICP идентификатор на акаунт има невалидна контролна сума. Провери адреса.",
+      invalidWallet: "Въведи валиден ICP адрес на портфейл — 64-символен идентификатор на акаунт или ICP принципал.",
+      totalExceedsEdit: "Това ще доведе общото разпределение до {total}%, надвишавайки лимита от 100%.",
+      totalExceedsAdd: "Общото разпределение ще бъде {total}%, надвишавайки лимита от 100%.",
+      saveFailed: "Не можахме да запазим промените. Моля, опитай отново.",
+      addFailed: "Не можахме да добавим бенефициента. Моля, опитай отново."
+    }
+  },
+  assets: {
+    eyebrow: "Наследство и активи",
+    title: "Държани активи",
+    subtitle: "Всичко, което се държи в сейфа — баланси, притежания и инструкциите, които ги управляват.",
+    assetsHeld: "Държани активи",
+    beneficiaries: "Бенефициенти",
+    allocationStatus: "Статус на разпределението",
+    sealed: "Запечатано",
+    unallocated: "Неразпределено",
+    beneficiaryFallback: "Бенефициент #{id}",
+    errorEyebrow: "Сейфът е недостъпен",
+    errorBody: "Не можахме да прочетем държаните активи. Моля, опитай отново.",
+    emptyEyebrow: "Няма държани активи",
+    emptyBody: "Сейфът в момента не съдържа крипто активи. След като бъдат добавени активи, техните баланси и разпределения към бенефициенти ще се появят тук.",
+    allocationLabel: "Разпределение на бенефициентите"
+  },
+  switch: {
+    eyebrow: "Превключвателят",
+    title: "Превключвателят",
+    subtitle: "Единственият контрол, който предава сейфа. Активиран, проверен и обмислен.",
+    active: "Активен · Прекъсвач на мъртвеца",
+    standingDown: "В режим на готовност",
+    armed: "АКТИВИРАН",
+    disarmed: "ДЕАКТИВИРАН",
+    checkIn: "Все още съм тук",
+    arm: "Активирай прекъсвача",
+    disarm: "Деактивиране",
+    cadence: "Честота · {duration}",
+    releaseIn: "Освобождаване след {duration}",
+    timelineAriaArmed: "Хронология на прекъсвача на мъртвеца, {percent}% от честотата измина",
+    timelineAriaDisarmed: "Хронология на прекъсвача на мъртвеца, деактивиран",
+    lastCheckIn: "Последна проверка",
+    armedAt: "Активиран на",
+    cadenceLabel: "Честота",
+    standingDownTitle: "В режим на готовност",
+    standingDownBody: "Деактивирането спира прекъсвача на мъртвеца. Сейфът остава запечатан, но вече няма да се освобождава към твоите бенефициенти при пропусната проверка.",
+    disarmTheSwitch: "Деактивирай прекъсвача",
+    armTitle: "Активирай прекъсвача",
+    armBody: "Избери колко дълго сейфът чака следващата ти проверка. Ако я пропуснеш, сейфът се освобождава към твоите бенефициенти.",
+    cadenceError: "Избери честота на проверка, по-голяма от нула, преди да активираш прекъсвача.",
+    errorEyebrow: "Превключвателят е недостъпен",
+    errorBody: "Не можахме да прочетем състоянието на прекъсвача. Моля, опитай отново.",
+    cadence24h: "24 часа",
+    cadence7d: "7 дни",
+    cadence30d: "30 дни"
+  },
+  audit: {
+    eyebrow: "Одитни регистри",
+    title: "Одитни регистри",
+    ledger: "Регистър на събитията",
+    count: "{count} събитие(я) запечатани",
+    timestamp: "Времева марка",
+    event: "Събитие",
+    description: "Описание",
+    tableAria: "Одитен регистър на сейфа",
+    errorEyebrow: "Регистърът е недостъпен",
+    errorBody: "Не можахме да прочетем одитния регистър. Моля, опитай отново.",
+    emptyTitle: "Все още няма събития",
+    emptyBody: "Всяко действие, предприето срещу сейфа, ще бъде запечатано тук, по ред, когато се случи.",
+    footer: "Всеки запис е запечатан в регистъра. Записите не могат да бъдат редактирани или премахвани."
+  },
+  settings: {
+    eyebrow: "Настройки",
+    title: "Конфигурация на сейфа",
+    subtitle: "Запази конфигурацията, която управлява наследството ти — състоянието на активиране/деактивиране на прекъсвача, неговата честота на проверка и бенефициентите, за които е запечатан.",
+    switchTitle: "Превключвателят",
+    switchDesc: "Активирай или деактивирай сейфа и задай колко често трябва да се проверява.",
+    beneficiariesTitle: "Бенефициенти",
+    beneficiariesDesc: "Редактирай хората и каузите, за които е запечатано наследството ти.",
+    cadence: "Честота · {value}",
+    daily: "Ежедневно",
+    weekly: "Седмично",
+    monthly: "Месечно",
+    yearly: "Годишно",
+    h24: "24 часа",
+    h7d: "7 дни",
+    h30d: "30 дни",
+    h365d: "365 дни",
+    emptyBeneficiaries: "Все още няма конфигурирани бенефициенти",
+    editBeneficiary: "Редактиране на бенефициент",
+    editBeneficiaryDesc: "Актуализирай името, дела на разпределението и адреса на портфейла на този бенефициент.",
+    removeBeneficiary: "Премахване на бенефициент",
+    removeBeneficiaryDesc: "Премахване на {name} от сейфа? Това не може да бъде отменено.",
+    toast: {
+      armed: "Превключвателят е активиран",
+      armedDesc: "Честотата на проверка е зададена на {cadence}.",
+      armError: "Не можахме да активираме прекъсвача",
+      armErrorDesc: "Сейфът не можа да бъде активиран. Моля, опитай отново.",
+      disarmed: "Превключвателят е деактивиран",
+      disarmedDesc: "Сейфът вече не е активиран.",
+      disarmError: "Не можахме да деактивираме прекъсвача",
+      disarmErrorDesc: "Сейфът не можа да бъде деактивиран. Моля, опитай отново.",
+      beneficiaryUpdated: "Бенефициентът е актуализиран",
+      beneficiaryUpdatedDesc: "Конфигурацията на бенефициента е запазена.",
+      updateError: "Не можахме да актуализираме бенефициента",
+      updateErrorDesc: "Промените не бяха запазени. Моля, опитай отново.",
+      beneficiaryRemoved: "Бенефициентът е премахнат",
+      beneficiaryRemovedDesc: "Бенефициентът е премахнат от сейфа.",
+      removeError: "Не можахме да премахнем бенефициента",
+      removeErrorDesc: "Бенефициентът не можа да бъде премахнат. Моля, опитай отново."
+    }
+  }
+};
+const de = {
+  meta: {
+    title: "Sovereign Legacy — Der Tresor",
+    description: "Sovereign Legacy — Der Tresor. Ihr Tresor. Versiegelt, bis er es nicht mehr ist."
+  },
+  common: {
+    cancel: "Abbrechen",
+    saveChanges: "Änderungen speichern",
+    edit: "Bearbeiten",
+    remove: "Entfernen",
+    name: "Name",
+    optional: "Optional",
+    addBeneficiary: "Begünstigten hinzufügen",
+    allocationShare: "Zuteilungsanteil (%)",
+    walletAddress: "Wallet-Adresse",
+    checkInCadence: "Check-in-Rhythmus",
+    selectCadence: "Rhythmus auswählen",
+    armed: "Aktiviert",
+    disarmed: "Deaktiviert",
+    arming: "Aktiviere…",
+    disarming: "Deaktiviere…",
+    saving: "Speichere…",
+    removing: "Entferne…",
+    arm: "Aktivieren",
+    disarm: "Deaktivieren"
+  },
+  nav: {
+    dashboard: "Dashboard",
+    beneficiaries: "Begünstigte",
+    legacyAssets: "Vermächtnis & Vermögen",
+    theSwitch: "Der Schalter",
+    auditLogs: "Prüfprotokolle",
+    settings: "Einstellungen"
+  },
+  header: {
+    home: "Sovereign Legacy Startseite",
+    networkBadge: "Netzwerk · Identität",
+    mobileMenu: "Navigationsmenü öffnen",
+    mobilePrimary: "Mobile Hauptnavigation"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Der Tresor. Alle Rechte vorbehalten.",
+    tagline: "Versiegelt, bis er es nicht mehr ist"
+  },
+  loading: {
+    openingVault: "Tresor wird geöffnet…"
+  },
+  language: {
+    label: "Sprache"
+  },
+  landing: {
+    eyebrow: "Selbstsouveränes Erbe",
+    headline1: "Ihr Tresor.",
+    headline2: "Versiegelt, bis er es nicht mehr ist.",
+    login: "Anmelden mit Internet Identity",
+    subhead: "Ein digitaler Totmannschalter für Krypto-Vermögen, nativ auf dem Internet Computer — kein Nachlassverfahren, keine Verzögerungen, niemand beobachtet außer der Kette selbst.",
+    vaultDoorAlt: "Eine verwitterte Banktresortür aus Messing und Stahl, geschlossen, mit dem schwach leuchtenden Unendlichkeitsschleifen-Emblem von Internet Computer in ihrer Mitte.",
+    introduction: {
+      eyebrow: "Einführung",
+      heading: "Der Totmannschalter — Geboren im Zeitalter des Dampfes",
+      p1: "In den letzten Jahrzehnten des neunzehnten Jahrhunderts veränderte eine neue Art von Maschine die Zivilisation. Elektrische Straßenbahnen durchzogen nun die überfüllten Städte, und Aufzüge hoben Fahrgäste in Gebäude von beispielloser Höhe. Sie waren Wunderwerke — und sie waren gefährlich.",
+      p2: "Das Problem war einfach und erschreckend: Was geschieht, wenn der Mann am Steuer nicht mehr am Steuer ist? Ein Straßenbahnführer konnte am Steuer einen Herzinfarkt erleiden. Ein Aufzugführer konnte mitten in der Fahrt das Bewusstsein verlieren. Und die Maschine, gleichgültig gegenüber dem Schicksal ihres Bedieners, fuhr einfach weiter — bis sie auf etwas stieß, das sie stoppte.",
+      p3: "Es war der amerikanische Ingenieur Frank J. Sprague, der 1888 die Straßenbahnlinien von Richmond, Virginia, elektrifizierte — die erste erfolgreiche elektrische Straßenbahn der Vereinigten Staaten. Seine Innovation endete nicht beim Motor. Sprague verstand, dass ein Fahrzeug, das Fahrgäste mit hoher Geschwindigkeit befördert, sich selbst stoppen können musste, falls der Bediener handlungsunfähig wurde.",
+      p4: "Sie nannten es den Totmannschalter. Halten Sie den Griff, um weiterzufahren. Lassen Sie ihn los — sei es aus Ablenkung, Krankheit oder Tod — und die Maschine stoppt sich selbst. Der Name wurde nicht für das Drama gewählt. Er wurde für die Präzision gewählt. Der Schalter wurde durch die Abwesenheit der lebenden Hand aktiviert.",
+      p5: "Die Idee verbreitete sich schnell. U-Bahnen in New York, London und Tokio übernahmen sie. Kernkraftwerke bauten sie in ihre Steuerstäbe ein. Verkehrsflugzeuge integrierten sie in ihre Autopiloten. Überall, wo eine Maschine Leben trug, folgte der Totmannschalter — still, geduldig, wartend.",
+      h3a: "Wie Funktioniert ein Totmannschalter in Heutigen Zeiten?",
+      p6: "Sie haben hart gearbeitet. Sie haben Krypto-Vermögenswerte angesammelt — ICP, Bitcoin, Ethereum, Stablecoins. Sie liegen in Wallets und Canistern, geschützt durch private Schlüssel, die nur Sie besitzen. Und wie der Straßenbahnführer, der den Griff umklammert, hält nur Ihre lebendige, aktive Präsenz im Netzwerk den Stromkreis geschlossen.",
+      p7: "So wendet Sovereign Legacy dasselbe Prinzip an. Sie zahlen Vermögenswerte in einen sicheren On-Chain-Canister-Tresor ein. Sie benennen einen oder mehrere Begünstigte und legen einen Zeitraum der Netzwerkinaktivität fest. Solange Sie sich regelmäßig anmelden, bleibt der Schalter geschlossen. In dem Moment, in dem diese Aktivität aufhört, sendet Ihnen Sovereign Legacy Warnungen. Wenn Sie nicht reagieren, wird die Übertragung automatisch ausgeführt und Ihre Vermögenswerte werden ohne Anwälte, Gerichte oder Verzögerungen an Ihre gewählten Begünstigten übertragen.",
+      h3b: "Möchten Sie Ihre Wünsche Personalisieren?",
+      p8: "Wenn Sie mehr als einen Empfänger wünschen — einen Ehepartner, Kinder, einen vertrauten Freund, einen wohltätigen Zweck — ermöglicht Ihnen Sovereign Legacy, Ihre Vermögenswerte prozentual aufzuteilen. Sie legen die Anteile fest. Ihre Begünstigten erhalten genau das, was Sie beabsichtigt haben."
+    },
+    advantages: {
+      eyebrow: "Warum es funktioniert",
+      heading: "Die Vorteile Sind in Jeden Schritt Eingebaut",
+      card1: {
+        title: "Keine Anwälte. Kein Nachlassverfahren. Keine Verzögerungen.",
+        body: "Der Canister führt Ihre Anweisungen in dem Moment aus, in dem der Totmannschalter auslöst. Keine Institution steht zwischen Ihren Wünschen und den Menschen, die Sie lieben."
+      },
+      card2: {
+        title: "Sie behalten die Kontrolle.",
+        body: "Ändern Sie Begünstigte, passen Sie Prozentsätze an oder aktualisieren Sie Ihre Nachricht jederzeit. Alles wird sofort, on-chain, aktualisiert."
+      },
+      card3: {
+        title: "Funktioniert, während Sie schlafen.",
+        body: "Wenn das Leben weitergeht, bleibt Sovereign Legacy still. Wenn nicht, geht alles genau so voran, wie Sie es geplant haben."
+      },
+      card4: {
+        title: "Globale Reichweite.",
+        body: "Begünstigte können überall auf der Welt sein. Sovereign Legacy spricht mehrere Sprachen und übernimmt die Erklärung, sodass Sie es nicht tun müssen."
+      },
+      card5: {
+        title: "Ihre Daten bleiben Ihre.",
+        body: "Ihr Tresor ist ein Canister auf dem Internet Computer, gesichert durch Ihre Internet Identity. Kein Dritter — einschließlich Sovereign Legacy selbst — hat Zugriff auf seinen Inhalt."
+      }
+    },
+    faq: {
+      eyebrow: "Fragen",
+      heading: "Häufig Gestellte Fragen",
+      q1: {
+        q: "Welche Sprachen unterstützt Sovereign Legacy?",
+        a: "Die App unterstützt 22 Sprachen, darunter rechts-nach-links-Sprachen wie Arabisch, Persisch und Urdu, damit Begünstigte überall auf der Welt eine Freigabemitteilung in ihrer eigenen Sprache verstehen können."
+      },
+      q2: {
+        q: "Wie sicher ist mein Tresor?",
+        a: "Ihr Tresor ist ein Canister auf dem Internet Computer, gesichert durch Ihre Internet Identity. Nur Ihr authentifizierter Principal kann seinen Inhalt einsehen oder verwalten."
+      },
+      q3: {
+        q: "Könnte ich meinen Tresor jemals verlieren?",
+        a: "Solange Sie Zugriff auf Ihre Internet Identity behalten, bleibt Ihr Tresor unter Ihrer Kontrolle. Das Hauptrisiko ist der Verlust Ihrer Internet-Identity-Zugangsdaten, weshalb eine sichere Sicherung Ihrer Wiederherstellungsmethode wichtig ist."
+      },
+      q4: {
+        q: "Wie werden Vermögenswerte unter den Begünstigten aufgeteilt?",
+        a: "Sie weisen jedem Begünstigten einen prozentualen Anteil zu. Anteile können jederzeit vor der Freigabe angepasst werden, und die Gesamtsumme über alle Begünstigten darf niemals 100 % überschreiten."
+      },
+      q5: {
+        q: "Wie setze ich den Netzwerkinaktivitäts-Timer zurück?",
+        a: "Melden Sie sich einfach mit Ihrer Internet Identity an. Jeder authentifizierte Check-in setzt die Inaktivitätsuhr zurück und hält den Totmannschalter aktiviert."
+      },
+      q6: {
+        q: "Wie füge ich einen Begünstigten hinzu?",
+        a: "Öffnen Sie von Ihrem Dashboard aus das Bedienfeld Begünstigte und fügen Sie einen Namen, Kontaktinformationen und einen Zuteilungsprozentsatz hinzu."
+      },
+      q7: {
+        q: "Kann ich meine Begünstigten nach der Einrichtung ändern?",
+        a: "Ja. Begünstigte, Zuteilungen und persönliche Nachrichten können jederzeit aktualisiert werden — Änderungen treten sofort, on-chain, in Kraft."
+      },
+      q8: {
+        q: "Wer kann meine Begünstigten sehen?",
+        a: "Nur Sie, solange Sie als Eigentümer des Tresors authentifiziert sind."
+      }
+    },
+    terms: {
+      eyebrow: "Bedingungen",
+      heading: "Allgemeine Geschäftsbedingungen",
+      card1: {
+        title: "1. Überblick",
+        body: "ICP Sovereign Legacy ist eine dezentrale, vollständig on-chain betriebene Plattform für Vererbung und Totmannschalter, aufgebaut auf dem Internet Computer Protocol (ICP). Durch die Nutzung dieses Dienstes stimmen Sie diesen Bedingungen zu."
+      },
+      card2: {
+        title: "2. Keine Haftung",
+        body: "Die Entwickler haften nicht für Verluste von Vermögenswerten, die aus falscher Konfiguration, verlorenen Internet-Identity-Zugangsdaten, Bedingungen des Blockchain-Netzwerks oder anderen Ursachen resultieren. Nutzen Sie diesen Dienst auf eigenes Risiko."
+      },
+      card3: {
+        title: "3. Autonome Ausführung",
+        body: "Die Vermögensverteilung wird automatisch durch die On-Chain-Logik des Smart Contracts ausgeführt, wenn Ihr Totmannschalter auslöst. Einmal ausgelöst, ist kein menschliches Eingreifen erforderlich oder möglich."
+      },
+      card4: {
+        title: "4. Datenschutz",
+        body: "Ihre Begünstigtenliste wird on-chain gespeichert und ist nur für Ihren authentifizierten Internet-Identity-Principal zugänglich. Kein Dritter kann Ihre Daten einsehen."
+      },
+      card5: {
+        title: "5. Gebühren",
+        body: "Dieser Dienst wird wie in der App beschrieben bereitgestellt. Alle Gebühren, die für eine bestimmte Aktion anfallen, werden in der App klar angezeigt, bevor Sie diese Aktion bestätigen — keine versteckten oder wiederkehrenden Gebühren."
+      },
+      card6: {
+        title: "6. Berechtigung",
+        body: "Sie müssen mindestens 18 Jahre alt sein (oder das Alter der Volljährigkeit in Ihrer Rechtsordnung erreicht haben) und die rechtliche Fähigkeit besitzen, diese Bedingungen einzugehen, um diesen Dienst zu nutzen."
+      },
+      card7: {
+        title: "7. Keine Garantie",
+        body: "Dieser Dienst wird „wie besehen“ und „wie verfügbar“ ohne jegliche Garantien bereitgestellt, weder ausdrücklich noch stillschweigend, einschließlich jeder Garantie für ununterbrochenen oder fehlerfreien Betrieb."
+      },
+      card8: {
+        title: "8. Risikoübernahme",
+        body: "Kryptowährungen und Blockchain-Technologie bergen inhärente Risiken, darunter Preisvolatilität, Netzwerküberlastung, Schwachstellen von Smart Contracts und Änderungen an zugrunde liegenden Protokollen. Durch die Nutzung dieses Dienstes akzeptieren Sie diese Risiken."
+      },
+      card9: {
+        title: "9. Beendigung",
+        body: "Der Zugang zu diesem Dienst kann bei Verstoß gegen diese Bedingungen oder bei Verhalten, das Sovereign Legacy nach eigenem Ermessen als schädlich für andere Nutzer oder für den Dienst selbst einstuft, ausgesetzt oder beendet werden."
+      },
+      card10: {
+        title: "10. Änderungen Dieser Bedingungen",
+        body: "Diese Bedingungen können von Zeit zu Zeit aktualisiert werden. Wesentliche Änderungen werden in der App dargestellt, und die fortgesetzte Nutzung des Dienstes nach solchen Änderungen stellt die Annahme der aktualisierten Bedingungen dar."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Dashboard",
+    title: "Der Tresor",
+    balance: "Tresorsaldo",
+    assetsHeld: "{count} Vermögenswert(e) gehalten",
+    noAssets: "Noch keine Vermögenswerte gehalten",
+    beneficiaries: "Begünstigte",
+    named: "benannt",
+    sealed: "{count} Begünstigte(r) versiegelt",
+    none: "Noch keine Begünstigten",
+    allocation: "Begünstigtenzuteilung",
+    allocationNone: "Noch keine Zuteilungen. Fügen Sie einen Begünstigten hinzu, um zu beginnen.",
+    allocationAria: "Zuteilungsanteile der Begünstigten",
+    switch: "Der Schalter",
+    lastVerified: "Zuletzt verifiziert · {time}",
+    notVerified: "Noch nicht verifiziert"
+  },
+  beneficiaries: {
+    eyebrow: "Begünstigte",
+    title: "Begünstigte",
+    subtitle: "Die Personen und Zwecke, für die Ihr Vermächtnis versiegelt ist. Zuteilung, Reihenfolge und Bedingungen leben hier.",
+    allocation: "Zuteilung",
+    count: "{count} Begünstigte(r)",
+    noAllocations: "Noch keine Zuteilungen. Fügen Sie einen Begünstigten hinzu, um zu beginnen.",
+    allocationAria: "Zuteilungsanteile der Begünstigten",
+    manage: "Verwalten",
+    manageBody: "Fügen Sie einen Begünstigten hinzu und weisen Sie ihm seinen Anteil am Tresor zu. Anteile können jederzeit bearbeitet oder widerrufen werden.",
+    loadError: "Begünstigte konnten nicht geladen werden. Bitte versuchen Sie es erneut.",
+    emptyTitle: "Noch keine Begünstigten",
+    emptyBody: "Ihr Vermächtnis ist nicht zugewiesen. Fügen Sie Ihren ersten Begünstigten hinzu, um den Tresor für jemanden zu versiegeln.",
+    noWallet: "Keine Wallet-Adresse",
+    editAria: "{name} bearbeiten",
+    removeAria: "{name} entfernen",
+    modal: {
+      editTitle: "Begünstigten bearbeiten",
+      addTitle: "Begünstigten hinzufügen",
+      editDesc: "Aktualisieren Sie Name, Anteil oder Wallet-Adresse dieses Begünstigten.",
+      addDesc: "Weisen Sie einem neuen Begünstigten einen Namen und einen Zuteilungsanteil zu."
+    },
+    namePlaceholder: "z. B. Elena Marchetti",
+    sharePlaceholder: "z. B. 40",
+    errors: {
+      nameRequired: "Geben Sie einen Namen für diesen Begünstigten ein.",
+      sharePositive: "Der Zuteilungsanteil muss größer als null sein.",
+      invalidChecksum: "Diese ICP-Konto-ID hat eine ungültige Prüfsumme. Überprüfen Sie die Adresse.",
+      invalidWallet: "Geben Sie eine gültige ICP-Wallet-Adresse ein — eine 64-stellige Konto-ID oder einen ICP-Principal.",
+      totalExceedsEdit: "Dies würde die Gesamtzuteilung auf {total} % bringen und das 100-%-Limit überschreiten.",
+      totalExceedsAdd: "Die Gesamtzuteilung wäre {total} % und würde das 100-%-Limit überschreiten.",
+      saveFailed: "Änderungen konnten nicht gespeichert werden. Bitte versuchen Sie es erneut.",
+      addFailed: "Begünstigter konnte nicht hinzugefügt werden. Bitte versuchen Sie es erneut."
+    }
+  },
+  assets: {
+    eyebrow: "Vermächtnis & Vermögen",
+    title: "Gehaltene Vermögenswerte",
+    subtitle: "Alles, was im Tresor gehalten wird — Salden, Bestände und die Anweisungen, die sie regeln.",
+    assetsHeld: "Gehaltene Vermögenswerte",
+    beneficiaries: "Begünstigte",
+    allocationStatus: "Zuteilungsstatus",
+    sealed: "Versiegelt",
+    unallocated: "Nicht zugeteilt",
+    beneficiaryFallback: "Begünstigter #{id}",
+    errorEyebrow: "Tresor nicht erreichbar",
+    errorBody: "Die gehaltenen Vermögenswerte konnten nicht gelesen werden. Bitte versuchen Sie es erneut.",
+    emptyEyebrow: "Keine Vermögenswerte gehalten",
+    emptyBody: "Der Tresor enthält derzeit keine Krypto-Vermögenswerte. Sobald Vermögenswerte hinzugefügt werden, erscheinen hier ihre Salden und Begünstigtenzuteilungen.",
+    allocationLabel: "Begünstigtenzuteilung"
+  },
+  switch: {
+    eyebrow: "Der Schalter",
+    title: "Der Schalter",
+    subtitle: "Die einzige Steuerung, die den Tresor übergibt. Aktiviert, verifiziert und bewusst.",
+    active: "Aktiv · Totmannschalter",
+    standingDown: "Bereit zum Ruhen",
+    armed: "AKTIVIERT",
+    disarmed: "DEAKTIVIERT",
+    checkIn: "Ich bin noch da",
+    arm: "Schalter aktivieren",
+    disarm: "Deaktivieren",
+    cadence: "Rhythmus · {duration}",
+    releaseIn: "Freigabe in {duration}",
+    timelineAriaArmed: "Totmannschalter-Zeitachse, {percent} % des Rhythmus verstrichen",
+    timelineAriaDisarmed: "Totmannschalter-Zeitachse, deaktiviert",
+    lastCheckIn: "Letzter Check-in",
+    armedAt: "Aktiviert am",
+    cadenceLabel: "Rhythmus",
+    standingDownTitle: "Bereit zum Ruhen",
+    standingDownBody: "Das Deaktivieren stoppt den Totmannschalter. Der Tresor bleibt versiegelt, wird aber bei einem verpassten Check-in nicht mehr an Ihre Begünstigten freigegeben.",
+    disarmTheSwitch: "Schalter deaktivieren",
+    armTitle: "Schalter aktivieren",
+    armBody: "Wählen Sie, wie lange der Tresor auf Ihren nächsten Check-in wartet. Wenn Sie ihn verpassen, wird der Tresor an Ihre Begünstigten freigegeben.",
+    cadenceError: "Wählen Sie vor dem Aktivieren des Schalters einen Check-in-Rhythmus größer als null.",
+    errorEyebrow: "Schalter nicht erreichbar",
+    errorBody: "Der Schalterstatus konnte nicht gelesen werden. Bitte versuchen Sie es erneut.",
+    cadence24h: "24 Stunden",
+    cadence7d: "7 Tage",
+    cadence30d: "30 Tage"
+  },
+  audit: {
+    eyebrow: "Prüfprotokolle",
+    title: "Prüfprotokolle",
+    ledger: "Ereignisprotokoll",
+    count: "{count} Ereignis(se) versiegelt",
+    timestamp: "Zeitstempel",
+    event: "Ereignis",
+    description: "Beschreibung",
+    tableAria: "Prüfprotokoll des Tresors",
+    errorEyebrow: "Protokoll nicht erreichbar",
+    errorBody: "Das Prüfprotokoll konnte nicht gelesen werden. Bitte versuchen Sie es erneut.",
+    emptyTitle: "Noch keine Ereignisse",
+    emptyBody: "Jede Aktion, die gegen den Tresor ausgeführt wird, wird hier in der Reihenfolge versiegelt, in der sie geschieht.",
+    footer: "Jeder Eintrag ist im Protokoll versiegelt. Einträge können weder bearbeitet noch entfernt werden."
+  },
+  settings: {
+    eyebrow: "Einstellungen",
+    title: "Tresorkonfiguration",
+    subtitle: "Bewahren Sie die Konfiguration, die Ihr Vermächtnis regelt — den Aktivierungs-/Deaktivierungsstatus des Schalters, seinen Check-in-Rhythmus und die Begünstigten, für die er versiegelt ist.",
+    switchTitle: "Der Schalter",
+    switchDesc: "Aktivieren oder deaktivieren Sie den Tresor und legen Sie fest, wie oft er verifiziert werden muss.",
+    beneficiariesTitle: "Begünstigte",
+    beneficiariesDesc: "Bearbeiten Sie die Personen und Zwecke, für die Ihr Vermächtnis versiegelt ist.",
+    cadence: "Rhythmus · {value}",
+    daily: "Täglich",
+    weekly: "Wöchentlich",
+    monthly: "Monatlich",
+    yearly: "Jährlich",
+    h24: "24 Stunden",
+    h7d: "7 Tage",
+    h30d: "30 Tage",
+    h365d: "365 Tage",
+    emptyBeneficiaries: "Noch keine Begünstigten konfiguriert",
+    editBeneficiary: "Begünstigten bearbeiten",
+    editBeneficiaryDesc: "Aktualisieren Sie Name, Zuteilungsanteil und Wallet-Adresse dieses Begünstigten.",
+    removeBeneficiary: "Begünstigten entfernen",
+    removeBeneficiaryDesc: "{name} aus dem Tresor entfernen? Dies kann nicht rückgängig gemacht werden.",
+    toast: {
+      armed: "Der Schalter wurde aktiviert",
+      armedDesc: "Check-in-Rhythmus auf {cadence} gesetzt.",
+      armError: "Der Schalter konnte nicht aktiviert werden",
+      armErrorDesc: "Der Tresor konnte nicht aktiviert werden. Bitte versuchen Sie es erneut.",
+      disarmed: "Der Schalter wurde deaktiviert",
+      disarmedDesc: "Der Tresor ist nicht mehr aktiviert.",
+      disarmError: "Der Schalter konnte nicht deaktiviert werden",
+      disarmErrorDesc: "Der Tresor konnte nicht deaktiviert werden. Bitte versuchen Sie es erneut.",
+      beneficiaryUpdated: "Begünstigter aktualisiert",
+      beneficiaryUpdatedDesc: "Die Begünstigtenkonfiguration wurde gespeichert.",
+      updateError: "Begünstigter konnte nicht aktualisiert werden",
+      updateErrorDesc: "Die Änderungen wurden nicht gespeichert. Bitte versuchen Sie es erneut.",
+      beneficiaryRemoved: "Begünstigter entfernt",
+      beneficiaryRemovedDesc: "Der Begünstigte wurde aus dem Tresor entfernt.",
+      removeError: "Begünstigter konnte nicht entfernt werden",
+      removeErrorDesc: "Der Begünstigte konnte nicht entfernt werden. Bitte versuchen Sie es erneut."
+    }
+  }
+};
+const en = {
+  meta: {
+    title: "Sovereign Legacy — The Vault",
+    description: "Sovereign Legacy — The Vault. Your vault. Sealed until it isn't."
+  },
+  common: {
+    cancel: "Cancel",
+    saveChanges: "Save changes",
+    edit: "Edit",
+    remove: "Remove",
+    name: "Name",
+    optional: "Optional",
+    addBeneficiary: "Add beneficiary",
+    allocationShare: "Allocation share (%)",
+    walletAddress: "Wallet address",
+    checkInCadence: "Check-in cadence",
+    selectCadence: "Select cadence",
+    armed: "Armed",
+    disarmed: "Disarmed",
+    arming: "Arming…",
+    disarming: "Disarming…",
+    saving: "Saving…",
+    removing: "Removing…",
+    arm: "Arm",
+    disarm: "Disarm"
+  },
+  nav: {
+    dashboard: "Dashboard",
+    beneficiaries: "Beneficiaries",
+    legacyAssets: "Legacy & Assets",
+    theSwitch: "The Switch",
+    auditLogs: "Audit Logs",
+    settings: "Settings"
+  },
+  header: {
+    home: "Sovereign Legacy home",
+    networkBadge: "Network · Identity",
+    mobileMenu: "Open navigation menu",
+    mobilePrimary: "Mobile primary"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — The Vault. All rights reserved.",
+    tagline: "Sealed until it isn't"
+  },
+  loading: {
+    openingVault: "Opening vault…"
+  },
+  language: {
+    label: "Language"
+  },
+  landing: {
+    eyebrow: "Self-sovereign inheritance",
+    headline1: "Your vault.",
+    headline2: "Sealed until it isn't.",
+    login: "Login with Internet Identity",
+    subhead: "A digital dead man's switch for crypto, built natively on the Internet Computer — no probate, no delays, no one watching but the chain itself.",
+    vaultDoorAlt: "A weathered brass and steel bank vault door, closed, with the Internet Computer infinity-loop emblem glowing faintly at its center.",
+    introduction: {
+      eyebrow: "Introduction",
+      heading: "The Dead Man's Switch — Born in the Age of Steam",
+      p1: "In the closing decades of the nineteenth century, a new kind of machine was reshaping civilization. Electric streetcars now threaded their way through crowded cities, and elevators lifted passengers skyward in buildings of unprecedented height. They were marvels — and they were dangerous.",
+      p2: "The problem was simple and terrifying: what happens when the man in control is no longer in control? A motorman could suffer a heart attack at the helm. An elevator operator might lose consciousness mid-ride. And the machine, indifferent to the fate of its operator, would simply continue — until it hit something that stopped it.",
+      p3: "It was the American engineer Frank J. Sprague who, in 1888, electrified the streetcar lines of Richmond, Virginia — the first successful electric street railway in the United States. His innovation did not stop at the motor. Sprague understood that a vehicle carrying passengers at speed needed a way to stop itself if the operator became incapacitated.",
+      p4: "They called it the dead man's switch. Hold the handle to keep moving. Release it — whether from distraction, illness, or death — and the machine stops itself. The name was not chosen for drama. It was chosen for precision. The switch was activated by the absence of the living hand.",
+      p5: "The idea spread quickly. Subways in New York, London, and Tokyo adopted it. Nuclear power stations built it into their control rods. Commercial aircraft embedded it in their autopilots. Anywhere a machine carried lives, the dead man's switch followed — silent, patient, waiting.",
+      h3a: "So How Does a Dead Man's Switch Work in These Times?",
+      p6: "You've worked hard. You've accumulated crypto assets — ICP, Bitcoin, Ethereum, stablecoins. They sit in wallets and canisters, secured by private keys that only you possess. And like the motorman gripping the handle, only your living, active presence on the network keeps the circuit closed.",
+      p7: "Here's how Sovereign Legacy applies the same principle. You deposit assets into a secure on-chain canister vault. You designate one or more beneficiaries and set a network inactivity period. As long as you log in periodically, the switch stays closed. The moment that activity stops, Sovereign Legacy sends you alerts. If you do not respond, the transfer executes automatically, moving your assets to your chosen beneficiaries without lawyers, courts, or delays.",
+      h3b: "Want to Personalize Your Wishes?",
+      p8: "If you'd like more than one recipient — a spouse, children, a trusted friend, a charitable cause — Sovereign Legacy lets you divide your assets by percentage. You set the shares. Your beneficiaries receive exactly what you intended."
+    },
+    advantages: {
+      eyebrow: "Why it works",
+      heading: "The Advantages Are Built Into Every Step",
+      card1: {
+        title: "No lawyers. No probate. No delays.",
+        body: "The canister executes your instructions the moment the dead man's switch triggers. No institution stands between your wishes and the people you love."
+      },
+      card2: {
+        title: "You stay in control.",
+        body: "Change beneficiaries, adjust percentages, or update your message at any time. Everything updates instantly, on-chain."
+      },
+      card3: {
+        title: "Works while you sleep.",
+        body: "If life goes on, Sovereign Legacy stays quiet. If it does not, everything moves forward exactly as you planned."
+      },
+      card4: {
+        title: "Global reach.",
+        body: "Beneficiaries can be anywhere in the world. Sovereign Legacy speaks multiple languages and handles the explanation so you do not have to."
+      },
+      card5: {
+        title: "Your data stays yours.",
+        body: "Your vault is a canister on the Internet Computer, secured by your Internet Identity. No third party — including Sovereign Legacy itself — has access to its contents."
+      }
+    },
+    faq: {
+      eyebrow: "Questions",
+      heading: "Frequently Asked Questions",
+      q1: {
+        q: "What languages does Sovereign Legacy support?",
+        a: "The app supports 22 languages, including right-to-left languages such as Arabic, Persian, and Urdu, so beneficiaries anywhere in the world can understand a release notice in their own language."
+      },
+      q2: {
+        q: "How secure is my vault?",
+        a: "Your vault is a canister on the Internet Computer, secured by your Internet Identity. Only your authenticated principal can view or manage its contents."
+      },
+      q3: {
+        q: "Could I ever lose my vault?",
+        a: "As long as you retain access to your Internet Identity, your vault remains under your control. The main risk is losing your Internet Identity credentials, which is why keeping a secure backup of your recovery method matters."
+      },
+      q4: {
+        q: "How are assets divided among beneficiaries?",
+        a: "You assign each beneficiary a percentage share. Shares can be adjusted at any time before release, and the total allocated across all beneficiaries must never exceed 100%."
+      },
+      q5: {
+        q: "How do I reset the network inactivity timer?",
+        a: "Simply log in with your Internet Identity. Any authenticated check-in resets the inactivity clock and keeps the dead man's switch armed."
+      },
+      q6: {
+        q: "How do I add a beneficiary?",
+        a: "From your dashboard, open the Beneficiaries panel and add a name, contact information, and allocation percentage."
+      },
+      q7: {
+        q: "Can I change my beneficiaries after setup?",
+        a: "Yes. Beneficiaries, allocations, and personal messages can all be updated at any time — changes take effect immediately, on-chain."
+      },
+      q8: {
+        q: "Who can see my beneficiaries?",
+        a: "Only you, while authenticated as the vault's owner."
+      }
+    },
+    terms: {
+      eyebrow: "Terms",
+      heading: "Terms & Conditions",
+      card1: {
+        title: "1. Overview",
+        body: "ICP Sovereign Legacy is a decentralized, fully on-chain inheritance and dead-man's-switch platform built on the Internet Computer Protocol (ICP). By using this service, you agree to these terms."
+      },
+      card2: {
+        title: "2. No Liability",
+        body: "The developers are not liable for any loss of assets resulting from incorrect configuration, lost Internet Identity credentials, blockchain network conditions, or any other cause. Use this service at your own risk."
+      },
+      card3: {
+        title: "3. Autonomous Execution",
+        body: "Asset distribution is executed automatically by on-chain smart contract logic when your dead-man's-switch triggers. No human intervention is required or possible once triggered."
+      },
+      card4: {
+        title: "4. Privacy",
+        body: "Your beneficiary list is stored on-chain and accessible only to your authenticated Internet Identity principal. No third party can view your data."
+      },
+      card5: {
+        title: "5. Fees",
+        body: "This service is provided as described within the app. Any fees that apply to a specific action are shown clearly in the app before you confirm that action — no hidden or recurring charges."
+      },
+      card6: {
+        title: "6. Eligibility",
+        body: "You must be at least 18 years old (or the age of majority in your jurisdiction) and have the legal capacity to enter into these terms to use this service."
+      },
+      card7: {
+        title: "7. No Warranty",
+        body: 'This service is provided "as is" and "as available," without warranties of any kind, whether express or implied, including any warranty of uninterrupted or error-free operation.'
+      },
+      card8: {
+        title: "8. Assumption of Risk",
+        body: "Cryptocurrency and blockchain technology carry inherent risks, including price volatility, network congestion, smart contract vulnerabilities, and changes to underlying protocols. By using this service, you accept these risks."
+      },
+      card9: {
+        title: "9. Termination",
+        body: "Access to this service may be suspended or terminated for violation of these terms or for conduct that Sovereign Legacy determines, in its discretion, to be harmful to other users or to the service itself."
+      },
+      card10: {
+        title: "10. Modifications to These Terms",
+        body: "These terms may be updated from time to time. Material changes will be presented within the app, and continued use of the service after such changes constitutes acceptance of the updated terms."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Dashboard",
+    title: "The Vault",
+    balance: "Vault Balance",
+    assetsHeld: "{count} asset(s) held",
+    noAssets: "No assets held yet",
+    beneficiaries: "Beneficiaries",
+    named: "named",
+    sealed: "{count} beneficiary(ies) sealed",
+    none: "No beneficiaries yet",
+    allocation: "Beneficiary Allocation",
+    allocationNone: "No allocations yet. Add a beneficiary to begin.",
+    allocationAria: "Beneficiary allocation shares",
+    switch: "The Switch",
+    lastVerified: "Last verified · {time}",
+    notVerified: "Not yet verified"
+  },
+  beneficiaries: {
+    eyebrow: "Beneficiaries",
+    title: "Beneficiaries",
+    subtitle: "The people and causes your legacy is sealed for. Allocation, order, and conditions live here.",
+    allocation: "Allocation",
+    count: "{count} beneficiary(ies)",
+    noAllocations: "No allocations yet. Add a beneficiary to begin.",
+    allocationAria: "Beneficiary allocation shares",
+    manage: "Manage",
+    manageBody: "Add a beneficiary and assign their share of the vault. Shares can be edited or revoked at any time.",
+    loadError: "Could not load beneficiaries. Please try again.",
+    emptyTitle: "No beneficiaries yet",
+    emptyBody: "Your legacy is unassigned. Add your first beneficiary to seal the vault for someone.",
+    noWallet: "No wallet address",
+    editAria: "Edit {name}",
+    removeAria: "Remove {name}",
+    modal: {
+      editTitle: "Edit beneficiary",
+      addTitle: "Add beneficiary",
+      editDesc: "Update the name, share, or wallet address for this beneficiary.",
+      addDesc: "Assign a name and allocation share to a new beneficiary."
+    },
+    namePlaceholder: "e.g. Elena Marchetti",
+    sharePlaceholder: "e.g. 40",
+    errors: {
+      nameRequired: "Enter a name for this beneficiary.",
+      sharePositive: "Allocation share must be greater than zero.",
+      invalidChecksum: "This ICP account identifier has an invalid checksum. Double-check the address.",
+      invalidWallet: "Enter a valid ICP wallet address — a 64-character account identifier or an ICP principal.",
+      totalExceedsEdit: "This would bring the total allocation to {total}%, exceeding the 100% limit.",
+      totalExceedsAdd: "Total allocation would be {total}%, exceeding the 100% limit.",
+      saveFailed: "Could not save changes. Please try again.",
+      addFailed: "Could not add beneficiary. Please try again."
+    }
+  },
+  assets: {
+    eyebrow: "Legacy & Assets",
+    title: "Held Assets",
+    subtitle: "Everything held in the vault — balances, holdings, and the instructions that govern them.",
+    assetsHeld: "Assets Held",
+    beneficiaries: "Beneficiaries",
+    allocationStatus: "Allocation Status",
+    sealed: "Sealed",
+    unallocated: "Unallocated",
+    beneficiaryFallback: "Beneficiary #{id}",
+    errorEyebrow: "Vault unreachable",
+    errorBody: "We couldn't read the held assets. Please try again.",
+    emptyEyebrow: "No assets held",
+    emptyBody: "The vault currently holds no crypto assets. Once assets are added, their balances and beneficiary allocations will appear here.",
+    allocationLabel: "Beneficiary Allocation"
+  },
+  switch: {
+    eyebrow: "The Switch",
+    title: "The Switch",
+    subtitle: "The single control that hands the vault over. Armed, verified, and deliberate.",
+    active: "Active · Dead man's switch",
+    standingDown: "Standing down",
+    armed: "ARMED",
+    disarmed: "DISARMED",
+    checkIn: "I'm still here",
+    arm: "Arm the switch",
+    disarm: "Disarm",
+    cadence: "Cadence · {duration}",
+    releaseIn: "Release in {duration}",
+    timelineAriaArmed: "Dead man's switch timeline, {percent}% of cadence elapsed",
+    timelineAriaDisarmed: "Dead man's switch timeline, disarmed",
+    lastCheckIn: "Last check-in",
+    armedAt: "Armed at",
+    cadenceLabel: "Cadence",
+    standingDownTitle: "Standing down",
+    standingDownBody: "Disarming halts the dead man's switch. The vault stays sealed, but it will no longer release to your beneficiaries on a missed check-in.",
+    disarmTheSwitch: "Disarm the switch",
+    armTitle: "Arm the switch",
+    armBody: "Choose how long the vault waits for your next check-in. If you miss it, the vault releases to your beneficiaries.",
+    cadenceError: "Choose a check-in cadence greater than zero before arming the switch.",
+    errorEyebrow: "Switch unreachable",
+    errorBody: "We couldn't read the switch state. Please try again.",
+    cadence24h: "24 hours",
+    cadence7d: "7 days",
+    cadence30d: "30 days"
+  },
+  audit: {
+    eyebrow: "Audit Logs",
+    title: "Audit Logs",
+    ledger: "Event Ledger",
+    count: "{count} event(s) sealed",
+    timestamp: "Timestamp",
+    event: "Event",
+    description: "Description",
+    tableAria: "Vault audit log",
+    errorEyebrow: "Ledger unreachable",
+    errorBody: "We couldn't read the audit ledger. Please try again.",
+    emptyTitle: "No events yet",
+    emptyBody: "Every action taken against the vault will be sealed here, in order, as it happens.",
+    footer: "Every entry is sealed on the ledger. Entries cannot be edited or removed."
+  },
+  settings: {
+    eyebrow: "Settings",
+    title: "Vault Configuration",
+    subtitle: "Preserve the configuration that governs your legacy — the arm/disarm state of The Switch, its check-in cadence, and the beneficiaries it is sealed for.",
+    switchTitle: "The Switch",
+    switchDesc: "Arm or disarm the vault and set how often it must be verified.",
+    beneficiariesTitle: "Beneficiaries",
+    beneficiariesDesc: "Edit the people and causes your legacy is sealed for.",
+    cadence: "Cadence · {value}",
+    daily: "Daily",
+    weekly: "Weekly",
+    monthly: "Monthly",
+    yearly: "Yearly",
+    h24: "24 hours",
+    h7d: "7 days",
+    h30d: "30 days",
+    h365d: "365 days",
+    emptyBeneficiaries: "No beneficiaries configured yet",
+    editBeneficiary: "Edit beneficiary",
+    editBeneficiaryDesc: "Update the name, allocation share, and wallet address for this beneficiary.",
+    removeBeneficiary: "Remove beneficiary",
+    removeBeneficiaryDesc: "Remove {name} from the vault? This cannot be undone.",
+    toast: {
+      armed: "The Switch armed",
+      armedDesc: "Check-in cadence set to {cadence}.",
+      armError: "Could not arm The Switch",
+      armErrorDesc: "The vault could not be armed. Please try again.",
+      disarmed: "The Switch disarmed",
+      disarmedDesc: "The vault is no longer armed.",
+      disarmError: "Could not disarm The Switch",
+      disarmErrorDesc: "The vault could not be disarmed. Please try again.",
+      beneficiaryUpdated: "Beneficiary updated",
+      beneficiaryUpdatedDesc: "The beneficiary configuration has been saved.",
+      updateError: "Could not update beneficiary",
+      updateErrorDesc: "The changes were not saved. Please try again.",
+      beneficiaryRemoved: "Beneficiary removed",
+      beneficiaryRemovedDesc: "The beneficiary has been removed from the vault.",
+      removeError: "Could not remove beneficiary",
+      removeErrorDesc: "The beneficiary could not be removed. Please try again."
+    }
+  }
+};
+const es = {
+  meta: {
+    title: "Sovereign Legacy — La Bóveda",
+    description: "Sovereign Legacy — La Bóveda. Tu bóveda. Sellada hasta que deje de estarlo."
+  },
+  common: {
+    cancel: "Cancelar",
+    saveChanges: "Guardar cambios",
+    edit: "Editar",
+    remove: "Eliminar",
+    name: "Nombre",
+    optional: "Opcional",
+    addBeneficiary: "Añadir beneficiario",
+    allocationShare: "Porcentaje de asignación (%)",
+    walletAddress: "Dirección de la cartera",
+    checkInCadence: "Cadencia de verificación",
+    selectCadence: "Seleccionar cadencia",
+    armed: "Armado",
+    disarmed: "Desarmado",
+    arming: "Armando…",
+    disarming: "Desarmando…",
+    saving: "Guardando…",
+    removing: "Eliminando…",
+    arm: "Armar",
+    disarm: "Desarmar"
+  },
+  nav: {
+    dashboard: "Panel",
+    beneficiaries: "Beneficiarios",
+    legacyAssets: "Legado y Activos",
+    theSwitch: "El Interruptor",
+    auditLogs: "Registros de Auditoría",
+    settings: "Ajustes"
+  },
+  header: {
+    home: "Inicio de Sovereign Legacy",
+    networkBadge: "Red · Identidad",
+    mobileMenu: "Abrir menú de navegación",
+    mobilePrimary: "Navegación principal móvil"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — La Bóveda. Todos los derechos reservados.",
+    tagline: "Sellada hasta que deje de estarlo"
+  },
+  loading: {
+    openingVault: "Abriendo la bóveda…"
+  },
+  language: {
+    label: "Idioma"
+  },
+  landing: {
+    eyebrow: "Herencia autosoberana",
+    headline1: "Tu bóveda.",
+    headline2: "Sellada hasta que deje de estarlo.",
+    login: "Iniciar sesión con Internet Identity",
+    subhead: "Un interruptor de hombre muerto digital para criptoactivos, construido de forma nativa en Internet Computer — sin sucesión judicial, sin demoras, sin nadie observando salvo la cadena misma.",
+    vaultDoorAlt: "Una puerta de bóveda bancaria de latón y acero desgastados, cerrada, con el emblema del bucle infinito de Internet Computer brillando tenuemente en su centro.",
+    introduction: {
+      eyebrow: "Introducción",
+      heading: "El Interruptor de Hombre Muerto: Nacido en la Era del Vapor",
+      p1: "En las últimas décadas del siglo XIX, un nuevo tipo de máquina estaba remodelando la civilización. Los tranvías eléctricos ya recorrían las ciudades abarrotadas y los ascensores elevaban a los pasajeros en edificios de una altura sin precedentes. Eran maravillas, y eran peligrosos.",
+      p2: "El problema era simple y aterrador: ¿qué ocurre cuando el hombre al mando ya no está al mando? Un conductor podía sufrir un infarto al volante. Un operador de ascensor podía perder el conocimiento a mitad del trayecto. Y la máquina, indiferente al destino de su operador, simplemente continuaba, hasta chocar con algo que la detuviera.",
+      p3: "Fue el ingeniero estadounidense Frank J. Sprague quien, en 1888, electrificó las líneas de tranvía de Richmond, Virginia: el primer ferrocarril eléctrico urbano exitoso de Estados Unidos. Su innovación no se detuvo en el motor. Sprague entendió que un vehículo que transportaba pasajeros a gran velocidad necesitaba una forma de detenerse si el operador quedaba incapacitado.",
+      p4: "Lo llamaron el interruptor de hombre muerto. Mantén la manija para seguir avanzando. Suéltala, ya sea por distracción, enfermedad o muerte, y la máquina se detiene sola. El nombre no se eligió por dramatismo, sino por precisión. El interruptor se activaba por la ausencia de la mano viva.",
+      p5: "La idea se extendió rápidamente. Los metros de Nueva York, Londres y Tokio la adoptaron. Las centrales nucleares la integraron en sus barras de control. Los aviones comerciales la incorporaron a sus pilotos automáticos. En cualquier lugar donde una máquina transportara vidas, el interruptor de hombre muerto la seguía: silencioso, paciente, a la espera.",
+      h3a: "¿Cómo Funciona un Interruptor de Hombre Muerto en Estos Tiempos?",
+      p6: "Has trabajado duro. Has acumulado activos de criptomonedas: ICP, Bitcoin, Ethereum, stablecoins. Están en carteras y canisters, protegidos por claves privadas que solo tú posees. Y como el conductor que sujeta la manija, solo tu presencia viva y activa en la red mantiene el circuito cerrado.",
+      p7: "Así aplica Sovereign Legacy el mismo principio. Depositas activos en una bóveda canister segura en la cadena. Designas uno o más beneficiarios y estableces un período de inactividad en la red. Mientras inicies sesión periódicamente, el interruptor permanece cerrado. En el momento en que esa actividad cesa, Sovereign Legacy te envía alertas. Si no respondes, la transferencia se ejecuta automáticamente, moviendo tus activos a tus beneficiarios elegidos sin abogados, tribunales ni demoras.",
+      h3b: "¿Quieres Personalizar Tus Deseos?",
+      p8: "Si deseas más de un destinatario (un cónyuge, hijos, un amigo de confianza, una causa benéfica), Sovereign Legacy te permite dividir tus activos por porcentaje. Tú fijas las participaciones. Tus beneficiarios reciben exactamente lo que pretendías."
+    },
+    advantages: {
+      eyebrow: "Por qué funciona",
+      heading: "Las Ventajas Están Integradas en Cada Paso",
+      card1: {
+        title: "Sin abogados. Sin sucesiones. Sin demoras.",
+        body: "El canister ejecuta tus instrucciones en el momento en que se activa el interruptor de hombre muerto. Ninguna institución se interpone entre tus deseos y las personas que amas."
+      },
+      card2: {
+        title: "Tú mantienes el control.",
+        body: "Cambia beneficiarios, ajusta porcentajes o actualiza tu mensaje en cualquier momento. Todo se actualiza al instante, en la cadena."
+      },
+      card3: {
+        title: "Funciona mientras duermes.",
+        body: "Si la vida continúa, Sovereign Legacy permanece en silencio. Si no, todo avanza exactamente como lo planeaste."
+      },
+      card4: {
+        title: "Alcance global.",
+        body: "Los beneficiarios pueden estar en cualquier parte del mundo. Sovereign Legacy habla varios idiomas y se encarga de la explicación para que tú no tengas que hacerlo."
+      },
+      card5: {
+        title: "Tus datos siguen siendo tuyos.",
+        body: "Tu bóveda es un canister en Internet Computer, protegida por tu Internet Identity. Ningún tercero, incluido el propio Sovereign Legacy, tiene acceso a su contenido."
+      }
+    },
+    faq: {
+      eyebrow: "Preguntas",
+      heading: "Preguntas Frecuentes",
+      q1: {
+        q: "¿Qué idiomas admite Sovereign Legacy?",
+        a: "La aplicación admite 22 idiomas, incluidos idiomas de derecha a izquierda como el árabe, el persa y el urdu, para que los beneficiarios de cualquier parte del mundo puedan entender un aviso de liberación en su propio idioma."
+      },
+      q2: {
+        q: "¿Qué tan segura es mi bóveda?",
+        a: "Tu bóveda es un canister en Internet Computer, protegida por tu Internet Identity. Solo tu principal autenticado puede ver o gestionar su contenido."
+      },
+      q3: {
+        q: "¿Podría perder mi bóveda alguna vez?",
+        a: "Mientras conserves acceso a tu Internet Identity, tu bóveda permanece bajo tu control. El principal riesgo es perder tus credenciales de Internet Identity, por eso es importante mantener una copia de seguridad segura de tu método de recuperación."
+      },
+      q4: {
+        q: "¿Cómo se dividen los activos entre los beneficiarios?",
+        a: "Asignas a cada beneficiario un porcentaje. Las participaciones pueden ajustarse en cualquier momento antes de la liberación, y el total asignado entre todos los beneficiarios nunca debe superar el 100%."
+      },
+      q5: {
+        q: "¿Cómo restablezco el temporizador de inactividad de la red?",
+        a: "Simplemente inicia sesión con tu Internet Identity. Cualquier verificación autenticada restablece el reloj de inactividad y mantiene armado el interruptor de hombre muerto."
+      },
+      q6: {
+        q: "¿Cómo añado un beneficiario?",
+        a: "Desde tu panel, abre el apartado de Beneficiarios y añade un nombre, información de contacto y porcentaje de asignación."
+      },
+      q7: {
+        q: "¿Puedo cambiar mis beneficiarios después de la configuración?",
+        a: "Sí. Los beneficiarios, las asignaciones y los mensajes personales pueden actualizarse en cualquier momento: los cambios surten efecto de inmediato, en la cadena."
+      },
+      q8: {
+        q: "¿Quién puede ver mis beneficiarios?",
+        a: "Solo tú, mientras estés autenticado como propietario de la bóveda."
+      }
+    },
+    terms: {
+      eyebrow: "Términos",
+      heading: "Términos y Condiciones",
+      card1: {
+        title: "1. Resumen",
+        body: "ICP Sovereign Legacy es una plataforma descentralizada de herencia e interruptor de hombre muerto, totalmente en la cadena, construida sobre el Protocolo de Internet Computer (ICP). Al usar este servicio, aceptas estos términos."
+      },
+      card2: {
+        title: "2. Sin Responsabilidad",
+        body: "Los desarrolladores no son responsables de ninguna pérdida de activos derivada de una configuración incorrecta, credenciales de Internet Identity perdidas, condiciones de la red blockchain o cualquier otra causa. Usa este servicio bajo tu propio riesgo."
+      },
+      card3: {
+        title: "3. Ejecución Autónoma",
+        body: "La distribución de activos se ejecuta automáticamente mediante la lógica de contratos inteligentes en la cadena cuando se activa tu interruptor de hombre muerto. No se requiere ni es posible la intervención humana una vez activado."
+      },
+      card4: {
+        title: "4. Privacidad",
+        body: "Tu lista de beneficiarios se almacena en la cadena y solo es accesible para tu principal autenticado de Internet Identity. Ningún tercero puede ver tus datos."
+      },
+      card5: {
+        title: "5. Comisiones",
+        body: "Este servicio se presta tal como se describe en la aplicación. Cualquier comisión aplicable a una acción concreta se muestra claramente en la aplicación antes de que confirmes esa acción: sin cargos ocultos ni recurrentes."
+      },
+      card6: {
+        title: "6. Elegibilidad",
+        body: "Debes tener al menos 18 años (o la mayoría de edad en tu jurisdicción) y capacidad legal para aceptar estos términos y usar este servicio."
+      },
+      card7: {
+        title: "7. Sin Garantía",
+        body: "Este servicio se presta «tal cual» y «según disponibilidad», sin garantías de ningún tipo, expresas o implícitas, incluida cualquier garantía de funcionamiento ininterrumpido o sin errores."
+      },
+      card8: {
+        title: "8. Asunción de Riesgos",
+        body: "Las criptomonedas y la tecnología blockchain conllevan riesgos inherentes, incluidos la volatilidad de precios, la congestión de la red, las vulnerabilidades de los contratos inteligentes y los cambios en los protocolos subyacentes. Al usar este servicio, aceptas estos riesgos."
+      },
+      card9: {
+        title: "9. Terminación",
+        body: "El acceso a este servicio puede suspenderse o terminarse por violación de estos términos o por conductas que Sovereign Legacy determine, a su discreción, como perjudiciales para otros usuarios o para el propio servicio."
+      },
+      card10: {
+        title: "10. Modificaciones de Estos Términos",
+        body: "Estos términos pueden actualizarse de vez en cuando. Los cambios importantes se presentarán dentro de la aplicación, y el uso continuado del servicio después de dichos cambios constituye la aceptación de los términos actualizados."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Panel",
+    title: "La Bóveda",
+    balance: "Saldo de la Bóveda",
+    assetsHeld: "{count} activo(s) en custodia",
+    noAssets: "Aún no hay activos",
+    beneficiaries: "Beneficiarios",
+    named: "designados",
+    sealed: "{count} beneficiario(s) sellados",
+    none: "Aún no hay beneficiarios",
+    allocation: "Asignación de Beneficiarios",
+    allocationNone: "Aún no hay asignaciones. Añade un beneficiario para empezar.",
+    allocationAria: "Participaciones de asignación de beneficiarios",
+    switch: "El Interruptor",
+    lastVerified: "Última verificación · {time}",
+    notVerified: "Aún no verificado"
+  },
+  beneficiaries: {
+    eyebrow: "Beneficiarios",
+    title: "Beneficiarios",
+    subtitle: "Las personas y causas para las que está sellado tu legado. La asignación, el orden y las condiciones viven aquí.",
+    allocation: "Asignación",
+    count: "{count} beneficiario(s)",
+    noAllocations: "Aún no hay asignaciones. Añade un beneficiario para empezar.",
+    allocationAria: "Participaciones de asignación de beneficiarios",
+    manage: "Gestionar",
+    manageBody: "Añade un beneficiario y asigna su parte de la bóveda. Las participaciones pueden editarse o revocarse en cualquier momento.",
+    loadError: "No se pudieron cargar los beneficiarios. Inténtalo de nuevo.",
+    emptyTitle: "Aún no hay beneficiarios",
+    emptyBody: "Tu legado no está asignado. Añade tu primer beneficiario para sellar la bóveda para alguien.",
+    noWallet: "Sin dirección de cartera",
+    editAria: "Editar {name}",
+    removeAria: "Eliminar {name}",
+    modal: {
+      editTitle: "Editar beneficiario",
+      addTitle: "Añadir beneficiario",
+      editDesc: "Actualiza el nombre, la participación o la dirección de cartera de este beneficiario.",
+      addDesc: "Asigna un nombre y una participación a un nuevo beneficiario."
+    },
+    namePlaceholder: "p. ej. Elena Marchetti",
+    sharePlaceholder: "p. ej. 40",
+    errors: {
+      nameRequired: "Introduce un nombre para este beneficiario.",
+      sharePositive: "La participación debe ser mayor que cero.",
+      invalidChecksum: "Este identificador de cuenta ICP tiene una suma de verificación no válida. Revisa la dirección.",
+      invalidWallet: "Introduce una dirección de cartera ICP válida: un identificador de cuenta de 64 caracteres o un principal ICP.",
+      totalExceedsEdit: "Esto elevaría la asignación total al {total}%, superando el límite del 100%.",
+      totalExceedsAdd: "La asignación total sería del {total}%, superando el límite del 100%.",
+      saveFailed: "No se pudieron guardar los cambios. Inténtalo de nuevo.",
+      addFailed: "No se pudo añadir el beneficiario. Inténtalo de nuevo."
+    }
+  },
+  assets: {
+    eyebrow: "Legado y Activos",
+    title: "Activos en Custodia",
+    subtitle: "Todo lo que se guarda en la bóveda: saldos, tenencias y las instrucciones que los rigen.",
+    assetsHeld: "Activos en Custodia",
+    beneficiaries: "Beneficiarios",
+    allocationStatus: "Estado de Asignación",
+    sealed: "Sellado",
+    unallocated: "Sin asignar",
+    beneficiaryFallback: "Beneficiario #{id}",
+    errorEyebrow: "Bóveda inaccesible",
+    errorBody: "No pudimos leer los activos en custodia. Inténtalo de nuevo.",
+    emptyEyebrow: "No hay activos en custodia",
+    emptyBody: "La bóveda no contiene actualmente activos de criptomonedas. Cuando se añadan activos, sus saldos y asignaciones a beneficiarios aparecerán aquí.",
+    allocationLabel: "Asignación de Beneficiarios"
+  },
+  switch: {
+    eyebrow: "El Interruptor",
+    title: "El Interruptor",
+    subtitle: "El único control que entrega la bóveda. Armado, verificado y deliberado.",
+    active: "Activo · Interruptor de hombre muerto",
+    standingDown: "En reposo",
+    armed: "ARMADO",
+    disarmed: "DESARMADO",
+    checkIn: "Sigo aquí",
+    arm: "Armar el interruptor",
+    disarm: "Desarmar",
+    cadence: "Cadencia · {duration}",
+    releaseIn: "Liberación en {duration}",
+    timelineAriaArmed: "Cronología del interruptor de hombre muerto, {percent}% de la cadencia transcurrida",
+    timelineAriaDisarmed: "Cronología del interruptor de hombre muerto, desarmado",
+    lastCheckIn: "Última verificación",
+    armedAt: "Armado el",
+    cadenceLabel: "Cadencia",
+    standingDownTitle: "En reposo",
+    standingDownBody: "Desarmar detiene el interruptor de hombre muerto. La bóveda permanece sellada, pero ya no se liberará a tus beneficiarios si se pierde una verificación.",
+    disarmTheSwitch: "Desarmar el interruptor",
+    armTitle: "Armar el interruptor",
+    armBody: "Elige cuánto tiempo espera la bóveda tu próxima verificación. Si la pierdes, la bóveda se libera a tus beneficiarios.",
+    cadenceError: "Elige una cadencia de verificación mayor que cero antes de armar el interruptor.",
+    errorEyebrow: "Interruptor inaccesible",
+    errorBody: "No pudimos leer el estado del interruptor. Inténtalo de nuevo.",
+    cadence24h: "24 horas",
+    cadence7d: "7 días",
+    cadence30d: "30 días"
+  },
+  audit: {
+    eyebrow: "Registros de Auditoría",
+    title: "Registros de Auditoría",
+    ledger: "Registro de Eventos",
+    count: "{count} evento(s) sellados",
+    timestamp: "Marca de tiempo",
+    event: "Evento",
+    description: "Descripción",
+    tableAria: "Registro de auditoría de la bóveda",
+    errorEyebrow: "Registro inaccesible",
+    errorBody: "No pudimos leer el registro de auditoría. Inténtalo de nuevo.",
+    emptyTitle: "Aún no hay eventos",
+    emptyBody: "Cada acción realizada contra la bóveda quedará sellada aquí, en orden, a medida que ocurra.",
+    footer: "Cada entrada está sellada en el registro. Las entradas no pueden editarse ni eliminarse."
+  },
+  settings: {
+    eyebrow: "Ajustes",
+    title: "Configuración de la Bóveda",
+    subtitle: "Conserva la configuración que rige tu legado: el estado de armado/desarmado del Interruptor, su cadencia de verificación y los beneficiarios para los que está sellado.",
+    switchTitle: "El Interruptor",
+    switchDesc: "Arma o desarma la bóveda y establece con qué frecuencia debe verificarse.",
+    beneficiariesTitle: "Beneficiarios",
+    beneficiariesDesc: "Edita las personas y causas para las que está sellado tu legado.",
+    cadence: "Cadencia · {value}",
+    daily: "Diario",
+    weekly: "Semanal",
+    monthly: "Mensual",
+    yearly: "Anual",
+    h24: "24 horas",
+    h7d: "7 días",
+    h30d: "30 días",
+    h365d: "365 días",
+    emptyBeneficiaries: "Aún no hay beneficiarios configurados",
+    editBeneficiary: "Editar beneficiario",
+    editBeneficiaryDesc: "Actualiza el nombre, la participación y la dirección de cartera de este beneficiario.",
+    removeBeneficiary: "Eliminar beneficiario",
+    removeBeneficiaryDesc: "¿Eliminar a {name} de la bóveda? Esta acción no se puede deshacer.",
+    toast: {
+      armed: "El Interruptor se ha armado",
+      armedDesc: "Cadencia de verificación establecida en {cadence}.",
+      armError: "No se pudo armar el Interruptor",
+      armErrorDesc: "La bóveda no pudo armarse. Inténtalo de nuevo.",
+      disarmed: "El Interruptor se ha desarmado",
+      disarmedDesc: "La bóveda ya no está armada.",
+      disarmError: "No se pudo desarmar el Interruptor",
+      disarmErrorDesc: "La bóveda no pudo desarmarse. Inténtalo de nuevo.",
+      beneficiaryUpdated: "Beneficiario actualizado",
+      beneficiaryUpdatedDesc: "La configuración del beneficiario se ha guardado.",
+      updateError: "No se pudo actualizar el beneficiario",
+      updateErrorDesc: "Los cambios no se guardaron. Inténtalo de nuevo.",
+      beneficiaryRemoved: "Beneficiario eliminado",
+      beneficiaryRemovedDesc: "El beneficiario se ha eliminado de la bóveda.",
+      removeError: "No se pudo eliminar el beneficiario",
+      removeErrorDesc: "El beneficiario no pudo eliminarse. Inténtalo de nuevo."
+    }
+  }
+};
+const fa = {
+  meta: {
+    title: "Sovereign Legacy — گاوصندوق",
+    description: "Sovereign Legacy — گاوصندوق. گاوصندوق شما. مهر و موم شده تا زمانی که نباشد."
+  },
+  common: {
+    cancel: "لغو",
+    saveChanges: "ذخیره تغییرات",
+    edit: "ویرایش",
+    remove: "حذف",
+    name: "نام",
+    optional: "اختیاری",
+    addBeneficiary: "افزودن ذی‌نفع",
+    allocationShare: "سهم تخصیص (%)",
+    walletAddress: "آدرس کیف پول",
+    checkInCadence: "بازه بررسی",
+    selectCadence: "انتخاب بازه",
+    armed: "فعال",
+    disarmed: "غیرفعال",
+    arming: "در حال فعال‌سازی…",
+    disarming: "در حال غیرفعال‌سازی…",
+    saving: "در حال ذخیره…",
+    removing: "در حال حذف…",
+    arm: "فعال‌سازی",
+    disarm: "غیرفعال‌سازی"
+  },
+  nav: {
+    dashboard: "داشبورد",
+    beneficiaries: "ذی‌نفعان",
+    legacyAssets: "میراث و دارایی‌ها",
+    theSwitch: "کلید",
+    auditLogs: "گزارش‌های حسابرسی",
+    settings: "تنظیمات"
+  },
+  header: {
+    home: "خانه Sovereign Legacy",
+    networkBadge: "شبکه · هویت",
+    mobileMenu: "باز کردن منوی ناوبری",
+    mobilePrimary: "ناوبری اصلی موبایل"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — گاوصندوق. تمامی حقوق محفوظ است.",
+    tagline: "مهر و موم شده تا زمانی که نباشد"
+  },
+  loading: {
+    openingVault: "در حال باز کردن گاوصندوق…"
+  },
+  language: {
+    label: "زبان"
+  },
+  landing: {
+    eyebrow: "میراث خودحاکم",
+    headline1: "گاوصندوق شما.",
+    headline2: "مهر و موم‌شده تا زمانی که دیگر چنین نباشد.",
+    login: "ورود با Internet Identity",
+    subhead: "یک کلید مرد مرده دیجیتال برای دارایی‌های رمزارزی، که به‌صورت بومی روی Internet Computer ساخته شده — بدون فرآیند تصفیه ارث، بدون تأخیر، و بدون هیچ ناظری جز خود زنجیره.",
+    vaultDoorAlt: "دری کهنه‌ی گاوصندوق بانکی از برنج و فولاد، بسته، با نشان حلقه‌ی بی‌نهایت Internet Computer که به‌طور محو در مرکز آن می‌درخشد.",
+    introduction: {
+      eyebrow: "مقدمه",
+      heading: "کلید مرده — متولد در عصر بخار",
+      p1: "در دهه‌های پایانی قرن نوزدهم، نوع جدیدی از ماشین در حال شکل‌دهی به تمدن بود. ترامواهای برقی اکنون از میان شهرهای شلوغ عبور می‌کردند و آسانسورها مسافران را به ساختمان‌هایی با ارتفاع بی‌سابقه می‌بردند. آن‌ها شگفتی بودند — و خطرناک.",
+      p2: "مشکل ساده و وحشتناک بود: چه اتفاقی می‌افتد وقتی مردی که کنترل را در دست دارد دیگر کنترل ندارد؟ یک راننده تراموا می‌توانست در پشت فرمان دچار حمله قلبی شود. یک اپراتور آسانسور می‌توانست در میانه مسیر هوشیاری خود را از دست بدهد. و ماشین، بی‌اعتنا به سرنوشت اپراتور خود، به سادگی ادامه می‌داد — تا زمانی که به چیزی برخورد کند که آن را متوقف کند.",
+      p3: "مهندس آمریکایی فرانک جی. اسپراگ کسی بود که در سال ۱۸۸۸ خطوط تراموای ریچموند، ویرجینیا را برقی کرد — اولین راه‌آهن برقی شهری موفق در ایالات متحده. نوآوری او به موتور ختم نشد. اسپراگ درک کرد که وسیله‌ای که مسافران را با سرعت حمل می‌کند به راهی برای توقف خود نیاز دارد اگر اپراتور ناتوان شود.",
+      p4: "آن را کلید مرده نامیدند. دستگیره را نگه دار تا به حرکت ادامه دهی. رهایش کن — چه بر اثر حواس‌پرتی، بیماری، یا مرگ — و ماشین خودش می‌ایستد. این نام برای نمایش انتخاب نشد. برای دقت انتخاب شد. کلید با نبودِ دستِ زنده فعال می‌شد.",
+      p5: "این ایده به سرعت گسترش یافت. متروهای نیویورک، لندن و توکیو آن را پذیرفتند. نیروگاه‌های هسته‌ای آن را در میله‌های کنترل خود ساختند. هواپیماهای تجاری آن را در خلبان خودکار خود جاسازی کردند. هر جا که ماشینی جان‌ها را حمل می‌کرد، کلید مرده دنبالش می‌آمد — خاموش، صبور، منتظر.",
+      h3a: "پس کلید مرده در این زمانه چگونه کار می‌کند؟",
+      p6: "سخت کار کرده‌اید. دارایی‌های رمزارزی جمع کرده‌اید — ICP، بیت‌کوین، اتریوم، استیبل‌کوین. آن‌ها در کیف پول‌ها و کانیسترها قرار دارند، محافظت‌شده با کلیدهای خصوصی که فقط شما دارید. و مانند راننده تراموا که دستگیره را گرفته، فقط حضور زنده و فعال شما در شبکه مدار را بسته نگه می‌دارد.",
+      p7: "اینگونه است که Sovereign Legacy همان اصل را به کار می‌گیرد. شما دارایی‌ها را در یک گاوصندوق کانیستری امن روی زنجیره سپرده‌گذاری می‌کنید. یک یا چند ذی‌نفع تعیین می‌کنید و یک دوره عدم فعالیت شبکه تنظیم می‌کنید. تا زمانی که به‌طور دوره‌ای وارد شوید، کلید بسته می‌ماند. لحظه‌ای که این فعالیت متوقف شود، Sovereign Legacy برای شما هشدار می‌فرستد. اگر پاسخ ندهید، انتقال به‌طور خودکار اجرا می‌شود و دارایی‌های شما را بدون وکیل، دادگاه یا تأخیر به ذی‌نفعان انتخابی شما منتقل می‌کند.",
+      h3b: "می‌خواهید خواسته‌های خود را شخصی‌سازی کنید؟",
+      p8: "اگر بیش از یک دریافت‌کننده می‌خواهید — همسر، فرزندان، دوست مورد اعتماد، یک موسسه خیریه — Sovereign Legacy به شما اجازه می‌دهد دارایی‌های خود را بر اساس درصد تقسیم کنید. شما سهم‌ها را تعیین می‌کنید. ذی‌نفعان شما دقیقاً همان چیزی را دریافت می‌کنند که در نظر داشتید."
+    },
+    advantages: {
+      eyebrow: "چرا کار می‌کند",
+      heading: "مزایا در هر مرحله ساخته شده‌اند",
+      card1: {
+        title: "بدون وکیل. بدون مراحل قانونی. بدون تأخیر.",
+        body: "کانیستر دستورات شما را در لحظه‌ای که کلید مرده فعال می‌شود اجرا می‌کند. هیچ نهادی بین خواسته‌های شما و افرادی که دوست دارید نمی‌ایستد."
+      },
+      card2: {
+        title: "شما کنترل را در دست دارید.",
+        body: "در هر زمان ذی‌نفعان را تغییر دهید، درصدها را تنظیم کنید یا پیام خود را به‌روزرسانی کنید. همه‌چیز فوراً و روی زنجیره به‌روزرسانی می‌شود."
+      },
+      card3: {
+        title: "در حالی که می‌خوابید کار می‌کند.",
+        body: "اگر زندگی ادامه یابد، Sovereign Legacy ساکت می‌ماند. اگر ادامه نیابد، همه‌چیز دقیقاً همان‌طور که برنامه‌ریزی کرده‌اید پیش می‌رود."
+      },
+      card4: {
+        title: "دسترسی جهانی.",
+        body: "ذی‌نفعان می‌توانند در هر جای دنیا باشند. Sovereign Legacy به چند زبان صحبت می‌کند و توضیح را بر عهده می‌گیرد تا شما مجبور نباشید."
+      },
+      card5: {
+        title: "داده‌های شما متعلق به شما می‌ماند.",
+        body: "گاوصندوق شما یک کانیستر روی Internet Computer است که با Internet Identity شما محافظت می‌شود. هیچ شخص ثالثی — از جمله خود Sovereign Legacy — به محتوای آن دسترسی ندارد."
+      }
+    },
+    faq: {
+      eyebrow: "سؤالات",
+      heading: "سؤالات متداول",
+      q1: {
+        q: "Sovereign Legacy از چه زبان‌هایی پشتیبانی می‌کند؟",
+        a: "این برنامه از ۲۲ زبان پشتیبانی می‌کند، از جمله زبان‌های راست‌به‌چپ مانند عربی، فارسی و اردو، تا ذی‌نفعان در هر جای دنیا بتوانند اطلاعیه آزادسازی را به زبان خودشان بفهمند."
+      },
+      q2: {
+        q: "گاوصندوق من چقدر امن است؟",
+        a: "گاوصندوق شما یک کانیستر روی Internet Computer است که با Internet Identity شما محافظت می‌شود. فقط اصل تأییدشده شما می‌تواند محتوای آن را ببیند یا مدیریت کند."
+      },
+      q3: {
+        q: "آیا ممکن است روزی گاوصندوقم را از دست بدهم؟",
+        a: "تا زمانی که به Internet Identity خود دسترسی داشته باشید، گاوصندوق شما تحت کنترل شما می‌ماند. خطر اصلی از دست دادن اعتبارنامه‌های Internet Identity است، به همین دلیل نگه‌داشتن نسخه پشتیبان امن از روش بازیابی شما اهمیت دارد."
+      },
+      q4: {
+        q: "دارایی‌ها چگونه بین ذی‌نفعان تقسیم می‌شوند؟",
+        a: "به هر ذی‌نفع یک سهم درصدی اختصاص می‌دهید. سهم‌ها را می‌توان در هر زمان قبل از آزادسازی تنظیم کرد و مجموع تخصیص‌یافته به همه ذی‌نفعان هرگز نباید از ۱۰۰٪ تجاوز کند."
+      },
+      q5: {
+        q: "چگونه تایمر عدم فعالیت شبکه را بازنشانی کنم؟",
+        a: "به سادگی با Internet Identity خود وارد شوید. هر بررسی تأییدشده ساعت عدم فعالیت را بازنشانی می‌کند و کلید مرده را فعال نگه می‌دارد."
+      },
+      q6: {
+        q: "چگونه ذی‌نفع اضافه کنم؟",
+        a: "از داشبورد خود، پنل ذی‌نفعان را باز کنید و نام، اطلاعات تماس و درصد تخصیص را اضافه کنید."
+      },
+      q7: {
+        q: "آیا می‌توانم ذی‌نفعانم را پس از راه‌اندازی تغییر دهم؟",
+        a: "بله. ذی‌نفعان، تخصیص‌ها و پیام‌های شخصی را می‌توان در هر زمان به‌روزرسانی کرد — تغییرات فوراً و روی زنجیره اعمال می‌شوند."
+      },
+      q8: {
+        q: "چه کسی می‌تواند ذی‌نفعان من را ببیند؟",
+        a: "فقط شما، تا زمانی که به‌عنوان مالک گاوصندوق تأیید شده باشید."
+      }
+    },
+    terms: {
+      eyebrow: "شرایط",
+      heading: "شرایط و ضوابط",
+      card1: {
+        title: "۱. مرور کلی",
+        body: "ICP Sovereign Legacy یک پلتفرم غیرمتمرکز، کاملاً روی زنجیره برای میراث و کلید مرده است که بر روی Internet Computer Protocol (ICP) ساخته شده است. با استفاده از این سرویس، با این شرایط موافقت می‌کنید."
+      },
+      card2: {
+        title: "۲. عدم مسئولیت",
+        body: "توسعه‌دهندگان در قبال هیچ از دست دادن دارایی ناشی از پیکربندی نادرست، اعتبارنامه‌های از دست‌رفته Internet Identity، شرایط شبکه بلاک‌چین یا هر علت دیگری مسئول نیستند. این سرویس را با مسئولیت خودتان استفاده کنید."
+      },
+      card3: {
+        title: "۳. اجرای خودمختار",
+        body: "توزیع دارایی به‌طور خودکار توسط منطق قرارداد هوشمند روی زنجیره زمانی که کلید مرده شما فعال می‌شود اجرا می‌گردد. پس از فعال‌شدن، هیچ مداخله انسانی لازم نیست و ممکن نیست."
+      },
+      card4: {
+        title: "۴. حریم خصوصی",
+        body: "فهرست ذی‌نفعان شما روی زنجیره ذخیره می‌شود و فقط برای اصل Internet Identity تأییدشده شما قابل دسترسی است. هیچ شخص ثالثی نمی‌تواند داده‌های شما را ببیند."
+      },
+      card5: {
+        title: "۵. کارمزدها",
+        body: "این سرویس همان‌طور که در برنامه توضیح داده شده ارائه می‌شود. هر کارمزدی که برای یک اقدام خاص اعمال می‌شود قبل از تأیید آن اقدام به‌وضوح در برنامه نشان داده می‌شود — بدون هزینه پنهان یا مکرر."
+      },
+      card6: {
+        title: "۶. شرایط احراز",
+        body: "برای استفاده از این سرویس باید حداقل ۱۸ سال (یا سن قانونی در حوزه قضایی شما) داشته باشید و ظرفیت قانونی برای پذیرش این شرایط را داشته باشید."
+      },
+      card7: {
+        title: "۷. عدم ضمانت",
+        body: "این سرویس «همان‌گونه که هست» و «همان‌گونه که در دسترس است» ارائه می‌شود، بدون هرگونه ضمانت، صریح یا ضمنی، از جمله هر ضمانت عملکرد بدون وقفه یا بدون خطا."
+      },
+      card8: {
+        title: "۸. پذیرش ریسک",
+        body: "رمزارز و فناوری بلاک‌چین ریسک‌های ذاتی دارند، از جمله نوسان قیمت، ازدحام شبکه، آسیب‌پذیری‌های قرارداد هوشمند و تغییرات در پروتکل‌های زیربنایی. با استفاده از این سرویس، این ریسک‌ها را می‌پذیرید."
+      },
+      card9: {
+        title: "۹. خاتمه",
+        body: "دسترسی به این سرویس ممکن است به دلیل نقض این شرایط یا رفتاری که Sovereign Legacy به صلاحدید خود برای سایر کاربران یا خود سرویس مضر تشخیص دهد، معلق یا خاتمه یابد."
+      },
+      card10: {
+        title: "۱۰. اصلاحات این شرایط",
+        body: "این شرایط ممکن است هر از گاهی به‌روزرسانی شود. تغییرات اساسی در برنامه ارائه خواهد شد و ادامه استفاده از سرویس پس از چنین تغییراتی به‌منزله پذیرش شرایط به‌روزرسانی‌شده است."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "داشبورد",
+    title: "گاوصندوق",
+    balance: "موجودی گاوصندوق",
+    assetsHeld: "{count} دارایی نگهداری می‌شود",
+    noAssets: "هنوز دارایی نگهداری نمی‌شود",
+    beneficiaries: "ذی‌نفعان",
+    named: "نام‌گذاری‌شده",
+    sealed: "{count} ذی‌نفع مهر و موم شد",
+    none: "هنوز ذی‌نفعی وجود ندارد",
+    allocation: "تخصیص ذی‌نفعان",
+    allocationNone: "هنوز تخصیصی وجود ندارد. برای شروع یک ذی‌نفع اضافه کنید.",
+    allocationAria: "سهم‌های تخصیص ذی‌نفعان",
+    switch: "کلید",
+    lastVerified: "آخرین بررسی · {time}",
+    notVerified: "هنوز تأیید نشده"
+  },
+  beneficiaries: {
+    eyebrow: "ذی‌نفعان",
+    title: "ذی‌نفعان",
+    subtitle: "افراد و اهدافی که میراث شما برای آن‌ها مهر و موم شده است. تخصیص، ترتیب و شرایط اینجا زندگی می‌کنند.",
+    allocation: "تخصیص",
+    count: "{count} ذی‌نفع",
+    noAllocations: "هنوز تخصیصی وجود ندارد. برای شروع یک ذی‌نفع اضافه کنید.",
+    allocationAria: "سهم‌های تخصیص ذی‌نفعان",
+    manage: "مدیریت",
+    manageBody: "یک ذی‌نفع اضافه کنید و سهم او از گاوصندوق را تعیین کنید. سهم‌ها را می‌توان در هر زمان ویرایش یا لغو کرد.",
+    loadError: "بارگذاری ذی‌نفعان ممکن نشد. لطفاً دوباره تلاش کنید.",
+    emptyTitle: "هنوز ذی‌نفعی وجود ندارد",
+    emptyBody: "میراث شما تخصیص نیافته است. اولین ذی‌نفع خود را اضافه کنید تا گاوصندوق را برای کسی مهر و موم کنید.",
+    noWallet: "بدون آدرس کیف پول",
+    editAria: "ویرایش {name}",
+    removeAria: "حذف {name}",
+    modal: {
+      editTitle: "ویرایش ذی‌نفع",
+      addTitle: "افزودن ذی‌نفع",
+      editDesc: "نام، سهم یا آدرس کیف پول این ذی‌نفع را به‌روزرسانی کنید.",
+      addDesc: "یک نام و سهم تخصیص به ذی‌نفع جدید اختصاص دهید."
+    },
+    namePlaceholder: "مثلاً Elena Marchetti",
+    sharePlaceholder: "مثلاً ۴۰",
+    errors: {
+      nameRequired: "برای این ذی‌نفع نام وارد کنید.",
+      sharePositive: "سهم تخصیص باید بزرگ‌تر از صفر باشد.",
+      invalidChecksum: "این شناسه حساب ICP جمع کنترلی نامعتبر دارد. آدرس را دوباره بررسی کنید.",
+      invalidWallet: "یک آدرس کیف پول ICP معتبر وارد کنید — شناسه حساب ۶۴ کاراکتری یا یک اصل ICP.",
+      totalExceedsEdit: "این کار مجموع تخصیص را به {total}٪ می‌رساند و از حد ۱۰۰٪ تجاوز می‌کند.",
+      totalExceedsAdd: "مجموع تخصیص {total}٪ خواهد بود و از حد ۱۰۰٪ تجاوز می‌کند.",
+      saveFailed: "ذخیره تغییرات ممکن نشد. لطفاً دوباره تلاش کنید.",
+      addFailed: "افزودن ذی‌نفع ممکن نشد. لطفاً دوباره تلاش کنید."
+    }
+  },
+  assets: {
+    eyebrow: "میراث و دارایی‌ها",
+    title: "دارایی‌های نگهداری‌شده",
+    subtitle: "هر چیزی که در گاوصندوق نگهداری می‌شود — موجودی‌ها، دارایی‌ها و دستوراتی که آن‌ها را اداره می‌کنند.",
+    assetsHeld: "دارایی‌های نگهداری‌شده",
+    beneficiaries: "ذی‌نفعان",
+    allocationStatus: "وضعیت تخصیص",
+    sealed: "مهر و موم‌شده",
+    unallocated: "تخصیص‌نیافته",
+    beneficiaryFallback: "ذی‌نفع #{id}",
+    errorEyebrow: "گاوصندوق در دسترس نیست",
+    errorBody: "نتوانستیم دارایی‌های نگهداری‌شده را بخوانیم. لطفاً دوباره تلاش کنید.",
+    emptyEyebrow: "دارایی نگهداری‌شده‌ای وجود ندارد",
+    emptyBody: "گاوصندوق در حال حاضر هیچ دارایی رمزارزی ندارد. پس از افزودن دارایی‌ها، موجودی و تخصیص ذی‌نفعان آن‌ها اینجا ظاهر می‌شود.",
+    allocationLabel: "تخصیص ذی‌نفعان"
+  },
+  switch: {
+    eyebrow: "کلید",
+    title: "کلید",
+    subtitle: "کنترل واحدی که گاوصندوق را تحویل می‌دهد. فعال، تأییدشده و عمدی.",
+    active: "فعال · کلید مرده",
+    standingDown: "در حالت آماده‌باش",
+    armed: "فعال",
+    disarmed: "غیرفعال",
+    checkIn: "من هنوز اینجا هستم",
+    arm: "فعال‌سازی کلید",
+    disarm: "غیرفعال‌سازی",
+    cadence: "بازه · {duration}",
+    releaseIn: "آزادسازی در {duration}",
+    timelineAriaArmed: "خط زمانی کلید مرده، {percent}٪ از بازه سپری شده",
+    timelineAriaDisarmed: "خط زمانی کلید مرده، غیرفعال",
+    lastCheckIn: "آخرین بررسی",
+    armedAt: "فعال‌سازی در",
+    cadenceLabel: "بازه",
+    standingDownTitle: "در حالت آماده‌باش",
+    standingDownBody: "غیرفعال‌سازی کلید مرده را متوقف می‌کند. گاوصندوق مهر و موم می‌ماند، اما دیگر در صورت از دست رفتن یک بررسی به ذی‌نفعان شما آزاد نمی‌شود.",
+    disarmTheSwitch: "غیرفعال‌سازی کلید",
+    armTitle: "فعال‌سازی کلید",
+    armBody: "انتخاب کنید گاوصندوق چقدر برای بررسی بعدی شما صبر کند. اگر آن را از دست بدهید، گاوصندوق به ذی‌نفعان شما آزاد می‌شود.",
+    cadenceError: "قبل از فعال‌سازی کلید، یک بازه بررسی بزرگ‌تر از صفر انتخاب کنید.",
+    errorEyebrow: "کلید در دسترس نیست",
+    errorBody: "نتوانستیم وضعیت کلید را بخوانیم. لطفاً دوباره تلاش کنید.",
+    cadence24h: "۲۴ ساعت",
+    cadence7d: "۷ روز",
+    cadence30d: "۳۰ روز"
+  },
+  audit: {
+    eyebrow: "گزارش‌های حسابرسی",
+    title: "گزارش‌های حسابرسی",
+    ledger: "دفتر رویدادها",
+    count: "{count} رویداد مهر و موم شد",
+    timestamp: "برچسب زمانی",
+    event: "رویداد",
+    description: "توضیحات",
+    tableAria: "گزارش حسابرسی گاوصندوق",
+    errorEyebrow: "دفتر در دسترس نیست",
+    errorBody: "نتوانستیم گزارش حسابرسی را بخوانیم. لطفاً دوباره تلاش کنید.",
+    emptyTitle: "هنوز رویدادی وجود ندارد",
+    emptyBody: "هر اقدامی که علیه گاوصندوق انجام شود اینجا، به ترتیب، به محض وقوع مهر و موم می‌شود.",
+    footer: "هر ورودی در دفتر مهر و موم می‌شود. ورودی‌ها قابل ویرایش یا حذف نیستند."
+  },
+  settings: {
+    eyebrow: "تنظیمات",
+    title: "پیکربندی گاوصندوق",
+    subtitle: "پیکربندی‌ای را که میراث شما را اداره می‌کند حفظ کنید — وضعیت فعال/غیرفعال کلید، بازه بررسی آن و ذی‌نفعانی که برای آن‌ها مهر و موم شده است.",
+    switchTitle: "کلید",
+    switchDesc: "گاوصندوق را فعال یا غیرفعال کنید و تعیین کنید هر چند وقت یک‌بار باید تأیید شود.",
+    beneficiariesTitle: "ذی‌نفعان",
+    beneficiariesDesc: "افراد و اهدافی را که میراث شما برای آن‌ها مهر و موم شده ویرایش کنید.",
+    cadence: "بازه · {value}",
+    daily: "روزانه",
+    weekly: "هفتگی",
+    monthly: "ماهانه",
+    yearly: "سالانه",
+    h24: "۲۴ ساعت",
+    h7d: "۷ روز",
+    h30d: "۳۰ روز",
+    h365d: "۳۶۵ روز",
+    emptyBeneficiaries: "هنوز ذی‌نفعی پیکربندی نشده است",
+    editBeneficiary: "ویرایش ذی‌نفع",
+    editBeneficiaryDesc: "نام، سهم تخصیص و آدرس کیف پول این ذی‌نفع را به‌روزرسانی کنید.",
+    removeBeneficiary: "حذف ذی‌نفع",
+    removeBeneficiaryDesc: "{name} را از گاوصندوق حذف کنیم؟ این عمل قابل بازگشت نیست.",
+    toast: {
+      armed: "کلید فعال شد",
+      armedDesc: "بازه بررسی روی {cadence} تنظیم شد.",
+      armError: "فعال‌سازی کلید ممکن نشد",
+      armErrorDesc: "گاوصندوق نتوانست فعال شود. لطفاً دوباره تلاش کنید.",
+      disarmed: "کلید غیرفعال شد",
+      disarmedDesc: "گاوصندوق دیگر فعال نیست.",
+      disarmError: "غیرفعال‌سازی کلید ممکن نشد",
+      disarmErrorDesc: "گاوصندوق نتوانست غیرفعال شود. لطفاً دوباره تلاش کنید.",
+      beneficiaryUpdated: "ذی‌نفع به‌روزرسانی شد",
+      beneficiaryUpdatedDesc: "پیکربندی ذی‌نفع ذخیره شد.",
+      updateError: "به‌روزرسانی ذی‌نفع ممکن نشد",
+      updateErrorDesc: "تغییرات ذخیره نشدند. لطفاً دوباره تلاش کنید.",
+      beneficiaryRemoved: "ذی‌نفع حذف شد",
+      beneficiaryRemovedDesc: "ذی‌نفع از گاوصندوق حذف شد.",
+      removeError: "حذف ذی‌نفع ممکن نشد",
+      removeErrorDesc: "ذی‌نفع نتوانست حذف شود. لطفاً دوباره تلاش کنید."
+    }
+  }
+};
+const fil = {
+  meta: {
+    title: "Sovereign Legacy — Ang Vault",
+    description: "Sovereign Legacy — Ang Vault. Ang iyong vault. Nakatatak hanggang hindi na."
+  },
+  common: {
+    cancel: "Kanselahin",
+    saveChanges: "I-save ang mga pagbabago",
+    edit: "I-edit",
+    remove: "Alisin",
+    name: "Pangalan",
+    optional: "Opsyonal",
+    addBeneficiary: "Magdagdag ng benepisyaryo",
+    allocationShare: "Bahagi ng alokasyon (%)",
+    walletAddress: "Address ng wallet",
+    checkInCadence: "Dalas ng check-in",
+    selectCadence: "Pumili ng dalas",
+    armed: "Aktibo",
+    disarmed: "Hindi aktibo",
+    arming: "Ina-activate…",
+    disarming: "Ina-deactivate…",
+    saving: "Sine-save…",
+    removing: "Inaalis…",
+    arm: "I-activate",
+    disarm: "I-deactivate"
+  },
+  nav: {
+    dashboard: "Dashboard",
+    beneficiaries: "Mga Benepisyaryo",
+    legacyAssets: "Legacy at Mga Asset",
+    theSwitch: "Ang Switch",
+    auditLogs: "Mga Audit Log",
+    settings: "Mga Setting"
+  },
+  header: {
+    home: "Home ng Sovereign Legacy",
+    networkBadge: "Network · Identity",
+    mobileMenu: "Buksan ang menu ng nabigasyon",
+    mobilePrimary: "Pangunahing nabigasyon sa mobile"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Ang Vault. Nakalaan ang lahat ng karapatan.",
+    tagline: "Nakatatak hanggang hindi na"
+  },
+  loading: {
+    openingVault: "Binubuksan ang vault…"
+  },
+  language: {
+    label: "Wika"
+  },
+  landing: {
+    eyebrow: "Sariling-soberanong pamana",
+    headline1: "Ang iyong kaban.",
+    headline2: "Nakasarado hanggang sa hindi na.",
+    login: "Mag-login gamit ang Internet Identity",
+    subhead: "Isang digital na switch na pang-hudyat kapag pumanaw ang may-ari, para sa crypto, likas na itinayo sa Internet Computer — walang paglilitis ng mana, walang pagkaantala, walang nagmamasid maliban sa mismong kadena.",
+    vaultDoorAlt: "Isang lumang pinto ng bangko na gawa sa tanso at bakal, nakasara, na may emblemang infinity-loop ng Internet Computer na kumikinang nang mahina sa gitna nito.",
+    introduction: {
+      eyebrow: "Panimula",
+      heading: "Ang Dead Man's Switch — Ipinanganak sa Panahon ng Singaw",
+      p1: "Sa mga huling dekada ng ikalabinsiyam na siglo, isang bagong uri ng makina ang humuhubog muli sa sibilisasyon. Ang mga de-kuryenteng tramway ay dumaraan na sa mga mataong lungsod, at ang mga elevator ay nag-aangat ng mga pasahero sa mga gusaling may hindi pa naganap na taas. Sila ay mga kahanga-hanga — at sila ay mapanganib.",
+      p2: "Ang problema ay simple at nakakatakot: ano ang mangyayari kapag ang taong may kontrol ay wala nang kontrol? Ang isang motorman ay maaaring ma-heart attack sa manibela. Ang isang operator ng elevator ay maaaring mawalan ng malay sa kalagitnaan ng biyahe. At ang makina, walang pakialam sa kapalaran ng operator nito, ay magpapatuloy lamang — hanggang sa bumangga ito sa isang bagay na pumipigil dito.",
+      p3: "Ang Amerikanong inhinyero na si Frank J. Sprague ang, noong 1888, nagpaandar ng kuryente sa mga linya ng tramway ng Richmond, Virginia — ang unang matagumpay na de-kuryenteng urban railway sa Estados Unidos. Ang kanyang inobasyon ay hindi huminto sa motor. Naunawaan ni Sprague na ang sasakyang nagdadala ng mga pasahero sa mataas na bilis ay nangangailangan ng paraan upang huminto kung sakaling mawalan ng kakayahan ang operator.",
+      p4: "Tinawag nila itong dead man's switch. Hawakan ang hawakan upang magpatuloy sa paggalaw. Bitawan ito — dahil man sa pagkagambala, sakit, o kamatayan — at humihinto ang makina nang mag-isa. Ang pangalan ay hindi pinili para sa drama. Ito ay pinili para sa katumpakan. Ang switch ay na-activate ng kawalan ng buhay na kamay.",
+      p5: "Mabilis na kumalat ang ideya. Ang mga subway sa New York, London, at Tokyo ay nagpatibay nito. Ang mga planta ng nukleyar na kuryente ay isinama ito sa kanilang mga control rod. Ang mga komersyal na sasakyang panghimpapawid ay isinama ito sa kanilang mga autopilot. Saanman nagdadala ng buhay ang isang makina, sumusunod ang dead man's switch — tahimik, matiyaga, naghihintay.",
+      h3a: "Paano Gumagana ang Dead Man's Switch sa Panahong Ito?",
+      p6: "Nagsumikap ka. Nag-ipon ka ng mga crypto asset — ICP, Bitcoin, Ethereum, stablecoin. Nasa mga wallet at canister ang mga ito, protektado ng mga pribadong susi na tanging ikaw ang mayroon. At tulad ng motorman na humahawak sa hawakan, tanging ang iyong buhay at aktibong presensya sa network ang nagpapanatiling nakasara sa circuit.",
+      p7: "Narito kung paano inilalapat ng Sovereign Legacy ang parehong prinsipyo. Nagdeposito ka ng mga asset sa isang ligtas na on-chain canister vault. Nagtatalaga ka ng isa o higit pang benepisyaryo at nagtatakda ng panahon ng kawalan ng aktibidad sa network. Hangga't regular kang nagla-login, nananatiling nakasara ang switch. Sa sandaling huminto ang aktibidad na iyon, nagpapadala sa iyo ng mga alerto ang Sovereign Legacy. Kung hindi ka tumugon, awtomatikong isinasagawa ang paglipat, inililipat ang iyong mga asset sa iyong mga napiling benepisyaryo nang walang mga abogado, korte, o pagkaantala.",
+      h3b: "Gusto Mong I-personalize ang Iyong Mga Hiling?",
+      p8: "Kung gusto mo ng higit sa isang tatanggap — asawa, mga anak, isang pinagkakatiwalaang kaibigan, isang kawanggawa — pinapayagan ka ng Sovereign Legacy na hatiin ang iyong mga asset ayon sa porsyento. Ikaw ang nagtatakda ng mga bahagi. Natatanggap ng iyong mga benepisyaryo ang eksaktong iyong nilayon."
+    },
+    advantages: {
+      eyebrow: "Bakit ito gumagana",
+      heading: "Ang Mga Bentahe ay Nakapaloob sa Bawat Hakbang",
+      card1: {
+        title: "Walang abogado. Walang probate. Walang pagkaantala.",
+        body: "Isinasagawa ng canister ang iyong mga tagubilin sa sandaling mag-trigger ang dead man's switch. Walang institusyon ang nakatayo sa pagitan ng iyong mga hiling at ng mga taong mahal mo."
+      },
+      card2: {
+        title: "Ikaw ang nananatiling may kontrol.",
+        body: "Palitan ang mga benepisyaryo, ayusin ang mga porsyento, o i-update ang iyong mensahe anumang oras. Lahat ay agad na na-update, on-chain."
+      },
+      card3: {
+        title: "Gumagana habang natutulog ka.",
+        body: "Kung magpapatuloy ang buhay, nananatiling tahimik ang Sovereign Legacy. Kung hindi, lahat ay sumusulong nang eksakto tulad ng iyong binalak."
+      },
+      card4: {
+        title: "Pandaigdigang abot.",
+        body: "Maaaring nasa kahit saan sa mundo ang mga benepisyaryo. Nagsasalita ang Sovereign Legacy ng maraming wika at hinahawakan ang paliwanag upang hindi mo na kailanganin."
+      },
+      card5: {
+        title: "Ang iyong data ay nananatiling sa iyo.",
+        body: "Ang iyong vault ay isang canister sa Internet Computer, na sinisiguro ng iyong Internet Identity. Walang ikatlong partido — kabilang ang Sovereign Legacy mismo — ang may access sa mga nilalaman nito."
+      }
+    },
+    faq: {
+      eyebrow: "Mga Tanong",
+      heading: "Mga Madalas Itanong",
+      q1: {
+        q: "Anong mga wika ang sinusuportahan ng Sovereign Legacy?",
+        a: "Sinusuportahan ng app ang 22 wika, kabilang ang mga wikang kanan-papuntang-kaliwa tulad ng Arabic, Persian, at Urdu, upang maunawaan ng mga benepisyaryo saanman sa mundo ang isang abiso ng paglabas sa kanilang sariling wika."
+      },
+      q2: {
+        q: "Gaano kaligtas ang aking vault?",
+        a: "Ang iyong vault ay isang canister sa Internet Computer, na sinisiguro ng iyong Internet Identity. Tanging ang iyong na-authenticate na principal ang makakakita o makakapamahala sa mga nilalaman nito."
+      },
+      q3: {
+        q: "Maaari ko bang mawala ang aking vault?",
+        a: "Hangga't pinapanatili mo ang access sa iyong Internet Identity, nananatili ang iyong vault sa ilalim ng iyong kontrol. Ang pangunahing panganib ay ang mawala ang iyong mga kredensyal sa Internet Identity, kaya naman mahalaga ang pag-iingat ng ligtas na backup ng iyong paraan ng pagbawi."
+      },
+      q4: {
+        q: "Paano hinahati ang mga asset sa mga benepisyaryo?",
+        a: "Nagtatalaga ka sa bawat benepisyaryo ng bahaging porsyento. Maaaring ayusin ang mga bahagi anumang oras bago ang paglabas, at ang kabuuang inilaan sa lahat ng benepisyaryo ay hindi dapat lumampas sa 100%."
+      },
+      q5: {
+        q: "Paano ko ire-reset ang timer ng kawalan ng aktibidad sa network?",
+        a: "Mag-login lamang gamit ang iyong Internet Identity. Anumang na-authenticate na check-in ay nagre-reset ng orasan ng kawalan ng aktibidad at pinapanatiling aktibo ang dead man's switch."
+      },
+      q6: {
+        q: "Paano ako magdadagdag ng benepisyaryo?",
+        a: "Mula sa iyong dashboard, buksan ang panel ng Mga Benepisyaryo at magdagdag ng pangalan, impormasyon sa pakikipag-ugnayan, at porsyento ng alokasyon."
+      },
+      q7: {
+        q: "Maaari ko bang baguhin ang aking mga benepisyaryo pagkatapos ng setup?",
+        a: "Oo. Ang mga benepisyaryo, alokasyon, at personal na mensahe ay maaaring i-update anumang oras — ang mga pagbabago ay may agarang epekto, on-chain."
+      },
+      q8: {
+        q: "Sino ang makakakita sa aking mga benepisyaryo?",
+        a: "Ikaw lamang, habang na-authenticate bilang may-ari ng vault."
+      }
+    },
+    terms: {
+      eyebrow: "Mga Tuntunin",
+      heading: "Mga Tuntunin at Kundisyon",
+      card1: {
+        title: "1. Pangkalahatang-tanaw",
+        body: "Ang ICP Sovereign Legacy ay isang desentralisado, ganap na on-chain na platform ng pamana at dead-man's-switch na binuo sa Internet Computer Protocol (ICP). Sa paggamit ng serbisyong ito, sumasang-ayon ka sa mga tuntuning ito."
+      },
+      card2: {
+        title: "2. Walang Pananagutan",
+        body: "Ang mga developer ay hindi mananagot sa anumang pagkawala ng mga asset na dulot ng maling configuration, nawalang mga kredensyal sa Internet Identity, mga kondisyon ng blockchain network, o anumang iba pang dahilan. Gamitin ang serbisyong ito sa iyong sariling panganib."
+      },
+      card3: {
+        title: "3. Awtomatikong Pagpapatupad",
+        body: "Ang pamamahagi ng asset ay awtomatikong isinasagawa ng on-chain smart contract logic kapag nag-trigger ang iyong dead-man's-switch. Walang interbensyon ng tao ang kinakailangan o posible kapag na-trigger na."
+      },
+      card4: {
+        title: "4. Privacy",
+        body: "Ang iyong listahan ng benepisyaryo ay nakaimbak on-chain at naa-access lamang ng iyong na-authenticate na Internet Identity principal. Walang ikatlong partido ang makakakita sa iyong data."
+      },
+      card5: {
+        title: "5. Mga Bayarin",
+        body: "Ang serbisyong ito ay ibinibigay gaya ng inilarawan sa loob ng app. Anumang bayarin na naaangkop sa isang partikular na aksyon ay malinaw na ipinapakita sa app bago mo kumpirmahin ang aksyong iyon — walang nakatagong o paulit-ulit na singil."
+      },
+      card6: {
+        title: "6. Pagiging Karapat-dapat",
+        body: "Dapat kang hindi bababa sa 18 taong gulang (o ang edad ng mayoridad sa iyong hurisdiksyon) at may legal na kapasidad na pumasok sa mga tuntuning ito upang gamitin ang serbisyong ito."
+      },
+      card7: {
+        title: "7. Walang Warranty",
+        body: "Ang serbisyong ito ay ibinibigay «gaya ng dati» at «gaya ng magagamit», nang walang mga warranty ng anumang uri, maging hayag o ipinahiwatig, kabilang ang anumang warranty ng walang patid o walang error na operasyon."
+      },
+      card8: {
+        title: "8. Pagtanggap sa Panganib",
+        body: "Ang cryptocurrency at blockchain technology ay may mga likas na panganib, kabilang ang pagbabagu-bago ng presyo, pagsisikip ng network, mga kahinaan ng smart contract, at mga pagbabago sa mga pinagbabatayang protocol. Sa paggamit ng serbisyong ito, tinatanggap mo ang mga panganib na ito."
+      },
+      card9: {
+        title: "9. Pagwawakas",
+        body: "Ang access sa serbisyong ito ay maaaring masuspinde o wakasan dahil sa paglabag sa mga tuntuning ito o sa mga pag-uugali na itinuturing ng Sovereign Legacy, sa sarili nitong pagpapasya, na nakakapinsala sa ibang mga user o sa serbisyo mismo."
+      },
+      card10: {
+        title: "10. Mga Pagbabago sa Mga Tuntuning Ito",
+        body: "Ang mga tuntuning ito ay maaaring i-update paminsan-minsan. Ang mga materyal na pagbabago ay ipapakita sa loob ng app, at ang patuloy na paggamit ng serbisyo pagkatapos ng mga naturang pagbabago ay bumubuo ng pagtanggap sa mga na-update na tuntunin."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Dashboard",
+    title: "Ang Vault",
+    balance: "Balanse ng Vault",
+    assetsHeld: "{count} asset ang hawak",
+    noAssets: "Wala pang hawak na asset",
+    beneficiaries: "Mga Benepisyaryo",
+    named: "pinangalanan",
+    sealed: "{count} benepisyaryo ang nakatatak",
+    none: "Wala pang benepisyaryo",
+    allocation: "Alokasyon ng mga Benepisyaryo",
+    allocationNone: "Wala pang alokasyon. Magdagdag ng benepisyaryo upang magsimula.",
+    allocationAria: "Mga bahagi ng alokasyon ng benepisyaryo",
+    switch: "Ang Switch",
+    lastVerified: "Huling na-verify · {time}",
+    notVerified: "Hindi pa na-verify"
+  },
+  beneficiaries: {
+    eyebrow: "Mga Benepisyaryo",
+    title: "Mga Benepisyaryo",
+    subtitle: "Ang mga tao at layunin kung saan nakatatak ang iyong pamana. Ang alokasyon, pagkakasunud-sunod, at mga kondisyon ay nakatira dito.",
+    allocation: "Alokasyon",
+    count: "{count} benepisyaryo",
+    noAllocations: "Wala pang alokasyon. Magdagdag ng benepisyaryo upang magsimula.",
+    allocationAria: "Mga bahagi ng alokasyon ng benepisyaryo",
+    manage: "Pamahalaan",
+    manageBody: "Magdagdag ng benepisyaryo at italaga ang kanilang bahagi ng vault. Ang mga bahagi ay maaaring i-edit o bawiin anumang oras.",
+    loadError: "Hindi ma-load ang mga benepisyaryo. Pakisubukang muli.",
+    emptyTitle: "Wala pang benepisyaryo",
+    emptyBody: "Ang iyong pamana ay hindi pa itinalaga. Idagdag ang iyong unang benepisyaryo upang itatak ang vault para sa isang tao.",
+    noWallet: "Walang address ng wallet",
+    editAria: "I-edit si {name}",
+    removeAria: "Alisin si {name}",
+    modal: {
+      editTitle: "I-edit ang benepisyaryo",
+      addTitle: "Magdagdag ng benepisyaryo",
+      editDesc: "I-update ang pangalan, bahagi, o address ng wallet ng benepisyaryong ito.",
+      addDesc: "Magtalaga ng pangalan at bahagi ng alokasyon sa isang bagong benepisyaryo."
+    },
+    namePlaceholder: "hal. Elena Marchetti",
+    sharePlaceholder: "hal. 40",
+    errors: {
+      nameRequired: "Maglagay ng pangalan para sa benepisyaryong ito.",
+      sharePositive: "Ang bahagi ng alokasyon ay dapat na mas malaki sa zero.",
+      invalidChecksum: "Ang ICP account identifier na ito ay may hindi wastong checksum. Suriing muli ang address.",
+      invalidWallet: "Maglagay ng wastong ICP wallet address — isang 64-character account identifier o isang ICP principal.",
+      totalExceedsEdit: "Dadalhin nito ang kabuuang alokasyon sa {total}%, na lumalampas sa limitasyong 100%.",
+      totalExceedsAdd: "Ang kabuuang alokasyon ay magiging {total}%, na lumalampas sa limitasyong 100%.",
+      saveFailed: "Hindi mai-save ang mga pagbabago. Pakisubukang muli.",
+      addFailed: "Hindi maidagdag ang benepisyaryo. Pakisubukang muli."
+    }
+  },
+  assets: {
+    eyebrow: "Legacy at Mga Asset",
+    title: "Mga Hawak na Asset",
+    subtitle: "Lahat ng hawak sa vault — mga balanse, pag-aari, at ang mga tagubiling namamahala sa mga ito.",
+    assetsHeld: "Mga Hawak na Asset",
+    beneficiaries: "Mga Benepisyaryo",
+    allocationStatus: "Katayuan ng Alokasyon",
+    sealed: "Nakatatak",
+    unallocated: "Hindi inilaan",
+    beneficiaryFallback: "Benepisyaryo #{id}",
+    errorEyebrow: "Hindi ma-access ang vault",
+    errorBody: "Hindi mabasa ang mga hawak na asset. Pakisubukang muli.",
+    emptyEyebrow: "Walang hawak na asset",
+    emptyBody: "Ang vault ay kasalukuyang walang hawak na crypto asset. Kapag naidagdag ang mga asset, lalabas dito ang kanilang mga balanse at alokasyon sa benepisyaryo.",
+    allocationLabel: "Alokasyon ng mga Benepisyaryo"
+  },
+  switch: {
+    eyebrow: "Ang Switch",
+    title: "Ang Switch",
+    subtitle: "Ang tanging kontrol na nag-aabot ng vault. Aktibo, na-verify, at sinadya.",
+    active: "Aktibo · Dead man's switch",
+    standingDown: "Nakatayo",
+    armed: "AKTIBO",
+    disarmed: "HINDI AKTIBO",
+    checkIn: "Narito pa ako",
+    arm: "I-activate ang switch",
+    disarm: "I-deactivate",
+    cadence: "Dalas · {duration}",
+    releaseIn: "Paglabas sa {duration}",
+    timelineAriaArmed: "Timeline ng dead man's switch, {percent}% ng dalas ang lumipas",
+    timelineAriaDisarmed: "Timeline ng dead man's switch, hindi aktibo",
+    lastCheckIn: "Huling check-in",
+    armedAt: "Na-activate noong",
+    cadenceLabel: "Dalas",
+    standingDownTitle: "Nakatayo",
+    standingDownBody: "Ang pag-deactivate ay humihinto sa dead man's switch. Nananatiling nakatatak ang vault, ngunit hindi na ito maglalabas sa iyong mga benepisyaryo sa isang napalampas na check-in.",
+    disarmTheSwitch: "I-deactivate ang switch",
+    armTitle: "I-activate ang switch",
+    armBody: "Piliin kung gaano katagal maghihintay ang vault para sa iyong susunod na check-in. Kung mapalampas mo ito, maglalabas ang vault sa iyong mga benepisyaryo.",
+    cadenceError: "Pumili ng dalas ng check-in na mas malaki sa zero bago i-activate ang switch.",
+    errorEyebrow: "Hindi ma-access ang switch",
+    errorBody: "Hindi mabasa ang estado ng switch. Pakisubukang muli.",
+    cadence24h: "24 oras",
+    cadence7d: "7 araw",
+    cadence30d: "30 araw"
+  },
+  audit: {
+    eyebrow: "Mga Audit Log",
+    title: "Mga Audit Log",
+    ledger: "Ledger ng mga Kaganapan",
+    count: "{count} kaganapan ang nakatatak",
+    timestamp: "Timestamp",
+    event: "Kaganapan",
+    description: "Paglalarawan",
+    tableAria: "Audit log ng vault",
+    errorEyebrow: "Hindi ma-access ang ledger",
+    errorBody: "Hindi mabasa ang audit ledger. Pakisubukang muli.",
+    emptyTitle: "Wala pang kaganapan",
+    emptyBody: "Bawat aksyon na ginawa laban sa vault ay itatatak dito, sa pagkakasunud-sunod, habang nangyayari ito.",
+    footer: "Bawat entry ay nakatatak sa ledger. Ang mga entry ay hindi maaaring i-edit o alisin."
+  },
+  settings: {
+    eyebrow: "Mga Setting",
+    title: "Configuration ng Vault",
+    subtitle: "Panatilihin ang configuration na namamahala sa iyong pamana — ang estado ng pag-activate/pag-deactivate ng Switch, ang dalas ng check-in nito, at ang mga benepisyaryo kung saan ito nakatatak.",
+    switchTitle: "Ang Switch",
+    switchDesc: "I-activate o i-deactivate ang vault at itakda kung gaano kadalas ito dapat i-verify.",
+    beneficiariesTitle: "Mga Benepisyaryo",
+    beneficiariesDesc: "I-edit ang mga tao at layunin kung saan nakatatak ang iyong pamana.",
+    cadence: "Dalas · {value}",
+    daily: "Araw-araw",
+    weekly: "Lingguhan",
+    monthly: "Buwanan",
+    yearly: "Taunan",
+    h24: "24 oras",
+    h7d: "7 araw",
+    h30d: "30 araw",
+    h365d: "365 araw",
+    emptyBeneficiaries: "Wala pang na-configure na benepisyaryo",
+    editBeneficiary: "I-edit ang benepisyaryo",
+    editBeneficiaryDesc: "I-update ang pangalan, bahagi ng alokasyon, at address ng wallet ng benepisyaryong ito.",
+    removeBeneficiary: "Alisin ang benepisyaryo",
+    removeBeneficiaryDesc: "Alisin si {name} sa vault? Hindi ito maaaring i-undo.",
+    toast: {
+      armed: "Na-activate ang Switch",
+      armedDesc: "Ang dalas ng check-in ay itinakda sa {cadence}.",
+      armError: "Hindi ma-activate ang Switch",
+      armErrorDesc: "Hindi ma-activate ang vault. Pakisubukang muli.",
+      disarmed: "Na-deactivate ang Switch",
+      disarmedDesc: "Hindi na aktibo ang vault.",
+      disarmError: "Hindi ma-deactivate ang Switch",
+      disarmErrorDesc: "Hindi ma-deactivate ang vault. Pakisubukang muli.",
+      beneficiaryUpdated: "Na-update ang benepisyaryo",
+      beneficiaryUpdatedDesc: "Na-save ang configuration ng benepisyaryo.",
+      updateError: "Hindi ma-update ang benepisyaryo",
+      updateErrorDesc: "Hindi na-save ang mga pagbabago. Pakisubukang muli.",
+      beneficiaryRemoved: "Naalis ang benepisyaryo",
+      beneficiaryRemovedDesc: "Naalis ang benepisyaryo sa vault.",
+      removeError: "Hindi maalis ang benepisyaryo",
+      removeErrorDesc: "Hindi maalis ang benepisyaryo. Pakisubukang muli."
+    }
+  }
+};
+const fr = {
+  meta: {
+    title: "Sovereign Legacy — Le Coffre",
+    description: "Sovereign Legacy — Le Coffre. Votre coffre. Scellé jusqu'à ce qu'il ne le soit plus."
+  },
+  common: {
+    cancel: "Annuler",
+    saveChanges: "Enregistrer les modifications",
+    edit: "Modifier",
+    remove: "Supprimer",
+    name: "Nom",
+    optional: "Facultatif",
+    addBeneficiary: "Ajouter un bénéficiaire",
+    allocationShare: "Part d'allocation (%)",
+    walletAddress: "Adresse du portefeuille",
+    checkInCadence: "Cadence de vérification",
+    selectCadence: "Sélectionner la cadence",
+    armed: "Armé",
+    disarmed: "Désarmé",
+    arming: "Armement…",
+    disarming: "Désarmement…",
+    saving: "Enregistrement…",
+    removing: "Suppression…",
+    arm: "Armer",
+    disarm: "Désarmer"
+  },
+  nav: {
+    dashboard: "Tableau de bord",
+    beneficiaries: "Bénéficiaires",
+    legacyAssets: "Héritage et Actifs",
+    theSwitch: "L'Interrupteur",
+    auditLogs: "Journaux d'Audit",
+    settings: "Paramètres"
+  },
+  header: {
+    home: "Accueil Sovereign Legacy",
+    networkBadge: "Réseau · Identité",
+    mobileMenu: "Ouvrir le menu de navigation",
+    mobilePrimary: "Navigation principale mobile"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Le Coffre. Tous droits réservés.",
+    tagline: "Scellé jusqu'à ce qu'il ne le soit plus"
+  },
+  loading: {
+    openingVault: "Ouverture du coffre…"
+  },
+  language: {
+    label: "Langue"
+  },
+  landing: {
+    eyebrow: "Héritage auto-souverain",
+    headline1: "Votre coffre.",
+    headline2: "Scellé jusqu'à ce qu'il ne le soit plus.",
+    login: "Connexion avec Internet Identity",
+    subhead: "Un interrupteur d'homme mort numérique pour vos cryptoactifs, natif sur l'Internet Computer — sans succession, sans délais, sans personne pour surveiller à part la chaîne elle-même.",
+    vaultDoorAlt: "Une porte de coffre-fort bancaire en laiton et acier patinés, fermée, avec l'emblème en boucle infinie d'Internet Computer qui luit faiblement en son centre.",
+    introduction: {
+      eyebrow: "Introduction",
+      heading: "L'Interrupteur de Homme Mort — Né à l'Âge de la Vapeur",
+      p1: "Dans les dernières décennies du XIXe siècle, un nouveau type de machine remodelait la civilisation. Les tramways électriques sillonnaient désormais les villes bondées, et les ascenseurs hissaient les passagers dans des immeubles d'une hauteur sans précédent. C'étaient des merveilles — et elles étaient dangereuses.",
+      p2: "Le problème était simple et terrifiant : que se passe-t-il quand l'homme aux commandes n'est plus aux commandes ? Un conducteur de tramway pouvait être victime d'une crise cardiaque. Un opérateur d'ascenseur pouvait perdre connaissance en pleine course. Et la machine, indifférente au sort de son opérateur, continuait simplement — jusqu'à heurter quelque chose qui l'arrêtait.",
+      p3: "C'est l'ingénieur américain Frank J. Sprague qui, en 1888, électrifia les lignes de tramway de Richmond, en Virginie — le premier chemin de fer électrique urbain réussi des États-Unis. Son innovation ne s'arrêta pas au moteur. Sprague comprit qu'un véhicule transportant des passagers à grande vitesse devait pouvoir s'arrêter seul si l'opérateur devenait incapable.",
+      p4: "Ils l'appelèrent l'interrupteur de homme mort. Tenez la poignée pour continuer. Relâchez-la — que ce soit par distraction, maladie ou mort — et la machine s'arrête d'elle-même. Le nom ne fut pas choisi pour le drame. Il fut choisi pour la précision. L'interrupteur était activé par l'absence de la main vivante.",
+      p5: "L'idée se répandit rapidement. Les métros de New York, Londres et Tokyo l'adoptèrent. Les centrales nucléaires l'intégrèrent à leurs barres de contrôle. Les avions commerciaux l'incorporèrent à leurs pilotes automatiques. Partout où une machine transportait des vies, l'interrupteur de homme mort suivait — silencieux, patient, en attente.",
+      h3a: "Comment Fonctionne un Interrupteur de Homme Mort Aujourd'hui ?",
+      p6: "Vous avez travaillé dur. Vous avez accumulé des actifs crypto — ICP, Bitcoin, Ethereum, stablecoins. Ils reposent dans des portefeuilles et des canisters, protégés par des clés privées que vous seul possédez. Et comme le conducteur agrippant la poignée, seule votre présence vivante et active sur le réseau maintient le circuit fermé.",
+      p7: "Voici comment Sovereign Legacy applique le même principe. Vous déposez des actifs dans un coffre canister sécurisé sur la chaîne. Vous désignez un ou plusieurs bénéficiaires et fixez une période d'inactivité réseau. Tant que vous vous connectez périodiquement, l'interrupteur reste fermé. Dès que cette activité cesse, Sovereign Legacy vous envoie des alertes. Si vous ne répondez pas, le transfert s'exécute automatiquement, déplaçant vos actifs vers vos bénéficiaires choisis, sans avocats, tribunaux ni délais.",
+      h3b: "Vous Souhaitez Personnaliser Vos Volontés ?",
+      p8: "Si vous souhaitez plus d'un destinataire — un conjoint, des enfants, un ami de confiance, une cause caritative — Sovereign Legacy vous permet de diviser vos actifs en pourcentages. Vous fixez les parts. Vos bénéficiaires reçoivent exactement ce que vous aviez prévu."
+    },
+    advantages: {
+      eyebrow: "Pourquoi ça fonctionne",
+      heading: "Les Avantages Sont Intégrés à Chaque Étape",
+      card1: {
+        title: "Pas d'avocats. Pas de succession. Pas de délais.",
+        body: "Le canister exécute vos instructions dès que l'interrupteur de homme mort se déclenche. Aucune institution ne s'interpose entre vos volontés et les personnes que vous aimez."
+      },
+      card2: {
+        title: "Vous gardez le contrôle.",
+        body: "Modifiez les bénéficiaires, ajustez les pourcentages ou mettez à jour votre message à tout moment. Tout se met à jour instantanément, sur la chaîne."
+      },
+      card3: {
+        title: "Fonctionne pendant que vous dormez.",
+        body: "Si la vie continue, Sovereign Legacy reste silencieux. Si elle ne continue pas, tout avance exactement comme vous l'aviez prévu."
+      },
+      card4: {
+        title: "Portée mondiale.",
+        body: "Les bénéficiaires peuvent être n'importe où dans le monde. Sovereign Legacy parle plusieurs langues et gère l'explication pour que vous n'ayez pas à le faire."
+      },
+      card5: {
+        title: "Vos données restent vôtres.",
+        body: "Votre coffre est un canister sur Internet Computer, sécurisé par votre Internet Identity. Aucun tiers — y compris Sovereign Legacy lui-même — n'a accès à son contenu."
+      }
+    },
+    faq: {
+      eyebrow: "Questions",
+      heading: "Questions Fréquentes",
+      q1: {
+        q: "Quelles langues Sovereign Legacy prend-il en charge ?",
+        a: "L'application prend en charge 22 langues, dont des langues de droite à gauche comme l'arabe, le persan et l'ourdou, afin que les bénéficiaires du monde entier puissent comprendre un avis de libération dans leur propre langue."
+      },
+      q2: {
+        q: "Mon coffre est-il sécurisé ?",
+        a: "Votre coffre est un canister sur Internet Computer, sécurisé par votre Internet Identity. Seul votre principal authentifié peut voir ou gérer son contenu."
+      },
+      q3: {
+        q: "Pourrais-je un jour perdre mon coffre ?",
+        a: "Tant que vous conservez l'accès à votre Internet Identity, votre coffre reste sous votre contrôle. Le principal risque est de perdre vos identifiants Internet Identity, c'est pourquoi il est essentiel de conserver une sauvegarde sécurisée de votre méthode de récupération."
+      },
+      q4: {
+        q: "Comment les actifs sont-ils répartis entre les bénéficiaires ?",
+        a: "Vous attribuez à chaque bénéficiaire une part en pourcentage. Les parts peuvent être ajustées à tout moment avant la libération, et le total alloué à tous les bénéficiaires ne doit jamais dépasser 100 %."
+      },
+      q5: {
+        q: "Comment réinitialiser le minuteur d'inactivité réseau ?",
+        a: "Connectez-vous simplement avec votre Internet Identity. Toute vérification authentifiée réinitialise l'horloge d'inactivité et maintient l'interrupteur de homme mort armé."
+      },
+      q6: {
+        q: "Comment ajouter un bénéficiaire ?",
+        a: "Depuis votre tableau de bord, ouvrez le panneau Bénéficiaires et ajoutez un nom, des coordonnées et un pourcentage d'allocation."
+      },
+      q7: {
+        q: "Puis-je modifier mes bénéficiaires après la configuration ?",
+        a: "Oui. Les bénéficiaires, les allocations et les messages personnels peuvent tous être mis à jour à tout moment — les changements prennent effet immédiatement, sur la chaîne."
+      },
+      q8: {
+        q: "Qui peut voir mes bénéficiaires ?",
+        a: "Vous seul, tant que vous êtes authentifié en tant que propriétaire du coffre."
+      }
+    },
+    terms: {
+      eyebrow: "Conditions",
+      heading: "Conditions Générales",
+      card1: {
+        title: "1. Présentation",
+        body: "ICP Sovereign Legacy est une plateforme décentralisée d'héritage et d'interrupteur de homme mort, entièrement sur la chaîne, construite sur le protocole Internet Computer (ICP). En utilisant ce service, vous acceptez ces conditions."
+      },
+      card2: {
+        title: "2. Absence de Responsabilité",
+        body: "Les développeurs ne sont pas responsables de toute perte d'actifs résultant d'une configuration incorrecte, de la perte d'identifiants Internet Identity, des conditions du réseau blockchain ou de toute autre cause. Utilisez ce service à vos propres risques."
+      },
+      card3: {
+        title: "3. Exécution Autonome",
+        body: "La distribution des actifs est exécutée automatiquement par la logique des contrats intelligents sur la chaîne lorsque votre interrupteur de homme mort se déclenche. Aucune intervention humaine n'est requise ni possible une fois déclenché."
+      },
+      card4: {
+        title: "4. Confidentialité",
+        body: "Votre liste de bénéficiaires est stockée sur la chaîne et accessible uniquement à votre principal Internet Identity authentifié. Aucun tiers ne peut voir vos données."
+      },
+      card5: {
+        title: "5. Frais",
+        body: "Ce service est fourni tel que décrit dans l'application. Tout frais applicable à une action spécifique est clairement affiché dans l'application avant que vous ne confirmiez cette action — aucun frais caché ni récurrent."
+      },
+      card6: {
+        title: "6. Éligibilité",
+        body: "Vous devez avoir au moins 18 ans (ou l'âge de la majorité dans votre juridiction) et avoir la capacité légale de conclure ces conditions pour utiliser ce service."
+      },
+      card7: {
+        title: "7. Absence de Garantie",
+        body: "Ce service est fourni « tel quel » et « selon disponibilité », sans garanties d'aucune sorte, expresses ou implicites, y compris toute garantie de fonctionnement ininterrompu ou sans erreur."
+      },
+      card8: {
+        title: "8. Acceptation des Risques",
+        body: "Les cryptomonnaies et la technologie blockchain comportent des risques inhérents, notamment la volatilité des prix, la congestion du réseau, les vulnérabilités des contrats intelligents et les modifications des protocoles sous-jacents. En utilisant ce service, vous acceptez ces risques."
+      },
+      card9: {
+        title: "9. Résiliation",
+        body: "L'accès à ce service peut être suspendu ou résilié en cas de violation de ces conditions ou pour tout comportement que Sovereign Legacy juge, à sa discrétion, préjudiciable aux autres utilisateurs ou au service lui-même."
+      },
+      card10: {
+        title: "10. Modifications de Ces Conditions",
+        body: "Ces conditions peuvent être mises à jour de temps à autre. Les modifications importantes seront présentées dans l'application, et l'utilisation continue du service après ces modifications constitue une acceptation des conditions mises à jour."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Tableau de bord",
+    title: "Le Coffre",
+    balance: "Solde du Coffre",
+    assetsHeld: "{count} actif(s) détenu(s)",
+    noAssets: "Aucun actif détenu pour l'instant",
+    beneficiaries: "Bénéficiaires",
+    named: "désignés",
+    sealed: "{count} bénéficiaire(s) scellé(s)",
+    none: "Aucun bénéficiaire pour l'instant",
+    allocation: "Allocation des Bénéficiaires",
+    allocationNone: "Aucune allocation pour l'instant. Ajoutez un bénéficiaire pour commencer.",
+    allocationAria: "Parts d'allocation des bénéficiaires",
+    switch: "L'Interrupteur",
+    lastVerified: "Dernière vérification · {time}",
+    notVerified: "Pas encore vérifié"
+  },
+  beneficiaries: {
+    eyebrow: "Bénéficiaires",
+    title: "Bénéficiaires",
+    subtitle: "Les personnes et causes pour lesquelles votre héritage est scellé. L'allocation, l'ordre et les conditions vivent ici.",
+    allocation: "Allocation",
+    count: "{count} bénéficiaire(s)",
+    noAllocations: "Aucune allocation pour l'instant. Ajoutez un bénéficiaire pour commencer.",
+    allocationAria: "Parts d'allocation des bénéficiaires",
+    manage: "Gérer",
+    manageBody: "Ajoutez un bénéficiaire et attribuez-lui sa part du coffre. Les parts peuvent être modifiées ou révoquées à tout moment.",
+    loadError: "Impossible de charger les bénéficiaires. Veuillez réessayer.",
+    emptyTitle: "Aucun bénéficiaire pour l'instant",
+    emptyBody: "Votre héritage n'est pas attribué. Ajoutez votre premier bénéficiaire pour sceller le coffre pour quelqu'un.",
+    noWallet: "Aucune adresse de portefeuille",
+    editAria: "Modifier {name}",
+    removeAria: "Supprimer {name}",
+    modal: {
+      editTitle: "Modifier le bénéficiaire",
+      addTitle: "Ajouter un bénéficiaire",
+      editDesc: "Mettez à jour le nom, la part ou l'adresse du portefeuille de ce bénéficiaire.",
+      addDesc: "Attribuez un nom et une part d'allocation à un nouveau bénéficiaire."
+    },
+    namePlaceholder: "p. ex. Elena Marchetti",
+    sharePlaceholder: "p. ex. 40",
+    errors: {
+      nameRequired: "Saisissez un nom pour ce bénéficiaire.",
+      sharePositive: "La part d'allocation doit être supérieure à zéro.",
+      invalidChecksum: "Cet identifiant de compte ICP a une somme de contrôle invalide. Vérifiez l'adresse.",
+      invalidWallet: "Saisissez une adresse de portefeuille ICP valide — un identifiant de compte de 64 caractères ou un principal ICP.",
+      totalExceedsEdit: "Cela porterait l'allocation totale à {total} %, dépassant la limite de 100 %.",
+      totalExceedsAdd: "L'allocation totale serait de {total} %, dépassant la limite de 100 %.",
+      saveFailed: "Impossible d'enregistrer les modifications. Veuillez réessayer.",
+      addFailed: "Impossible d'ajouter le bénéficiaire. Veuillez réessayer."
+    }
+  },
+  assets: {
+    eyebrow: "Héritage et Actifs",
+    title: "Actifs Détenus",
+    subtitle: "Tout ce qui est conservé dans le coffre — soldes, avoirs et les instructions qui les régissent.",
+    assetsHeld: "Actifs Détenus",
+    beneficiaries: "Bénéficiaires",
+    allocationStatus: "État de l'Allocation",
+    sealed: "Scellé",
+    unallocated: "Non alloué",
+    beneficiaryFallback: "Bénéficiaire #{id}",
+    errorEyebrow: "Coffre inaccessible",
+    errorBody: "Impossible de lire les actifs détenus. Veuillez réessayer.",
+    emptyEyebrow: "Aucun actif détenu",
+    emptyBody: "Le coffre ne contient actuellement aucun actif crypto. Une fois des actifs ajoutés, leurs soldes et allocations aux bénéficiaires apparaîtront ici.",
+    allocationLabel: "Allocation des Bénéficiaires"
+  },
+  switch: {
+    eyebrow: "L'Interrupteur",
+    title: "L'Interrupteur",
+    subtitle: "La seule commande qui remet le coffre. Armé, vérifié et délibéré.",
+    active: "Actif · Interrupteur de homme mort",
+    standingDown: "En veille",
+    armed: "ARMÉ",
+    disarmed: "DÉSARMÉ",
+    checkIn: "Je suis toujours là",
+    arm: "Armer l'interrupteur",
+    disarm: "Désarmer",
+    cadence: "Cadence · {duration}",
+    releaseIn: "Libération dans {duration}",
+    timelineAriaArmed: "Chronologie de l'interrupteur de homme mort, {percent} % de la cadence écoulée",
+    timelineAriaDisarmed: "Chronologie de l'interrupteur de homme mort, désarmé",
+    lastCheckIn: "Dernière vérification",
+    armedAt: "Armé le",
+    cadenceLabel: "Cadence",
+    standingDownTitle: "En veille",
+    standingDownBody: "Désarmer interrompt l'interrupteur de homme mort. Le coffre reste scellé, mais il ne se libérera plus vers vos bénéficiaires en cas de vérification manquée.",
+    disarmTheSwitch: "Désarmer l'interrupteur",
+    armTitle: "Armer l'interrupteur",
+    armBody: "Choisissez combien de temps le coffre attend votre prochaine vérification. Si vous la manquez, le coffre se libère vers vos bénéficiaires.",
+    cadenceError: "Choisissez une cadence de vérification supérieure à zéro avant d'armer l'interrupteur.",
+    errorEyebrow: "Interrupteur inaccessible",
+    errorBody: "Impossible de lire l'état de l'interrupteur. Veuillez réessayer.",
+    cadence24h: "24 heures",
+    cadence7d: "7 jours",
+    cadence30d: "30 jours"
+  },
+  audit: {
+    eyebrow: "Journaux d'Audit",
+    title: "Journaux d'Audit",
+    ledger: "Registre des Événements",
+    count: "{count} événement(s) scellé(s)",
+    timestamp: "Horodatage",
+    event: "Événement",
+    description: "Description",
+    tableAria: "Journal d'audit du coffre",
+    errorEyebrow: "Registre inaccessible",
+    errorBody: "Impossible de lire le registre d'audit. Veuillez réessayer.",
+    emptyTitle: "Aucun événement pour l'instant",
+    emptyBody: "Chaque action effectuée sur le coffre sera scellée ici, dans l'ordre, au fur et à mesure.",
+    footer: "Chaque entrée est scellée dans le registre. Les entrées ne peuvent être ni modifiées ni supprimées."
+  },
+  settings: {
+    eyebrow: "Paramètres",
+    title: "Configuration du Coffre",
+    subtitle: "Préservez la configuration qui régit votre héritage — l'état armé/désarmé de l'Interrupteur, sa cadence de vérification et les bénéficiaires pour lesquels il est scellé.",
+    switchTitle: "L'Interrupteur",
+    switchDesc: "Armez ou désarmez le coffre et définissez la fréquence de vérification.",
+    beneficiariesTitle: "Bénéficiaires",
+    beneficiariesDesc: "Modifiez les personnes et causes pour lesquelles votre héritage est scellé.",
+    cadence: "Cadence · {value}",
+    daily: "Quotidien",
+    weekly: "Hebdomadaire",
+    monthly: "Mensuel",
+    yearly: "Annuel",
+    h24: "24 heures",
+    h7d: "7 jours",
+    h30d: "30 jours",
+    h365d: "365 jours",
+    emptyBeneficiaries: "Aucun bénéficiaire configuré pour l'instant",
+    editBeneficiary: "Modifier le bénéficiaire",
+    editBeneficiaryDesc: "Mettez à jour le nom, la part d'allocation et l'adresse du portefeuille de ce bénéficiaire.",
+    removeBeneficiary: "Supprimer le bénéficiaire",
+    removeBeneficiaryDesc: "Supprimer {name} du coffre ? Cette action est irréversible.",
+    toast: {
+      armed: "L'Interrupteur est armé",
+      armedDesc: "Cadence de vérification définie sur {cadence}.",
+      armError: "Impossible d'armer l'Interrupteur",
+      armErrorDesc: "Le coffre n'a pas pu être armé. Veuillez réessayer.",
+      disarmed: "L'Interrupteur est désarmé",
+      disarmedDesc: "Le coffre n'est plus armé.",
+      disarmError: "Impossible de désarmer l'Interrupteur",
+      disarmErrorDesc: "Le coffre n'a pas pu être désarmé. Veuillez réessayer.",
+      beneficiaryUpdated: "Bénéficiaire mis à jour",
+      beneficiaryUpdatedDesc: "La configuration du bénéficiaire a été enregistrée.",
+      updateError: "Impossible de mettre à jour le bénéficiaire",
+      updateErrorDesc: "Les modifications n'ont pas été enregistrées. Veuillez réessayer.",
+      beneficiaryRemoved: "Bénéficiaire supprimé",
+      beneficiaryRemovedDesc: "Le bénéficiaire a été retiré du coffre.",
+      removeError: "Impossible de supprimer le bénéficiaire",
+      removeErrorDesc: "Le bénéficiaire n'a pas pu être supprimé. Veuillez réessayer."
+    }
+  }
+};
+const hi = {
+  meta: {
+    title: "Sovereign Legacy — तिजोरी",
+    description: "Sovereign Legacy — तिजोरी। आपकी तिजोरी। जब तक सील न खुले, सीलबंद।"
+  },
+  common: {
+    cancel: "रद्द करें",
+    saveChanges: "परिवर्तन सहेजें",
+    edit: "संपादित करें",
+    remove: "हटाएँ",
+    name: "नाम",
+    optional: "वैकल्पिक",
+    addBeneficiary: "लाभार्थी जोड़ें",
+    allocationShare: "आवंटन हिस्सा (%)",
+    walletAddress: "वॉलेट पता",
+    checkInCadence: "चेक-इन अंतराल",
+    selectCadence: "अंतराल चुनें",
+    armed: "सक्रिय",
+    disarmed: "निष्क्रिय",
+    arming: "सक्रिय हो रहा है…",
+    disarming: "निष्क्रिय हो रहा है…",
+    saving: "सहेजा जा रहा है…",
+    removing: "हटाया जा रहा है…",
+    arm: "सक्रिय करें",
+    disarm: "निष्क्रिय करें"
+  },
+  nav: {
+    dashboard: "डैशबोर्ड",
+    beneficiaries: "लाभार्थी",
+    legacyAssets: "विरासत और संपत्तियाँ",
+    theSwitch: "स्विच",
+    auditLogs: "ऑडिट लॉग",
+    settings: "सेटिंग्स"
+  },
+  header: {
+    home: "Sovereign Legacy होम",
+    networkBadge: "नेटवर्क · पहचान",
+    mobileMenu: "नेविगेशन मेनू खोलें",
+    mobilePrimary: "मोबाइल मुख्य नेविगेशन"
+  },
+  footer: {
+    copyright: "© {year}। Sovereign Legacy — तिजोरी। सर्वाधिकार सुरक्षित।",
+    tagline: "जब तक सील न खुले, सीलबंद"
+  },
+  loading: {
+    openingVault: "तिजोरी खोली जा रही है…"
+  },
+  language: {
+    label: "भाषा"
+  },
+  landing: {
+    eyebrow: "स्व-संप्रभु विरासत",
+    headline1: "आपकी तिजोरी।",
+    headline2: "सीलबंद, जब तक वह न रहे।",
+    login: "Internet Identity से लॉग इन करें",
+    subhead: "क्रिप्टो के लिए एक डिजिटल डेड मैन स्विच, जो सीधे Internet Computer पर बनाया गया है — कोई प्रोबेट नहीं, कोई देरी नहीं, चेन के अलावा कोई नज़र रखने वाला नहीं।",
+    vaultDoorAlt: "एक पुराना पीतल और स्टील का बैंक तिजोरी दरवाज़ा, बंद, जिसके केंद्र में Internet Computer का इन्फिनिटी-लूप प्रतीक हल्की चमक के साथ जगमगा रहा है।",
+    introduction: {
+      eyebrow: "परिचय",
+      heading: "डेड मैन स्विच — भाप के युग में जन्मा",
+      p1: "उन्नीसवीं सदी के अंतिम दशकों में, एक नई तरह की मशीन सभ्यता को नया रूप दे रही थी। इलेक्ट्रिक ट्राम अब भीड़भाड़ वाले शहरों में चलती थीं, और लिफ्टें यात्रियों को अभूतपूर्व ऊँचाई वाली इमारतों तक ले जाती थीं। वे चमत्कार थीं — और वे खतरनाक थीं।",
+      p2: "समस्या सरल और भयावह थी: जब नियंत्रण में बैठा व्यक्ति नियंत्रण में न रहे तो क्या होगा? एक मोटरमैन को पहिए पर दिल का दौरा पड़ सकता था। एक लिफ्ट ऑपरेटर बीच यात्रा में बेहोश हो सकता था। और मशीन, अपने ऑपरेटर के भाग्य के प्रति उदासीन, बस चलती रहती थी — जब तक कि वह किसी ऐसी चीज़ से न टकरा जाए जो उसे रोक दे।",
+      p3: "यह अमेरिकी इंजीनियर फ्रैंक जे. स्प्रैग ही थे जिन्होंने 1888 में रिचमंड, वर्जीनिया की ट्राम लाइनों का विद्युतीकरण किया — संयुक्त राज्य अमेरिका की पहली सफल इलेक्ट्रिक शहरी रेलवे। उनका नवाचार मोटर तक ही सीमित नहीं था। स्प्रैग ने समझा कि तेज़ गति से यात्रियों को ले जाने वाले वाहन को खुद को रोकने का एक तरीका चाहिए, यदि ऑपरेटर अक्षम हो जाए।",
+      p4: "उन्होंने इसे डेड मैन स्विच कहा। चलते रहने के लिए हैंडल पकड़े रखें। इसे छोड़ दें — चाहे ध्यान भटकने से, बीमारी से या मृत्यु से — और मशीन खुद रुक जाती है। यह नाम नाटकीयता के लिए नहीं चुना गया था। इसे सटीकता के लिए चुना गया था। स्विच जीवित हाथ की अनुपस्थिति से सक्रिय होता था।",
+      p5: "यह विचार तेज़ी से फैला। न्यूयॉर्क, लंदन और टोक्यो की मेट्रो ने इसे अपनाया। परमाणु ऊर्जा संयंत्रों ने इसे अपनी नियंत्रण छड़ों में बनाया। वाणिज्यिक विमानों ने इसे अपने ऑटोपायलट में शामिल किया। जहाँ भी कोई मशीन जीवन ढोती थी, डेड मैन स्विच उसका पीछा करता था — शांत, धैर्यवान, प्रतीक्षारत।",
+      h3a: "आज के समय में डेड मैन स्विच कैसे काम करता है?",
+      p6: "आपने कड़ी मेहनत की है। आपने क्रिप्टो संपत्तियाँ जमा की हैं — ICP, Bitcoin, Ethereum, स्टेबलकॉइन। वे वॉलेट और कैनिस्टर में हैं, निजी कुंजियों से सुरक्षित, जो केवल आपके पास हैं। और हैंडल पकड़ने वाले मोटरमैन की तरह, केवल आपकी जीवित, सक्रिय उपस्थिति ही सर्किट को बंद रखती है।",
+      p7: "Sovereign Legacy उसी सिद्धांत को कैसे लागू करता है, यहाँ बताया गया है। आप संपत्तियाँ एक सुरक्षित ऑन-चेन कैनिस्टर तिजोरी में जमा करते हैं। आप एक या अधिक लाभार्थी नामित करते हैं और नेटवर्क निष्क्रियता अवधि निर्धारित करते हैं। जब तक आप समय-समय पर लॉगिन करते हैं, स्विच बंद रहता है। जिस क्षण वह गतिविधि रुकती है, Sovereign Legacy आपको अलर्ट भेजता है। यदि आप जवाब नहीं देते, तो स्थानांतरण स्वचालित रूप से निष्पादित होता है, आपकी संपत्तियाँ आपके चुने हुए लाभार्थियों तक बिना वकीलों, अदालतों या देरी के पहुँच जाती हैं।",
+      h3b: "अपनी इच्छाओं को निजीकृत करना चाहते हैं?",
+      p8: "यदि आप एक से अधिक प्राप्तकर्ता चाहते हैं — जीवनसाथी, बच्चे, एक भरोसेमंद मित्र, एक धर्मार्थ कारण — तो Sovereign Legacy आपको अपनी संपत्तियों को प्रतिशत के आधार पर विभाजित करने देता है। आप हिस्से तय करते हैं। आपके लाभार्थियों को ठीक वही मिलता है जो आपने चाहा था।"
+    },
+    advantages: {
+      eyebrow: "यह क्यों काम करता है",
+      heading: "लाभ हर कदम में निर्मित हैं",
+      card1: {
+        title: "न वकील। न प्रोबेट। न देरी।",
+        body: "डेड मैन स्विच सक्रिय होते ही कैनिस्टर आपके निर्देशों को निष्पादित करता है। आपकी इच्छाओं और आपके प्रियजनों के बीच कोई संस्था नहीं आती।"
+      },
+      card2: {
+        title: "आप नियंत्रण में रहते हैं।",
+        body: "किसी भी समय लाभार्थी बदलें, प्रतिशत समायोजित करें या अपना संदेश अपडेट करें। सब कुछ तुरंत, ऑन-चेन अपडेट होता है।"
+      },
+      card3: {
+        title: "आपके सोते समय भी काम करता है।",
+        body: "यदि जीवन चलता रहता है, तो Sovereign Legacy शांत रहता है। यदि नहीं, तो सब कुछ ठीक वैसे ही आगे बढ़ता है जैसा आपने योजना बनाई थी।"
+      },
+      card4: {
+        title: "वैश्विक पहुँच।",
+        body: "लाभार्थी दुनिया में कहीं भी हो सकते हैं। Sovereign Legacy कई भाषाएँ बोलता है और स्पष्टीकरण का ध्यान रखता है, ताकि आपको न करना पड़े।"
+      },
+      card5: {
+        title: "आपका डेटा आपका ही रहता है।",
+        body: "आपकी तिजोरी Internet Computer पर एक कैनिस्टर है, जो आपकी Internet Identity से सुरक्षित है। कोई तीसरा पक्ष — स्वयं Sovereign Legacy सहित — इसकी सामग्री तक पहुँच नहीं रखता।"
+      }
+    },
+    faq: {
+      eyebrow: "प्रश्न",
+      heading: "अक्सर पूछे जाने वाले प्रश्न",
+      q1: {
+        q: "Sovereign Legacy कौन-सी भाषाएँ समर्थित करता है?",
+        a: "ऐप 22 भाषाओं का समर्थन करता है, जिनमें अरबी, फ़ारसी और उर्दू जैसी दाएँ-से-बाएँ भाषाएँ शामिल हैं, ताकि दुनिया में कहीं भी लाभार्थी रिलीज़ सूचना को अपनी भाषा में समझ सकें।"
+      },
+      q2: {
+        q: "मेरी तिजोरी कितनी सुरक्षित है?",
+        a: "आपकी तिजोरी Internet Computer पर एक कैनिस्टर है, जो आपकी Internet Identity से सुरक्षित है। केवल आपका प्रमाणित प्रिंसिपल ही इसकी सामग्री देख या प्रबंधित कर सकता है।"
+      },
+      q3: {
+        q: "क्या मैं कभी अपनी तिजोरी खो सकता हूँ?",
+        a: "जब तक आपके पास अपनी Internet Identity तक पहुँच है, आपकी तिजोरी आपके नियंत्रण में रहती है। मुख्य जोखिम आपकी Internet Identity साख खोना है, इसीलिए अपनी पुनर्प्राप्ति विधि का सुरक्षित बैकअप रखना महत्वपूर्ण है।"
+      },
+      q4: {
+        q: "संपत्तियाँ लाभार्थियों के बीच कैसे विभाजित होती हैं?",
+        a: "आप प्रत्येक लाभार्थी को प्रतिशत हिस्सा देते हैं। हिस्से रिलीज़ से पहले किसी भी समय समायोजित किए जा सकते हैं, और सभी लाभार्थियों को आवंटित कुल राशि कभी भी 100% से अधिक नहीं होनी चाहिए।"
+      },
+      q5: {
+        q: "नेटवर्क निष्क्रियता टाइमर कैसे रीसेट करूँ?",
+        a: "बस अपनी Internet Identity से लॉगिन करें। कोई भी प्रमाणित चेक-इन निष्क्रियता घड़ी को रीसेट करता है और डेड मैन स्विच को सक्रिय रखता है।"
+      },
+      q6: {
+        q: "लाभार्थी कैसे जोड़ूँ?",
+        a: "अपने डैशबोर्ड से, लाभार्थी पैनल खोलें और नाम, संपर्क जानकारी और आवंटन प्रतिशत जोड़ें।"
+      },
+      q7: {
+        q: "क्या मैं सेटअप के बाद अपने लाभार्थी बदल सकता हूँ?",
+        a: "हाँ। लाभार्थी, आवंटन और व्यक्तिगत संदेश किसी भी समय अपडेट किए जा सकते हैं — परिवर्तन तुरंत, ऑन-चेन प्रभावी होते हैं।"
+      },
+      q8: {
+        q: "मेरे लाभार्थियों को कौन देख सकता है?",
+        a: "केवल आप, जब तिजोरी के स्वामी के रूप में प्रमाणित हैं।"
+      }
+    },
+    terms: {
+      eyebrow: "शर्तें",
+      heading: "नियम और शर्तें",
+      card1: {
+        title: "1. अवलोकन",
+        body: "ICP Sovereign Legacy एक विकेंद्रीकृत, पूर्णतः ऑन-चेन विरासत और डेड-मैन-स्विच प्लेटफ़ॉर्म है, जो Internet Computer Protocol (ICP) पर बना है। इस सेवा का उपयोग करके, आप इन शर्तों से सहमत होते हैं।"
+      },
+      card2: {
+        title: "2. कोई दायित्व नहीं",
+        body: "डेवलपर्स गलत कॉन्फ़िगरेशन, खोई हुई Internet Identity साख, ब्लॉकचेन नेटवर्क स्थितियों या किसी अन्य कारण से होने वाली संपत्ति की किसी भी हानि के लिए उत्तरदायी नहीं हैं। इस सेवा का उपयोग अपने जोखिम पर करें।"
+      },
+      card3: {
+        title: "3. स्वायत्त निष्पादन",
+        body: "जब आपका डेड-मैन-स्विच सक्रिय होता है, तो संपत्ति वितरण ऑन-चेन स्मार्ट कॉन्ट्रैक्ट लॉजिक द्वारा स्वचालित रूप से निष्पादित होता है। सक्रिय होने के बाद कोई मानवीय हस्तक्षेप आवश्यक या संभव नहीं है।"
+      },
+      card4: {
+        title: "4. गोपनीयता",
+        body: "आपकी लाभार्थी सूची ऑन-चेन संग्रहीत है और केवल आपके प्रमाणित Internet Identity प्रिंसिपल के लिए सुलभ है। कोई तीसरा पक्ष आपका डेटा नहीं देख सकता।"
+      },
+      card5: {
+        title: "5. शुल्क",
+        body: "यह सेवा ऐप में वर्णित अनुसार प्रदान की जाती है। किसी विशिष्ट कार्रवाई पर लागू होने वाले किसी भी शुल्क को उस कार्रवाई की पुष्टि करने से पहले ऐप में स्पष्ट रूप से दिखाया जाता है — कोई छिपा या आवर्ती शुल्क नहीं।"
+      },
+      card6: {
+        title: "6. पात्रता",
+        body: "इस सेवा का उपयोग करने के लिए आपकी आयु कम से कम 18 वर्ष (या आपके क्षेत्राधिकार में वयस्कता की आयु) होनी चाहिए और इन शर्तों में प्रवेश करने की कानूनी क्षमता होनी चाहिए।"
+      },
+      card7: {
+        title: "7. कोई वारंटी नहीं",
+        body: "यह सेवा «जैसी है» और «जैसी उपलब्ध है» प्रदान की जाती है, बिना किसी प्रकार की वारंटी के, चाहे वह स्पष्ट या निहित हो, जिसमें निर्बाध या त्रुटि-मुक्त संचालन की कोई वारंटी शामिल है।"
+      },
+      card8: {
+        title: "8. जोखिम की स्वीकृति",
+        body: "क्रिप्टोकरेंसी और ब्लॉकचेन तकनीक में अंतर्निहित जोखिम हैं, जिनमें मूल्य अस्थिरता, नेटवर्क भीड़, स्मार्ट कॉन्ट्रैक्ट कमज़ोरियाँ और अंतर्निहित प्रोटोकॉल में परिवर्तन शामिल हैं। इस सेवा का उपयोग करके, आप इन जोखिमों को स्वीकार करते हैं।"
+      },
+      card9: {
+        title: "9. समाप्ति",
+        body: "इन शर्तों के उल्लंघन या ऐसे आचरण के लिए इस सेवा तक पहुँच निलंबित या समाप्त की जा सकती है, जिसे Sovereign Legacy अपने विवेक से अन्य उपयोगकर्ताओं या सेवा के लिए हानिकारक निर्धारित करता है।"
+      },
+      card10: {
+        title: "10. इन शर्तों में संशोधन",
+        body: "इन शर्तों को समय-समय पर अद्यतन किया जा सकता है। महत्वपूर्ण परिवर्तन ऐप के भीतर प्रस्तुत किए जाएँगे, और ऐसे परिवर्तनों के बाद सेवा का निरंतर उपयोग अद्यतन शर्तों की स्वीकृति माना जाएगा।"
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "डैशबोर्ड",
+    title: "तिजोरी",
+    balance: "तिजोरी शेष",
+    assetsHeld: "{count} संपत्ति(याँ) रखी गईं",
+    noAssets: "अभी तक कोई संपत्ति नहीं",
+    beneficiaries: "लाभार्थी",
+    named: "नामित",
+    sealed: "{count} लाभार्थी सीलबंद",
+    none: "अभी तक कोई लाभार्थी नहीं",
+    allocation: "लाभार्थी आवंटन",
+    allocationNone: "अभी तक कोई आवंटन नहीं। शुरू करने के लिए लाभार्थी जोड़ें।",
+    allocationAria: "लाभार्थी आवंटन हिस्से",
+    switch: "स्विच",
+    lastVerified: "अंतिम सत्यापन · {time}",
+    notVerified: "अभी सत्यापित नहीं"
+  },
+  beneficiaries: {
+    eyebrow: "लाभार्थी",
+    title: "लाभार्थी",
+    subtitle: "जिन लोगों और कारणों के लिए आपकी विरासत सीलबंद है। आवंटन, क्रम और शर्तें यहाँ रहती हैं।",
+    allocation: "आवंटन",
+    count: "{count} लाभार्थी",
+    noAllocations: "अभी तक कोई आवंटन नहीं। शुरू करने के लिए लाभार्थी जोड़ें।",
+    allocationAria: "लाभार्थी आवंटन हिस्से",
+    manage: "प्रबंधित करें",
+    manageBody: "लाभार्थी जोड़ें और तिजोरी में उनका हिस्सा निर्धारित करें। हिस्से किसी भी समय संपादित या रद्द किए जा सकते हैं।",
+    loadError: "लाभार्थियों को लोड नहीं किया जा सका। कृपया पुनः प्रयास करें।",
+    emptyTitle: "अभी तक कोई लाभार्थी नहीं",
+    emptyBody: "आपकी विरासत अधिसौंपी नहीं गई है। किसी के लिए तिजोरी सील करने हेतु अपना पहला लाभार्थी जोड़ें।",
+    noWallet: "कोई वॉलेट पता नहीं",
+    editAria: "{name} को संपादित करें",
+    removeAria: "{name} को हटाएँ",
+    modal: {
+      editTitle: "लाभार्थी संपादित करें",
+      addTitle: "लाभार्थी जोड़ें",
+      editDesc: "इस लाभार्थी का नाम, हिस्सा या वॉलेट पता अपडेट करें।",
+      addDesc: "नए लाभार्थी को नाम और आवंटन हिस्सा निर्धारित करें।"
+    },
+    namePlaceholder: "जैसे: Elena Marchetti",
+    sharePlaceholder: "जैसे: 40",
+    errors: {
+      nameRequired: "इस लाभार्थी के लिए नाम दर्ज करें।",
+      sharePositive: "आवंटन हिस्सा शून्य से अधिक होना चाहिए।",
+      invalidChecksum: "इस ICP खाता पहचानकर्ता की चेकसम अमान्य है। पता दोबारा जाँचें।",
+      invalidWallet: "मान्य ICP वॉलेट पता दर्ज करें — 64-अक्षर का खाता पहचानकर्ता या ICP प्रिंसिपल।",
+      totalExceedsEdit: "इससे कुल आवंटन {total}% हो जाएगा, जो 100% की सीमा से अधिक है।",
+      totalExceedsAdd: "कुल आवंटन {total}% होगा, जो 100% की सीमा से अधिक है।",
+      saveFailed: "परिवर्तन सहेजे नहीं जा सके। कृपया पुनः प्रयास करें।",
+      addFailed: "लाभार्थी जोड़ा नहीं जा सका। कृपया पुनः प्रयास करें।"
+    }
+  },
+  assets: {
+    eyebrow: "विरासत और संपत्तियाँ",
+    title: "रखी गई संपत्तियाँ",
+    subtitle: "तिजोरी में रखी हर चीज़ — शेष, होल्डिंग्स और उन्हें नियंत्रित करने वाले निर्देश।",
+    assetsHeld: "रखी गई संपत्तियाँ",
+    beneficiaries: "लाभार्थी",
+    allocationStatus: "आवंटन स्थिति",
+    sealed: "सीलबंद",
+    unallocated: "अनावंटित",
+    beneficiaryFallback: "लाभार्थी #{id}",
+    errorEyebrow: "तिजोरी अनुपलब्ध",
+    errorBody: "रखी गई संपत्तियाँ पढ़ी नहीं जा सकीं। कृपया पुनः प्रयास करें।",
+    emptyEyebrow: "कोई संपत्ति नहीं",
+    emptyBody: "तिजोरी में फिलहाल कोई क्रिप्टो संपत्ति नहीं है। संपत्तियाँ जोड़े जाने पर उनके शेष और लाभार्थी आवंटन यहाँ दिखाई देंगे।",
+    allocationLabel: "लाभार्थी आवंटन"
+  },
+  switch: {
+    eyebrow: "स्विच",
+    title: "स्विच",
+    subtitle: "वह एकमात्र नियंत्रण जो तिजोरी सौंपता है। सक्रिय, सत्यापित और सोच-समझकर।",
+    active: "सक्रिय · डेड मैन स्विच",
+    standingDown: "स्थगित",
+    armed: "सक्रिय",
+    disarmed: "निष्क्रिय",
+    checkIn: "मैं अभी भी यहाँ हूँ",
+    arm: "स्विच सक्रिय करें",
+    disarm: "निष्क्रिय करें",
+    cadence: "अंतराल · {duration}",
+    releaseIn: "{duration} में रिलीज़",
+    timelineAriaArmed: "डेड मैन स्विच टाइमलाइन, अंतराल का {percent}% बीत चुका",
+    timelineAriaDisarmed: "डेड मैन स्विच टाइमलाइन, निष्क्रिय",
+    lastCheckIn: "अंतिम चेक-इन",
+    armedAt: "सक्रिय किया गया",
+    cadenceLabel: "अंतराल",
+    standingDownTitle: "स्थगित",
+    standingDownBody: "निष्क्रिय करने से डेड मैन स्विच रुक जाता है। तिजोरी सीलबंद रहती है, लेकिन छूटे चेक-इन पर आपके लाभार्थियों को रिलीज़ नहीं होगी।",
+    disarmTheSwitch: "स्विच निष्क्रिय करें",
+    armTitle: "स्विच सक्रिय करें",
+    armBody: "चुनें कि तिजोरी आपके अगले चेक-इन के लिए कितनी देर प्रतीक्षा करे। यदि आप इसे चूक जाते हैं, तो तिजोरी आपके लाभार्थियों को रिलीज़ हो जाती है।",
+    cadenceError: "स्विच सक्रिय करने से पहले शून्य से अधिक चेक-इन अंतराल चुनें।",
+    errorEyebrow: "स्विच अनुपलब्ध",
+    errorBody: "स्विच की स्थिति पढ़ी नहीं जा सकी। कृपया पुनः प्रयास करें।",
+    cadence24h: "24 घंटे",
+    cadence7d: "7 दिन",
+    cadence30d: "30 दिन"
+  },
+  audit: {
+    eyebrow: "ऑडिट लॉग",
+    title: "ऑडिट लॉग",
+    ledger: "इवेंट लेजर",
+    count: "{count} इवेंट सीलबंद",
+    timestamp: "टाइमस्टैम्प",
+    event: "इवेंट",
+    description: "विवरण",
+    tableAria: "तिजोरी ऑडिट लॉग",
+    errorEyebrow: "लेजर अनुपलब्ध",
+    errorBody: "ऑडिट लेजर पढ़ा नहीं जा सका। कृपया पुनः प्रयास करें।",
+    emptyTitle: "अभी तक कोई इवेंट नहीं",
+    emptyBody: "तिजोरी के विरुद्ध की गई हर कार्रवाई यहाँ क्रम से सील की जाएगी, जैसे-जैसे वह घटित होगी।",
+    footer: "हर प्रविष्टि लेजर पर सीलबंद है। प्रविष्टियों को संपादित या हटाया नहीं जा सकता।"
+  },
+  settings: {
+    eyebrow: "सेटिंग्स",
+    title: "तिजोरी कॉन्फ़िगरेशन",
+    subtitle: "अपनी विरासत को नियंत्रित करने वाला कॉन्फ़िगरेशन सुरक्षित रखें — स्विच की सक्रिय/निष्क्रिय स्थिति, उसका चेक-इन अंतराल और जिन लाभार्थियों के लिए वह सीलबंद है।",
+    switchTitle: "स्विच",
+    switchDesc: "तिजोरी को सक्रिय या निष्क्रिय करें और निर्धारित करें कि उसे कितनी बार सत्यापित किया जाना चाहिए।",
+    beneficiariesTitle: "लाभार्थी",
+    beneficiariesDesc: "जिन लोगों और कारणों के लिए आपकी विरासत सीलबंद है, उन्हें संपादित करें।",
+    cadence: "अंतराल · {value}",
+    daily: "दैनिक",
+    weekly: "साप्ताहिक",
+    monthly: "मासिक",
+    yearly: "वार्षिक",
+    h24: "24 घंटे",
+    h7d: "7 दिन",
+    h30d: "30 दिन",
+    h365d: "365 दिन",
+    emptyBeneficiaries: "अभी तक कोई लाभार्थी कॉन्फ़िगर नहीं",
+    editBeneficiary: "लाभार्थी संपादित करें",
+    editBeneficiaryDesc: "इस लाभार्थी का नाम, आवंटन हिस्सा और वॉलेट पता अपडेट करें।",
+    removeBeneficiary: "लाभार्थी हटाएँ",
+    removeBeneficiaryDesc: "{name} को तिजोरी से हटाएँ? इसे पूर्ववत नहीं किया जा सकता।",
+    toast: {
+      armed: "स्विच सक्रिय हो गया",
+      armedDesc: "चेक-इन अंतराल {cadence} निर्धारित किया गया।",
+      armError: "स्विच सक्रिय नहीं किया जा सका",
+      armErrorDesc: "तिजोरी सक्रिय नहीं हो सकी। कृपया पुनः प्रयास करें।",
+      disarmed: "स्विच निष्क्रिय हो गया",
+      disarmedDesc: "तिजोरी अब सक्रिय नहीं है।",
+      disarmError: "स्विच निष्क्रिय नहीं किया जा सका",
+      disarmErrorDesc: "तिजोरी निष्क्रिय नहीं हो सकी। कृपया पुनः प्रयास करें।",
+      beneficiaryUpdated: "लाभार्थी अपडेट हो गया",
+      beneficiaryUpdatedDesc: "लाभार्थी कॉन्फ़िगरेशन सहेज लिया गया।",
+      updateError: "लाभार्थी अपडेट नहीं किया जा सका",
+      updateErrorDesc: "परिवर्तन सहेजे नहीं गए। कृपया पुनः प्रयास करें।",
+      beneficiaryRemoved: "लाभार्थी हटा दिया गया",
+      beneficiaryRemovedDesc: "लाभार्थी को तिजोरी से हटा दिया गया।",
+      removeError: "लाभार्थी हटाया नहीं जा सका",
+      removeErrorDesc: "लाभार्थी हटाया नहीं जा सका। कृपया पुनः प्रयास करें।"
+    }
+  }
+};
+const id = {
+  meta: {
+    title: "Sovereign Legacy — Brankas",
+    description: "Sovereign Legacy — Brankas. Brankas Anda. Tersegel sampai tidak lagi tersegel."
+  },
+  common: {
+    cancel: "Batal",
+    saveChanges: "Simpan perubahan",
+    edit: "Edit",
+    remove: "Hapus",
+    name: "Nama",
+    optional: "Opsional",
+    addBeneficiary: "Tambah penerima manfaat",
+    allocationShare: "Bagian alokasi (%)",
+    walletAddress: "Alamat dompet",
+    checkInCadence: "Interval check-in",
+    selectCadence: "Pilih interval",
+    armed: "Aktif",
+    disarmed: "Nonaktif",
+    arming: "Mengaktifkan…",
+    disarming: "Menonaktifkan…",
+    saving: "Menyimpan…",
+    removing: "Menghapus…",
+    arm: "Aktifkan",
+    disarm: "Nonaktifkan"
+  },
+  nav: {
+    dashboard: "Dasbor",
+    beneficiaries: "Penerima Manfaat",
+    legacyAssets: "Warisan & Aset",
+    theSwitch: "Saklar",
+    auditLogs: "Log Audit",
+    settings: "Pengaturan"
+  },
+  header: {
+    home: "Beranda Sovereign Legacy",
+    networkBadge: "Jaringan · Identitas",
+    mobileMenu: "Buka menu navigasi",
+    mobilePrimary: "Navigasi utama seluler"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Brankas. Semua hak dilindungi.",
+    tagline: "Tersegel sampai tidak lagi tersegel"
+  },
+  loading: {
+    openingVault: "Membuka brankas…"
+  },
+  language: {
+    label: "Bahasa"
+  },
+  landing: {
+    eyebrow: "Warisan yang berdaulat penuh",
+    headline1: "Brankas Anda.",
+    headline2: "Tersegel sampai saatnya tiba.",
+    login: "Masuk dengan Internet Identity",
+    subhead: "Saklar mati digital untuk aset kripto, dibangun secara native di Internet Computer — tanpa proses hukum warisan, tanpa penundaan, tanpa ada yang mengawasi selain rantai itu sendiri.",
+    vaultDoorAlt: "Pintu brankas bank dari kuningan dan baja yang lapuk, tertutup, dengan lambang lingkaran tak hingga Internet Computer yang menyala redup di tengahnya.",
+    introduction: {
+      eyebrow: "Pendahuluan",
+      heading: "Saklar Orang Mati — Lahir di Zaman Uap",
+      p1: "Pada dekade-dekade terakhir abad kesembilan belas, jenis mesin baru sedang membentuk kembali peradaban. Trem listrik kini melintasi kota-kota yang padat, dan lift mengangkat penumpang ke gedung-gedung setinggi yang belum pernah ada. Itu adalah keajaiban — dan itu berbahaya.",
+      p2: "Masalahnya sederhana dan menakutkan: apa yang terjadi ketika orang yang mengendalikan tidak lagi mengendalikan? Seorang pengemudi trem bisa terkena serangan jantung di kemudi. Seorang operator lift bisa kehilangan kesadaran di tengah perjalanan. Dan mesin itu, acuh tak acuh terhadap nasib operatornya, hanya terus berjalan — sampai menabrak sesuatu yang menghentikannya.",
+      p3: "Adalah insinyur Amerika Frank J. Sprague yang, pada tahun 1888, mengaliri listrik jalur trem Richmond, Virginia — kereta api listrik perkotaan pertama yang sukses di Amerika Serikat. Inovasinya tidak berhenti pada motor. Sprague memahami bahwa kendaraan yang membawa penumpang dengan kecepatan tinggi perlu memiliki cara untuk berhenti sendiri jika operatornya menjadi tidak mampu.",
+      p4: "Mereka menyebutnya saklar orang mati. Pegang gagangnya untuk terus bergerak. Lepaskan — entah karena gangguan, penyakit, atau kematian — dan mesin berhenti sendiri. Nama itu tidak dipilih untuk drama. Ia dipilih untuk ketepatan. Saklar diaktifkan oleh ketiadaan tangan yang hidup.",
+      p5: "Ide itu menyebar dengan cepat. Kereta bawah tanah di New York, London, dan Tokyo mengadopsinya. Pembangkit listrik tenaga nuklir membangunnya ke dalam batang kendali mereka. Pesawat komersial menanamkannya ke dalam autopilot mereka. Di mana pun mesin membawa nyawa, saklar orang mati mengikutinya — diam, sabar, menunggu.",
+      h3a: "Bagaimana Saklar Orang Mati Bekerja di Zaman Sekarang?",
+      p6: "Anda telah bekerja keras. Anda telah mengumpulkan aset kripto — ICP, Bitcoin, Ethereum, stablecoin. Aset itu berada di dompet dan canister, diamankan oleh kunci privat yang hanya Anda miliki. Dan seperti pengemudi trem yang menggenggam gagang, hanya kehadiran Anda yang hidup dan aktif di jaringan yang menjaga sirkuit tetap tertutup.",
+      p7: "Beginilah cara Sovereign Legacy menerapkan prinsip yang sama. Anda menyetor aset ke brankas canister on-chain yang aman. Anda menunjuk satu atau lebih penerima manfaat dan menetapkan periode ketidakaktifan jaringan. Selama Anda masuk secara berkala, saklar tetap tertutup. Begitu aktivitas itu berhenti, Sovereign Legacy mengirimkan peringatan kepada Anda. Jika Anda tidak merespons, transfer dieksekusi secara otomatis, memindahkan aset Anda ke penerima manfaat pilihan Anda tanpa pengacara, pengadilan, atau penundaan.",
+      h3b: "Ingin Mempersonalisasi Keinginan Anda?",
+      p8: "Jika Anda menginginkan lebih dari satu penerima — pasangan, anak-anak, teman tepercaya, tujuan amal — Sovereign Legacy memungkinkan Anda membagi aset berdasarkan persentase. Anda yang menentukan bagiannya. Penerima manfaat Anda menerima persis seperti yang Anda maksudkan."
+    },
+    advantages: {
+      eyebrow: "Mengapa berhasil",
+      heading: "Keunggulan Tertanam di Setiap Langkah",
+      card1: {
+        title: "Tanpa pengacara. Tanpa probate. Tanpa penundaan.",
+        body: "Canister mengeksekusi instruksi Anda begitu saklar orang mati terpicu. Tidak ada institusi yang berdiri di antara keinginan Anda dan orang-orang yang Anda cintai."
+      },
+      card2: {
+        title: "Anda tetap memegang kendali.",
+        body: "Ubah penerima manfaat, sesuaikan persentase, atau perbarui pesan Anda kapan saja. Semuanya diperbarui secara instan, on-chain."
+      },
+      card3: {
+        title: "Bekerja saat Anda tidur.",
+        body: "Jika hidup terus berjalan, Sovereign Legacy tetap diam. Jika tidak, semuanya berjalan persis seperti yang Anda rencanakan."
+      },
+      card4: {
+        title: "Jangkauan global.",
+        body: "Penerima manfaat bisa berada di mana saja di dunia. Sovereign Legacy berbicara banyak bahasa dan menangani penjelasannya sehingga Anda tidak perlu melakukannya."
+      },
+      card5: {
+        title: "Data Anda tetap milik Anda.",
+        body: "Brankas Anda adalah canister di Internet Computer, diamankan oleh Internet Identity Anda. Tidak ada pihak ketiga — termasuk Sovereign Legacy sendiri — yang memiliki akses ke isinya."
+      }
+    },
+    faq: {
+      eyebrow: "Pertanyaan",
+      heading: "Pertanyaan yang Sering Diajukan",
+      q1: {
+        q: "Bahasa apa saja yang didukung Sovereign Legacy?",
+        a: "Aplikasi ini mendukung 22 bahasa, termasuk bahasa kanan-ke-kiri seperti Arab, Persia, dan Urdu, sehingga penerima manfaat di mana pun di dunia dapat memahami pemberitahuan pelepasan dalam bahasa mereka sendiri."
+      },
+      q2: {
+        q: "Seberapa aman brankas saya?",
+        a: "Brankas Anda adalah canister di Internet Computer, diamankan oleh Internet Identity Anda. Hanya principal terautentikasi Anda yang dapat melihat atau mengelola isinya."
+      },
+      q3: {
+        q: "Bisakah saya kehilangan brankas saya?",
+        a: "Selama Anda mempertahankan akses ke Internet Identity Anda, brankas Anda tetap berada di bawah kendali Anda. Risiko utamanya adalah kehilangan kredensial Internet Identity, itulah sebabnya menyimpan cadangan aman untuk metode pemulihan Anda itu penting."
+      },
+      q4: {
+        q: "Bagaimana aset dibagi di antara penerima manfaat?",
+        a: "Anda menetapkan bagian persentase untuk setiap penerima manfaat. Bagian dapat disesuaikan kapan saja sebelum pelepasan, dan total yang dialokasikan ke semua penerima manfaat tidak boleh melebihi 100%."
+      },
+      q5: {
+        q: "Bagaimana cara mengatur ulang pengatur waktu ketidakaktifan jaringan?",
+        a: "Cukup masuk dengan Internet Identity Anda. Setiap check-in terautentikasi mengatur ulang jam ketidakaktifan dan menjaga saklar orang mati tetap aktif."
+      },
+      q6: {
+        q: "Bagaimana cara menambah penerima manfaat?",
+        a: "Dari dasbor Anda, buka panel Penerima Manfaat dan tambahkan nama, informasi kontak, dan persentase alokasi."
+      },
+      q7: {
+        q: "Bisakah saya mengubah penerima manfaat setelah pengaturan?",
+        a: "Ya. Penerima manfaat, alokasi, dan pesan pribadi semuanya dapat diperbarui kapan saja — perubahan berlaku seketika, on-chain."
+      },
+      q8: {
+        q: "Siapa yang dapat melihat penerima manfaat saya?",
+        a: "Hanya Anda, selama terautentikasi sebagai pemilik brankas."
+      }
+    },
+    terms: {
+      eyebrow: "Ketentuan",
+      heading: "Syarat & Ketentuan",
+      card1: {
+        title: "1. Ringkasan",
+        body: "ICP Sovereign Legacy adalah platform warisan dan saklar orang mati yang terdesentralisasi, sepenuhnya on-chain, dibangun di atas Protokol Internet Computer (ICP). Dengan menggunakan layanan ini, Anda menyetujui ketentuan ini."
+      },
+      card2: {
+        title: "2. Tanpa Tanggung Jawab",
+        body: "Para pengembang tidak bertanggung jawab atas kehilangan aset apa pun yang diakibatkan oleh konfigurasi yang salah, kredensial Internet Identity yang hilang, kondisi jaringan blockchain, atau penyebab lainnya. Gunakan layanan ini dengan risiko Anda sendiri."
+      },
+      card3: {
+        title: "3. Eksekusi Otonom",
+        body: "Distribusi aset dieksekusi secara otomatis oleh logika kontrak pintar on-chain ketika saklar orang mati Anda terpicu. Tidak ada intervensi manusia yang diperlukan atau mungkin dilakukan setelah terpicu."
+      },
+      card4: {
+        title: "4. Privasi",
+        body: "Daftar penerima manfaat Anda disimpan on-chain dan hanya dapat diakses oleh principal Internet Identity terautentikasi Anda. Tidak ada pihak ketiga yang dapat melihat data Anda."
+      },
+      card5: {
+        title: "5. Biaya",
+        body: "Layanan ini disediakan sebagaimana dijelaskan dalam aplikasi. Biaya apa pun yang berlaku untuk tindakan tertentu ditampilkan dengan jelas di aplikasi sebelum Anda mengonfirmasi tindakan tersebut — tanpa biaya tersembunyi atau berulang."
+      },
+      card6: {
+        title: "6. Kelayakan",
+        body: "Anda harus berusia minimal 18 tahun (atau usia dewasa di yurisdiksi Anda) dan memiliki kapasitas hukum untuk menyetujui ketentuan ini guna menggunakan layanan ini."
+      },
+      card7: {
+        title: "7. Tanpa Jaminan",
+        body: "Layanan ini disediakan «sebagaimana adanya» dan «sesuai ketersediaan», tanpa jaminan apa pun, baik tersurat maupun tersirat, termasuk jaminan operasi tanpa gangguan atau bebas kesalahan."
+      },
+      card8: {
+        title: "8. Penerimaan Risiko",
+        body: "Mata uang kripto dan teknologi blockchain membawa risiko yang melekat, termasuk volatilitas harga, kemacetan jaringan, kerentanan kontrak pintar, dan perubahan protokol yang mendasarinya. Dengan menggunakan layanan ini, Anda menerima risiko-risiko ini."
+      },
+      card9: {
+        title: "9. Penghentian",
+        body: "Akses ke layanan ini dapat ditangguhkan atau dihentikan karena pelanggaran ketentuan ini atau perilaku yang menurut Sovereign Legacy, atas kebijakannya, merugikan pengguna lain atau layanan itu sendiri."
+      },
+      card10: {
+        title: "10. Perubahan Ketentuan Ini",
+        body: "Ketentuan ini dapat diperbarui dari waktu ke waktu. Perubahan material akan disajikan di dalam aplikasi, dan penggunaan layanan yang berkelanjutan setelah perubahan tersebut merupakan penerimaan atas ketentuan yang diperbarui."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Dasbor",
+    title: "Brankas",
+    balance: "Saldo Brankas",
+    assetsHeld: "{count} aset disimpan",
+    noAssets: "Belum ada aset yang disimpan",
+    beneficiaries: "Penerima Manfaat",
+    named: "dinamai",
+    sealed: "{count} penerima manfaat tersegel",
+    none: "Belum ada penerima manfaat",
+    allocation: "Alokasi Penerima Manfaat",
+    allocationNone: "Belum ada alokasi. Tambahkan penerima manfaat untuk memulai.",
+    allocationAria: "Bagian alokasi penerima manfaat",
+    switch: "Saklar",
+    lastVerified: "Terakhir diverifikasi · {time}",
+    notVerified: "Belum diverifikasi"
+  },
+  beneficiaries: {
+    eyebrow: "Penerima Manfaat",
+    title: "Penerima Manfaat",
+    subtitle: "Orang dan tujuan yang menjadi tempat warisan Anda tersegel. Alokasi, urutan, dan ketentuan ada di sini.",
+    allocation: "Alokasi",
+    count: "{count} penerima manfaat",
+    noAllocations: "Belum ada alokasi. Tambahkan penerima manfaat untuk memulai.",
+    allocationAria: "Bagian alokasi penerima manfaat",
+    manage: "Kelola",
+    manageBody: "Tambahkan penerima manfaat dan tetapkan bagian mereka dari brankas. Bagian dapat diedit atau dicabut kapan saja.",
+    loadError: "Tidak dapat memuat penerima manfaat. Silakan coba lagi.",
+    emptyTitle: "Belum ada penerima manfaat",
+    emptyBody: "Warisan Anda belum ditetapkan. Tambahkan penerima manfaat pertama Anda untuk menyegel brankas bagi seseorang.",
+    noWallet: "Tidak ada alamat dompet",
+    editAria: "Edit {name}",
+    removeAria: "Hapus {name}",
+    modal: {
+      editTitle: "Edit penerima manfaat",
+      addTitle: "Tambah penerima manfaat",
+      editDesc: "Perbarui nama, bagian, atau alamat dompet penerima manfaat ini.",
+      addDesc: "Tetapkan nama dan bagian alokasi untuk penerima manfaat baru."
+    },
+    namePlaceholder: "mis. Elena Marchetti",
+    sharePlaceholder: "mis. 40",
+    errors: {
+      nameRequired: "Masukkan nama untuk penerima manfaat ini.",
+      sharePositive: "Bagian alokasi harus lebih besar dari nol.",
+      invalidChecksum: "Pengidentifikasi akun ICP ini memiliki checksum yang tidak valid. Periksa kembali alamatnya.",
+      invalidWallet: "Masukkan alamat dompet ICP yang valid — pengidentifikasi akun 64 karakter atau principal ICP.",
+      totalExceedsEdit: "Ini akan membawa total alokasi ke {total}%, melebihi batas 100%.",
+      totalExceedsAdd: "Total alokasi akan menjadi {total}%, melebihi batas 100%.",
+      saveFailed: "Tidak dapat menyimpan perubahan. Silakan coba lagi.",
+      addFailed: "Tidak dapat menambah penerima manfaat. Silakan coba lagi."
+    }
+  },
+  assets: {
+    eyebrow: "Warisan & Aset",
+    title: "Aset yang Disimpan",
+    subtitle: "Segala sesuatu yang disimpan di brankas — saldo, kepemilikan, dan instruksi yang mengaturnya.",
+    assetsHeld: "Aset yang Disimpan",
+    beneficiaries: "Penerima Manfaat",
+    allocationStatus: "Status Alokasi",
+    sealed: "Tersegel",
+    unallocated: "Belum dialokasikan",
+    beneficiaryFallback: "Penerima Manfaat #{id}",
+    errorEyebrow: "Brankas tidak dapat diakses",
+    errorBody: "Tidak dapat membaca aset yang disimpan. Silakan coba lagi.",
+    emptyEyebrow: "Tidak ada aset yang disimpan",
+    emptyBody: "Brankas saat ini tidak menyimpan aset kripto. Setelah aset ditambahkan, saldo dan alokasi penerima manfaatnya akan muncul di sini.",
+    allocationLabel: "Alokasi Penerima Manfaat"
+  },
+  switch: {
+    eyebrow: "Saklar",
+    title: "Saklar",
+    subtitle: "Satu-satunya kendali yang menyerahkan brankas. Aktif, terverifikasi, dan disengaja.",
+    active: "Aktif · Saklar orang mati",
+    standingDown: "Berdiri diam",
+    armed: "AKTIF",
+    disarmed: "NONAKTIF",
+    checkIn: "Saya masih di sini",
+    arm: "Aktifkan saklar",
+    disarm: "Nonaktifkan",
+    cadence: "Interval · {duration}",
+    releaseIn: "Pelepasan dalam {duration}",
+    timelineAriaArmed: "Linimasa saklar orang mati, {percent}% interval berlalu",
+    timelineAriaDisarmed: "Linimasa saklar orang mati, nonaktif",
+    lastCheckIn: "Check-in terakhir",
+    armedAt: "Diaktifkan pada",
+    cadenceLabel: "Interval",
+    standingDownTitle: "Berdiri diam",
+    standingDownBody: "Menonaktifkan menghentikan saklar orang mati. Brankas tetap tersegel, tetapi tidak akan lagi melepaskan ke penerima manfaat Anda saat check-in terlewat.",
+    disarmTheSwitch: "Nonaktifkan saklar",
+    armTitle: "Aktifkan saklar",
+    armBody: "Pilih berapa lama brankas menunggu check-in berikutnya. Jika Anda melewatkannya, brankas melepaskan ke penerima manfaat Anda.",
+    cadenceError: "Pilih interval check-in lebih besar dari nol sebelum mengaktifkan saklar.",
+    errorEyebrow: "Saklar tidak dapat diakses",
+    errorBody: "Tidak dapat membaca status saklar. Silakan coba lagi.",
+    cadence24h: "24 jam",
+    cadence7d: "7 hari",
+    cadence30d: "30 hari"
+  },
+  audit: {
+    eyebrow: "Log Audit",
+    title: "Log Audit",
+    ledger: "Buku Besar Peristiwa",
+    count: "{count} peristiwa tersegel",
+    timestamp: "Stempel waktu",
+    event: "Peristiwa",
+    description: "Deskripsi",
+    tableAria: "Log audit brankas",
+    errorEyebrow: "Buku besar tidak dapat diakses",
+    errorBody: "Tidak dapat membaca buku besar audit. Silakan coba lagi.",
+    emptyTitle: "Belum ada peristiwa",
+    emptyBody: "Setiap tindakan yang dilakukan terhadap brankas akan tersegel di sini, secara berurutan, saat terjadi.",
+    footer: "Setiap entri tersegel di buku besar. Entri tidak dapat diedit atau dihapus."
+  },
+  settings: {
+    eyebrow: "Pengaturan",
+    title: "Konfigurasi Brankas",
+    subtitle: "Pertahankan konfigurasi yang mengatur warisan Anda — status aktif/nonaktif Saklar, interval check-in, dan penerima manfaat yang menjadi tempatnya tersegel.",
+    switchTitle: "Saklar",
+    switchDesc: "Aktifkan atau nonaktifkan brankas dan atur seberapa sering brankas harus diverifikasi.",
+    beneficiariesTitle: "Penerima Manfaat",
+    beneficiariesDesc: "Edit orang dan tujuan yang menjadi tempat warisan Anda tersegel.",
+    cadence: "Interval · {value}",
+    daily: "Harian",
+    weekly: "Mingguan",
+    monthly: "Bulanan",
+    yearly: "Tahunan",
+    h24: "24 jam",
+    h7d: "7 hari",
+    h30d: "30 hari",
+    h365d: "365 hari",
+    emptyBeneficiaries: "Belum ada penerima manfaat yang dikonfigurasi",
+    editBeneficiary: "Edit penerima manfaat",
+    editBeneficiaryDesc: "Perbarui nama, bagian alokasi, dan alamat dompet penerima manfaat ini.",
+    removeBeneficiary: "Hapus penerima manfaat",
+    removeBeneficiaryDesc: "Hapus {name} dari brankas? Tindakan ini tidak dapat dibatalkan.",
+    toast: {
+      armed: "Saklar diaktifkan",
+      armedDesc: "Interval check-in diatur ke {cadence}.",
+      armError: "Tidak dapat mengaktifkan Saklar",
+      armErrorDesc: "Brankas tidak dapat diaktifkan. Silakan coba lagi.",
+      disarmed: "Saklar dinonaktifkan",
+      disarmedDesc: "Brankas tidak lagi aktif.",
+      disarmError: "Tidak dapat menonaktifkan Saklar",
+      disarmErrorDesc: "Brankas tidak dapat dinonaktifkan. Silakan coba lagi.",
+      beneficiaryUpdated: "Penerima manfaat diperbarui",
+      beneficiaryUpdatedDesc: "Konfigurasi penerima manfaat telah disimpan.",
+      updateError: "Tidak dapat memperbarui penerima manfaat",
+      updateErrorDesc: "Perubahan tidak disimpan. Silakan coba lagi.",
+      beneficiaryRemoved: "Penerima manfaat dihapus",
+      beneficiaryRemovedDesc: "Penerima manfaat telah dihapus dari brankas.",
+      removeError: "Tidak dapat menghapus penerima manfaat",
+      removeErrorDesc: "Penerima manfaat tidak dapat dihapus. Silakan coba lagi."
+    }
+  }
+};
+const it = {
+  meta: {
+    title: "Sovereign Legacy — La Volta",
+    description: "Sovereign Legacy — La Volta. La tua volta. Sigillata finché non lo sarà più."
+  },
+  common: {
+    cancel: "Annulla",
+    saveChanges: "Salva modifiche",
+    edit: "Modifica",
+    remove: "Rimuovi",
+    name: "Nome",
+    optional: "Facoltativo",
+    addBeneficiary: "Aggiungi beneficiario",
+    allocationShare: "Quota di assegnazione (%)",
+    walletAddress: "Indirizzo del portafoglio",
+    checkInCadence: "Cadenza di verifica",
+    selectCadence: "Seleziona cadenza",
+    armed: "Armato",
+    disarmed: "Disarmato",
+    arming: "Armamento…",
+    disarming: "Disarmamento…",
+    saving: "Salvataggio…",
+    removing: "Rimozione…",
+    arm: "Arma",
+    disarm: "Disarma"
+  },
+  nav: {
+    dashboard: "Pannello",
+    beneficiaries: "Beneficiari",
+    legacyAssets: "Eredità e Attivi",
+    theSwitch: "L'Interruttore",
+    auditLogs: "Registri di Controllo",
+    settings: "Impostazioni"
+  },
+  header: {
+    home: "Home di Sovereign Legacy",
+    networkBadge: "Rete · Identità",
+    mobileMenu: "Apri menu di navigazione",
+    mobilePrimary: "Navigazione principale mobile"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — La Volta. Tutti i diritti riservati.",
+    tagline: "Sigillata finché non lo sarà più"
+  },
+  loading: {
+    openingVault: "Apertura della volta…"
+  },
+  language: {
+    label: "Lingua"
+  },
+  landing: {
+    eyebrow: "Eredità auto-sovrana",
+    headline1: "Il tuo caveau.",
+    headline2: "Sigillato finché non lo è più.",
+    login: "Accedi con Internet Identity",
+    subhead: "Un interruttore digitale dell'uomo morto per le criptovalute, costruito nativamente su Internet Computer — senza successione, senza ritardi, senza nessuno a sorvegliare tranne la catena stessa.",
+    vaultDoorAlt: "Una porta di cassaforte bancaria in ottone e acciaio consumati, chiusa, con l'emblema del cappio infinito di Internet Computer che brilla debolmente al centro.",
+    introduction: {
+      eyebrow: "Introduzione",
+      heading: "L'Interruttore di Uomo Morto — Nato nell'Età del Vapore",
+      p1: "Negli ultimi decenni del diciannovesimo secolo, un nuovo tipo di macchina stava rimodellando la civiltà. I tram elettrici ora attraversavano le città affollate e gli ascensori sollevavano i passeggeri in edifici di altezza senza precedenti. Erano meraviglie — ed erano pericolosi.",
+      p2: "Il problema era semplice e terrificante: cosa succede quando l'uomo al comando non è più al comando? Un conducente di tram poteva subire un infarto al volante. Un operatore di ascensore poteva perdere conoscenza a metà corsa. E la macchina, indifferente al destino del suo operatore, semplicemente continuava — finché non urtava qualcosa che la fermava.",
+      p3: "Fu l'ingegnere americano Frank J. Sprague che, nel 1888, elettrificò le linee tranviarie di Richmond, in Virginia — la prima ferrovia elettrica urbana di successo negli Stati Uniti. La sua innovazione non si fermò al motore. Sprague capì che un veicolo che trasportava passeggeri ad alta velocità doveva poter fermarsi da solo se l'operatore fosse diventato incapace.",
+      p4: "Lo chiamarono l'interruttore di uomo morto. Tieni la maniglia per continuare a muoverti. Rilasciala — sia per distrazione, malattia o morte — e la macchina si ferma da sola. Il nome non fu scelto per il dramma. Fu scelto per la precisione. L'interruttore era attivato dall'assenza della mano viva.",
+      p5: "L'idea si diffuse rapidamente. Le metropolitane di New York, Londra e Tokyo la adottarono. Le centrali nucleari la integrarono nelle loro barre di controllo. Gli aerei commerciali la incorporarono nei loro piloti automatici. Ovunque una macchina trasportasse vite, l'interruttore di uomo morto la seguiva — silenzioso, paziente, in attesa.",
+      h3a: "Come Funziona un Interruttore di Uomo Morto ai Giorni Nostri?",
+      p6: "Hai lavorato duramente. Hai accumulato attivi in criptovaluta — ICP, Bitcoin, Ethereum, stablecoin. Riposano in portafogli e canister, protetti da chiavi private che solo tu possiedi. E come il conducente che stringe la maniglia, solo la tua presenza viva e attiva sulla rete mantiene il circuito chiuso.",
+      p7: "Ecco come Sovereign Legacy applica lo stesso principio. Depositi attivi in una volta canister sicura sulla catena. Designi uno o più beneficiari e imposti un periodo di inattività di rete. Finché accedi periodicamente, l'interruttore resta chiuso. Nel momento in cui quell'attività cessa, Sovereign Legacy ti invia avvisi. Se non rispondi, il trasferimento viene eseguito automaticamente, spostando i tuoi attivi verso i beneficiari scelti senza avvocati, tribunali o ritardi.",
+      h3b: "Vuoi Personalizzare i Tuoi Desideri?",
+      p8: "Se desideri più di un destinatario — un coniuge, figli, un amico fidato, una causa benefica — Sovereign Legacy ti consente di dividere i tuoi attivi in percentuale. Tu imposti le quote. I tuoi beneficiari ricevono esattamente ciò che intendevi."
+    },
+    advantages: {
+      eyebrow: "Perché funziona",
+      heading: "I Vantaggi Sono Integrati in Ogni Passaggio",
+      card1: {
+        title: "Niente avvocati. Niente successioni. Niente ritardi.",
+        body: "Il canister esegue le tue istruzioni nel momento in cui scatta l'interruttore di uomo morto. Nessuna istituzione si frappone tra i tuoi desideri e le persone che ami."
+      },
+      card2: {
+        title: "Tu mantieni il controllo.",
+        body: "Cambia beneficiari, regola le percentuali o aggiorna il tuo messaggio in qualsiasi momento. Tutto si aggiorna all'istante, sulla catena."
+      },
+      card3: {
+        title: "Funziona mentre dormi.",
+        body: "Se la vita continua, Sovereign Legacy resta in silenzio. Se non continua, tutto procede esattamente come avevi pianificato."
+      },
+      card4: {
+        title: "Portata globale.",
+        body: "I beneficiari possono essere ovunque nel mondo. Sovereign Legacy parla più lingue e gestisce la spiegazione, così non devi farlo tu."
+      },
+      card5: {
+        title: "I tuoi dati restano tuoi.",
+        body: "La tua volta è un canister su Internet Computer, protetto dalla tua Internet Identity. Nessun terzo — incluso lo stesso Sovereign Legacy — ha accesso al suo contenuto."
+      }
+    },
+    faq: {
+      eyebrow: "Domande",
+      heading: "Domande Frequenti",
+      q1: {
+        q: "Quali lingue supporta Sovereign Legacy?",
+        a: "L'app supporta 22 lingue, incluse lingue da destra a sinistra come arabo, persiano e urdu, così i beneficiari in qualsiasi parte del mondo possono comprendere un avviso di rilascio nella propria lingua."
+      },
+      q2: {
+        q: "Quanto è sicura la mia volta?",
+        a: "La tua volta è un canister su Internet Computer, protetto dalla tua Internet Identity. Solo il tuo principal autenticato può visualizzare o gestire il suo contenuto."
+      },
+      q3: {
+        q: "Potrei mai perdere la mia volta?",
+        a: "Finché mantieni l'accesso alla tua Internet Identity, la tua volta resta sotto il tuo controllo. Il rischio principale è perdere le credenziali di Internet Identity, ecco perché è importante conservare un backup sicuro del tuo metodo di recupero."
+      },
+      q4: {
+        q: "Come vengono divisi gli attivi tra i beneficiari?",
+        a: "Assegni a ogni beneficiario una quota percentuale. Le quote possono essere modificate in qualsiasi momento prima del rilascio, e il totale assegnato a tutti i beneficiari non deve mai superare il 100%."
+      },
+      q5: {
+        q: "Come reimposto il timer di inattività di rete?",
+        a: "Basta accedere con la tua Internet Identity. Qualsiasi verifica autenticata reimposta l'orologio di inattività e mantiene armato l'interruttore di uomo morto."
+      },
+      q6: {
+        q: "Come aggiungo un beneficiario?",
+        a: "Dal tuo pannello, apri il pannello Beneficiari e aggiungi un nome, informazioni di contatto e percentuale di assegnazione."
+      },
+      q7: {
+        q: "Posso cambiare i miei beneficiari dopo la configurazione?",
+        a: "Sì. Beneficiari, assegnazioni e messaggi personali possono essere aggiornati in qualsiasi momento — le modifiche hanno effetto immediato, sulla catena."
+      },
+      q8: {
+        q: "Chi può vedere i miei beneficiari?",
+        a: "Solo tu, finché sei autenticato come proprietario della volta."
+      }
+    },
+    terms: {
+      eyebrow: "Termini",
+      heading: "Termini e Condizioni",
+      card1: {
+        title: "1. Panoramica",
+        body: "ICP Sovereign Legacy è una piattaforma decentralizzata di eredità e interruttore di uomo morto, interamente sulla catena, costruita sul Protocollo Internet Computer (ICP). Utilizzando questo servizio, accetti questi termini."
+      },
+      card2: {
+        title: "2. Nessuna Responsabilità",
+        body: "Gli sviluppatori non sono responsabili per alcuna perdita di attivi derivante da configurazione errata, credenziali Internet Identity perse, condizioni della rete blockchain o qualsiasi altra causa. Utilizza questo servizio a tuo rischio."
+      },
+      card3: {
+        title: "3. Esecuzione Autonoma",
+        body: "La distribuzione degli attivi viene eseguita automaticamente dalla logica degli smart contract sulla catena quando scatta il tuo interruttore di uomo morto. Nessun intervento umano è necessario o possibile una volta scattato."
+      },
+      card4: {
+        title: "4. Privacy",
+        body: "Il tuo elenco di beneficiari è memorizzato sulla catena ed è accessibile solo al tuo principal autenticato di Internet Identity. Nessun terzo può vedere i tuoi dati."
+      },
+      card5: {
+        title: "5. Commissioni",
+        body: "Questo servizio è fornito come descritto nell'app. Eventuali commissioni applicabili a un'azione specifica sono mostrate chiaramente nell'app prima che tu confermi quell'azione — nessun addebito nascosto o ricorrente."
+      },
+      card6: {
+        title: "6. Idoneità",
+        body: "Devi avere almeno 18 anni (o la maggiore età nella tua giurisdizione) e la capacità legale di stipulare questi termini per utilizzare questo servizio."
+      },
+      card7: {
+        title: "7. Nessuna Garanzia",
+        body: "Questo servizio è fornito «così com'è» e «come disponibile», senza garanzie di alcun tipo, esplicite o implicite, incluse eventuali garanzie di funzionamento ininterrotto o senza errori."
+      },
+      card8: {
+        title: "8. Assunzione del Rischio",
+        body: "Le criptovalute e la tecnologia blockchain comportano rischi intrinseci, tra cui volatilità dei prezzi, congestione della rete, vulnerabilità degli smart contract e modifiche ai protocolli sottostanti. Utilizzando questo servizio, accetti questi rischi."
+      },
+      card9: {
+        title: "9. Risoluzione",
+        body: "L'accesso a questo servizio può essere sospeso o risolto per violazione di questi termini o per condotte che Sovereign Legacy determini, a sua discrezione, dannose per altri utenti o per il servizio stesso."
+      },
+      card10: {
+        title: "10. Modifiche a Questi Termini",
+        body: "Questi termini possono essere aggiornati di volta in volta. Le modifiche sostanziali saranno presentate nell'app, e l'uso continuato del servizio dopo tali modifiche costituisce accettazione dei termini aggiornati."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Pannello",
+    title: "La Volta",
+    balance: "Saldo della Volta",
+    assetsHeld: "{count} attivo/i detenuto/i",
+    noAssets: "Nessun attivo detenuto per ora",
+    beneficiaries: "Beneficiari",
+    named: "designati",
+    sealed: "{count} beneficiario/i sigillato/i",
+    none: "Nessun beneficiario per ora",
+    allocation: "Assegnazione dei Beneficiari",
+    allocationNone: "Nessuna assegnazione per ora. Aggiungi un beneficiario per iniziare.",
+    allocationAria: "Quote di assegnazione dei beneficiari",
+    switch: "L'Interruttore",
+    lastVerified: "Ultima verifica · {time}",
+    notVerified: "Non ancora verificato"
+  },
+  beneficiaries: {
+    eyebrow: "Beneficiari",
+    title: "Beneficiari",
+    subtitle: "Le persone e le cause per cui la tua eredità è sigillata. Assegnazione, ordine e condizioni vivono qui.",
+    allocation: "Assegnazione",
+    count: "{count} beneficiario/i",
+    noAllocations: "Nessuna assegnazione per ora. Aggiungi un beneficiario per iniziare.",
+    allocationAria: "Quote di assegnazione dei beneficiari",
+    manage: "Gestisci",
+    manageBody: "Aggiungi un beneficiario e assegna la sua quota della volta. Le quote possono essere modificate o revocate in qualsiasi momento.",
+    loadError: "Impossibile caricare i beneficiari. Riprova.",
+    emptyTitle: "Nessun beneficiario per ora",
+    emptyBody: "La tua eredità non è assegnata. Aggiungi il tuo primo beneficiario per sigillare la volta per qualcuno.",
+    noWallet: "Nessun indirizzo di portafoglio",
+    editAria: "Modifica {name}",
+    removeAria: "Rimuovi {name}",
+    modal: {
+      editTitle: "Modifica beneficiario",
+      addTitle: "Aggiungi beneficiario",
+      editDesc: "Aggiorna nome, quota o indirizzo del portafoglio di questo beneficiario.",
+      addDesc: "Assegna un nome e una quota di assegnazione a un nuovo beneficiario."
+    },
+    namePlaceholder: "es. Elena Marchetti",
+    sharePlaceholder: "es. 40",
+    errors: {
+      nameRequired: "Inserisci un nome per questo beneficiario.",
+      sharePositive: "La quota di assegnazione deve essere maggiore di zero.",
+      invalidChecksum: "Questo identificatore di conto ICP ha un checksum non valido. Controlla l'indirizzo.",
+      invalidWallet: "Inserisci un indirizzo di portafoglio ICP valido — un identificatore di conto di 64 caratteri o un principal ICP.",
+      totalExceedsEdit: "Questo porterebbe l'assegnazione totale al {total}%, superando il limite del 100%.",
+      totalExceedsAdd: "L'assegnazione totale sarebbe del {total}%, superando il limite del 100%.",
+      saveFailed: "Impossibile salvare le modifiche. Riprova.",
+      addFailed: "Impossibile aggiungere il beneficiario. Riprova."
+    }
+  },
+  assets: {
+    eyebrow: "Eredità e Attivi",
+    title: "Attivi Detenuti",
+    subtitle: "Tutto ciò che è custodito nella volta — saldi, partecipazioni e le istruzioni che li governano.",
+    assetsHeld: "Attivi Detenuti",
+    beneficiaries: "Beneficiari",
+    allocationStatus: "Stato dell'Assegnazione",
+    sealed: "Sigillato",
+    unallocated: "Non assegnato",
+    beneficiaryFallback: "Beneficiario #{id}",
+    errorEyebrow: "Volta non raggiungibile",
+    errorBody: "Impossibile leggere gli attivi detenuti. Riprova.",
+    emptyEyebrow: "Nessun attivo detenuto",
+    emptyBody: "La volta non contiene attualmente attivi in criptovaluta. Una volta aggiunti, qui appariranno i loro saldi e le assegnazioni ai beneficiari.",
+    allocationLabel: "Assegnazione dei Beneficiari"
+  },
+  switch: {
+    eyebrow: "L'Interruttore",
+    title: "L'Interruttore",
+    subtitle: "L'unico controllo che consegna la volta. Armato, verificato e deliberato.",
+    active: "Attivo · Interruttore di uomo morto",
+    standingDown: "In riposo",
+    armed: "ARMATO",
+    disarmed: "DISARMATO",
+    checkIn: "Sono ancora qui",
+    arm: "Arma l'interruttore",
+    disarm: "Disarma",
+    cadence: "Cadenza · {duration}",
+    releaseIn: "Rilascio tra {duration}",
+    timelineAriaArmed: "Cronologia dell'interruttore di uomo morto, {percent}% della cadenza trascorsa",
+    timelineAriaDisarmed: "Cronologia dell'interruttore di uomo morto, disarmato",
+    lastCheckIn: "Ultima verifica",
+    armedAt: "Armato il",
+    cadenceLabel: "Cadenza",
+    standingDownTitle: "In riposo",
+    standingDownBody: "Disarmare interrompe l'interruttore di uomo morto. La volta resta sigillata, ma non si rilascerà più ai tuoi beneficiari in caso di verifica mancata.",
+    disarmTheSwitch: "Disarma l'interruttore",
+    armTitle: "Arma l'interruttore",
+    armBody: "Scegli per quanto tempo la volta attende la tua prossima verifica. Se la manchi, la volta si rilascia ai tuoi beneficiari.",
+    cadenceError: "Scegli una cadenza di verifica maggiore di zero prima di armare l'interruttore.",
+    errorEyebrow: "Interruttore non raggiungibile",
+    errorBody: "Impossibile leggere lo stato dell'interruttore. Riprova.",
+    cadence24h: "24 ore",
+    cadence7d: "7 giorni",
+    cadence30d: "30 giorni"
+  },
+  audit: {
+    eyebrow: "Registri di Controllo",
+    title: "Registri di Controllo",
+    ledger: "Registro degli Eventi",
+    count: "{count} evento/i sigillato/i",
+    timestamp: "Data/ora",
+    event: "Evento",
+    description: "Descrizione",
+    tableAria: "Registro di controllo della volta",
+    errorEyebrow: "Registro non raggiungibile",
+    errorBody: "Impossibile leggere il registro di controllo. Riprova.",
+    emptyTitle: "Nessun evento per ora",
+    emptyBody: "Ogni azione eseguita sulla volta sarà sigillata qui, in ordine, man mano che accade.",
+    footer: "Ogni voce è sigillata nel registro. Le voci non possono essere modificate né rimosse."
+  },
+  settings: {
+    eyebrow: "Impostazioni",
+    title: "Configurazione della Volta",
+    subtitle: "Preserva la configurazione che governa la tua eredità — lo stato armato/disarmato dell'Interruttore, la sua cadenza di verifica e i beneficiari per cui è sigillato.",
+    switchTitle: "L'Interruttore",
+    switchDesc: "Arma o disarma la volta e imposta con quale frequenza deve essere verificata.",
+    beneficiariesTitle: "Beneficiari",
+    beneficiariesDesc: "Modifica le persone e le cause per cui la tua eredità è sigillata.",
+    cadence: "Cadenza · {value}",
+    daily: "Giornaliero",
+    weekly: "Settimanale",
+    monthly: "Mensile",
+    yearly: "Annuale",
+    h24: "24 ore",
+    h7d: "7 giorni",
+    h30d: "30 giorni",
+    h365d: "365 giorni",
+    emptyBeneficiaries: "Nessun beneficiario configurato per ora",
+    editBeneficiary: "Modifica beneficiario",
+    editBeneficiaryDesc: "Aggiorna nome, quota di assegnazione e indirizzo del portafoglio di questo beneficiario.",
+    removeBeneficiary: "Rimuovi beneficiario",
+    removeBeneficiaryDesc: "Rimuovere {name} dalla volta? Questa azione non può essere annullata.",
+    toast: {
+      armed: "L'Interruttore è stato armato",
+      armedDesc: "Cadenza di verifica impostata su {cadence}.",
+      armError: "Impossibile armare l'Interruttore",
+      armErrorDesc: "La volta non ha potuto essere armata. Riprova.",
+      disarmed: "L'Interruttore è stato disarmato",
+      disarmedDesc: "La volta non è più armata.",
+      disarmError: "Impossibile disarmare l'Interruttore",
+      disarmErrorDesc: "La volta non ha potuto essere disarmata. Riprova.",
+      beneficiaryUpdated: "Beneficiario aggiornato",
+      beneficiaryUpdatedDesc: "La configurazione del beneficiario è stata salvata.",
+      updateError: "Impossibile aggiornare il beneficiario",
+      updateErrorDesc: "Le modifiche non sono state salvate. Riprova.",
+      beneficiaryRemoved: "Beneficiario rimosso",
+      beneficiaryRemovedDesc: "Il beneficiario è stato rimosso dalla volta.",
+      removeError: "Impossibile rimuovere il beneficiario",
+      removeErrorDesc: "Il beneficiario non ha potuto essere rimosso. Riprova."
+    }
+  }
+};
+const ja = {
+  meta: {
+    title: "Sovereign Legacy — 金庫",
+    description: "Sovereign Legacy — 金庫。あなたの金庫。封印が解かれるまで。"
+  },
+  common: {
+    cancel: "キャンセル",
+    saveChanges: "変更を保存",
+    edit: "編集",
+    remove: "削除",
+    name: "名前",
+    optional: "任意",
+    addBeneficiary: "受益者を追加",
+    allocationShare: "配分比率（%）",
+    walletAddress: "ウォレットアドレス",
+    checkInCadence: "チェックイン間隔",
+    selectCadence: "間隔を選択",
+    armed: "作動中",
+    disarmed: "解除中",
+    arming: "作動中…",
+    disarming: "解除中…",
+    saving: "保存中…",
+    removing: "削除中…",
+    arm: "作動",
+    disarm: "解除"
+  },
+  nav: {
+    dashboard: "ダッシュボード",
+    beneficiaries: "受益者",
+    legacyAssets: "遺産と資産",
+    theSwitch: "スイッチ",
+    auditLogs: "監査ログ",
+    settings: "設定"
+  },
+  header: {
+    home: "Sovereign Legacy ホーム",
+    networkBadge: "ネットワーク・アイデンティティ",
+    mobileMenu: "ナビゲーションメニューを開く",
+    mobilePrimary: "モバイルメインナビゲーション"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — 金庫。無断複写・転載を禁じます。",
+    tagline: "封印が解かれるまで"
+  },
+  loading: {
+    openingVault: "金庫を開いています…"
+  },
+  language: {
+    label: "言語"
+  },
+  landing: {
+    eyebrow: "自己主権型の相続",
+    headline1: "あなたの金庫。",
+    headline2: "解かれるまで封印されたまま。",
+    login: "Internet Identityでログイン",
+    subhead: "Internet Computer上にネイティブに構築された、暗号資産のためのデジタル・デッドマンスイッチ — 検認裁判なし、遅延なし、チェーン自身以外に見ている者はいません。",
+    vaultDoorAlt: "風化した真鍮と鋼鉄の銀行金庫の扉が閉じられており、その中央でInternet Computerの無限ループの紋章がかすかに輝いている。",
+    introduction: {
+      eyebrow: "はじめに",
+      heading: "デッドマンスイッチ — 蒸気の時代に生まれる",
+      p1: "19世紀の終わり頃、新しい種類の機械が文明を変えつつありました。電動路面電車が混雑する都市を縫うように走り、エレベーターがかつてない高さの建物へ乗客を運び上げました。それらは驚異であり、そして危険でもありました。",
+      p2: "問題は単純で恐ろしいものでした。操縦している人間が操縦できなくなったらどうなるのか。運転士が操縦中に心臓発作を起こすかもしれません。エレベーターの操作員が途中で意識を失うかもしれません。そして機械は操作員の運命に無関心で、ただ動き続けるだけでした。何かにぶつかって止まるまで。",
+      p3: "1888年、アメリカの技術者フランク・J・スプレーグがバージニア州リッチモンドの路面電車路線を電化しました。アメリカ初の成功した電動都市鉄道です。彼の革新はモーターだけにとどまりませんでした。スプレーグは、高速で乗客を運ぶ車両には、操作員が行動不能になった場合に自ら停止する仕組みが必要だと理解していました。",
+      p4: "それはデッドマンスイッチと呼ばれました。ハンドルを握っていれば動き続けます。気を散らしたにせよ、病気にせよ、死にせよ、手を離せば機械は自ら停止します。その名前は演出のためではなく、正確さのために選ばれました。スイッチは生きた手の不在によって作動したのです。",
+      p5: "この考えは急速に広まりました。ニューヨーク、ロンドン、東京の地下鉄が採用しました。原子力発電所は制御棒に組み込みました。民間航空機は自動操縦装置に組み込みました。機械が命を運ぶ場所ならどこでも、デッドマンスイッチは静かに、辛抱強く、待ち続けました。",
+      h3a: "現代におけるデッドマンスイッチの仕組み",
+      p6: "あなたは懸命に働いてきました。ICP、ビットコイン、イーサリアム、ステーブルコインといった暗号資産を蓄積してきました。それらはウォレットやキャニスターにあり、あなただけが持つ秘密鍵で守られています。そしてハンドルを握る運転士のように、ネットワーク上であなたが生きて活動していることだけが回路を閉じたままにします。",
+      p7: "Sovereign Legacy が同じ原理をどう適用するか。あなたは資産を安全なオンチェーンキャニスターの金庫に預けます。1人以上の受益者を指定し、ネットワーク非活動期間を設定します。定期的にログインしている限り、スイッチは閉じたままです。その活動が止まった瞬間、Sovereign Legacy はあなたに警告を送ります。応答しなければ、弁護士も裁判所も遅延もなく、あなたの資産は選んだ受益者へ自動的に移転されます。",
+      h3b: "あなたの希望をカスタマイズしますか？",
+      p8: "配偶者、子供、信頼できる友人、慈善活動など、複数の受取人を希望する場合、Sovereign Legacy は資産をパーセンテージで分割できます。あなたが割合を設定します。受益者はあなたが意図したとおりに受け取ります。"
+    },
+    advantages: {
+      eyebrow: "なぜ機能するのか",
+      heading: "利点はすべての段階に組み込まれている",
+      card1: {
+        title: "弁護士も相続手続きも遅延もなし。",
+        body: "デッドマンスイッチが作動した瞬間、キャニスターがあなたの指示を実行します。あなたの希望と愛する人々の間に、いかなる機関も立ちはだかりません。"
+      },
+      card2: {
+        title: "あなたがコントロールを維持。",
+        body: "受益者を変更し、割合を調整し、メッセージをいつでも更新できます。すべてがオンチェーンで即座に更新されます。"
+      },
+      card3: {
+        title: "眠っている間も機能。",
+        body: "人生が続くなら、Sovereign Legacy は静かにしています。続かないなら、すべてはあなたが計画したとおりに進みます。"
+      },
+      card4: {
+        title: "グローバルな到達範囲。",
+        body: "受益者は世界のどこにいても構いません。Sovereign Legacy は複数の言語に対応し、説明も処理するので、あなたがする必要はありません。"
+      },
+      card5: {
+        title: "あなたのデータはあなたのもの。",
+        body: "あなたの金庫は Internet Computer 上のキャニスターであり、あなたの Internet Identity で保護されています。Sovereign Legacy 自身を含め、いかなる第三者もその内容にアクセスできません。"
+      }
+    },
+    faq: {
+      eyebrow: "質問",
+      heading: "よくある質問",
+      q1: {
+        q: "Sovereign Legacy はどの言語に対応していますか？",
+        a: "このアプリは22言語に対応しており、アラビア語、ペルシャ語、ウルドゥー語などの右から左へ読む言語も含まれます。世界のどこにいる受益者も、リリース通知を自分の言語で理解できます。"
+      },
+      q2: {
+        q: "私の金庫はどのくらい安全ですか？",
+        a: "あなたの金庫は Internet Computer 上のキャニスターであり、あなたの Internet Identity で保護されています。認証されたあなたのプリンシパルだけがその内容を閲覧・管理できます。"
+      },
+      q3: {
+        q: "金庫を失うことはありますか？",
+        a: "Internet Identity へのアクセスを維持している限り、金庫はあなたの管理下にあります。主なリスクは Internet Identity の認証情報を失うことであり、回復方法の安全なバックアップを保管することが重要です。"
+      },
+      q4: {
+        q: "資産は受益者間でどのように分割されますか？",
+        a: "各受益者にパーセンテージの割合を割り当てます。割合はリリース前ならいつでも調整でき、全受益者への合計割り当てが100%を超えることはありません。"
+      },
+      q5: {
+        q: "ネットワーク非活動タイマーをリセットするには？",
+        a: "Internet Identity でログインするだけです。認証されたチェックインは非活動時計をリセットし、デッドマンスイッチを作動したままにします。"
+      },
+      q6: {
+        q: "受益者を追加するには？",
+        a: "ダッシュボードから受益者パネルを開き、名前、連絡先情報、配分比率を追加します。"
+      },
+      q7: {
+        q: "設定後に受益者を変更できますか？",
+        a: "はい。受益者、配分、個人メッセージはいつでも更新できます。変更はオンチェーンで即座に反映されます。"
+      },
+      q8: {
+        q: "誰が私の受益者を見られますか？",
+        a: "金庫の所有者として認証されている間は、あなただけです。"
+      }
+    },
+    terms: {
+      eyebrow: "利用規約",
+      heading: "利用規約",
+      card1: {
+        title: "1. 概要",
+        body: "ICP Sovereign Legacy は、Internet Computer Protocol（ICP）上に構築された、分散型で完全にオンチェーンの相続・デッドマンスイッチプラットフォームです。本サービスを利用することで、これらの規約に同意したものとみなされます。"
+      },
+      card2: {
+        title: "2. 免責",
+        body: "開発者は、誤った設定、Internet Identity の認証情報の喪失、ブロックチェーンネットワークの状態、その他いかなる原因による資産の損失についても責任を負いません。本サービスは自己責任でご利用ください。"
+      },
+      card3: {
+        title: "3. 自律的実行",
+        body: "資産の分配は、デッドマンスイッチが作動したときにオンチェーンのスマートコントラクトロジックによって自動的に実行されます。作動後は、人の介入は不要であり、不可能です。"
+      },
+      card4: {
+        title: "4. プライバシー",
+        body: "受益者リストはオンチェーンに保存され、認証されたあなたの Internet Identity プリンシパルだけがアクセスできます。いかなる第三者もあなたのデータを閲覧できません。"
+      },
+      card5: {
+        title: "5. 手数料",
+        body: "本サービスはアプリ内で説明されているとおりに提供されます。特定のアクションに適用される手数料は、そのアクションを確認する前にアプリ内で明確に表示されます。隠れた手数料や継続的な請求はありません。"
+      },
+      card6: {
+        title: "6. 資格",
+        body: "本サービスを利用するには、18歳以上（または管轄区域における成年年齢）であり、これらの規約を締結する法的能力を有している必要があります。"
+      },
+      card7: {
+        title: "7. 保証の否認",
+        body: "本サービスは「現状のまま」「利用可能な状態で」提供され、明示的か黙示的かを問わず、いかなる種類の保証もなく、中断のないまたはエラーのない動作の保証も含まれません。"
+      },
+      card8: {
+        title: "8. リスクの引き受け",
+        body: "暗号通貨とブロックチェーン技術には、価格変動、ネットワーク輻輳、スマートコントラクトの脆弱性、基盤プロトコルの変更など、固有のリスクがあります。本サービスを利用することで、これらのリスクを受け入れたものとみなされます。"
+      },
+      card9: {
+        title: "9. 終了",
+        body: "本規約への違反、または Sovereign Legacy が独自の判断で他のユーザーやサービス自体に有害と判断した行為があった場合、本サービスへのアクセスは停止または終了されることがあります。"
+      },
+      card10: {
+        title: "10. 本規約の変更",
+        body: "本規約は随時更新されることがあります。重要な変更はアプリ内で提示され、そのような変更後のサービスの継続利用は、更新された規約への同意を構成します。"
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "ダッシュボード",
+    title: "金庫",
+    balance: "金庫残高",
+    assetsHeld: "{count}件の資産を保有",
+    noAssets: "まだ保有資産がありません",
+    beneficiaries: "受益者",
+    named: "名",
+    sealed: "{count}人の受益者を封印",
+    none: "まだ受益者がいません",
+    allocation: "受益者配分",
+    allocationNone: "まだ配分がありません。受益者を追加して始めましょう。",
+    allocationAria: "受益者の配分比率",
+    switch: "スイッチ",
+    lastVerified: "最終確認 · {time}",
+    notVerified: "未確認"
+  },
+  beneficiaries: {
+    eyebrow: "受益者",
+    title: "受益者",
+    subtitle: "あなたの遺産が封印されている人々と目的。配分、順序、条件はここにあります。",
+    allocation: "配分",
+    count: "{count}人の受益者",
+    noAllocations: "まだ配分がありません。受益者を追加して始めましょう。",
+    allocationAria: "受益者の配分比率",
+    manage: "管理",
+    manageBody: "受益者を追加し、金庫の割合を割り当てます。割合はいつでも編集または取り消せます。",
+    loadError: "受益者を読み込めませんでした。もう一度お試しください。",
+    emptyTitle: "まだ受益者がいません",
+    emptyBody: "あなたの遺産は未割り当てです。最初の受益者を追加して、誰かのために金庫を封印しましょう。",
+    noWallet: "ウォレットアドレスなし",
+    editAria: "{name} を編集",
+    removeAria: "{name} を削除",
+    modal: {
+      editTitle: "受益者を編集",
+      addTitle: "受益者を追加",
+      editDesc: "この受益者の名前、割合、ウォレットアドレスを更新します。",
+      addDesc: "新しい受益者に名前と配分比率を割り当てます。"
+    },
+    namePlaceholder: "例：Elena Marchetti",
+    sharePlaceholder: "例：40",
+    errors: {
+      nameRequired: "この受益者の名前を入力してください。",
+      sharePositive: "配分比率は0より大きくなければなりません。",
+      invalidChecksum: "このICPアカウント識別子のチェックサムが無効です。アドレスを確認してください。",
+      invalidWallet: "有効なICPウォレットアドレスを入力してください — 64文字のアカウント識別子またはICPプリンシパル。",
+      totalExceedsEdit: "これにより合計配分が{total}%になり、100%の上限を超えます。",
+      totalExceedsAdd: "合計配分は{total}%になり、100%の上限を超えます。",
+      saveFailed: "変更を保存できませんでした。もう一度お試しください。",
+      addFailed: "受益者を追加できませんでした。もう一度お試しください。"
+    }
+  },
+  assets: {
+    eyebrow: "遺産と資産",
+    title: "保有資産",
+    subtitle: "金庫に保管されているすべて — 残高、保有、そしてそれらを管理する指示。",
+    assetsHeld: "保有資産",
+    beneficiaries: "受益者",
+    allocationStatus: "配分ステータス",
+    sealed: "封印済み",
+    unallocated: "未配分",
+    beneficiaryFallback: "受益者 #{id}",
+    errorEyebrow: "金庫に接続できません",
+    errorBody: "保有資産を読み取れませんでした。もう一度お試しください。",
+    emptyEyebrow: "保有資産なし",
+    emptyBody: "金庫には現在暗号資産がありません。資産が追加されると、その残高と受益者への配分がここに表示されます。",
+    allocationLabel: "受益者配分"
+  },
+  switch: {
+    eyebrow: "スイッチ",
+    title: "スイッチ",
+    subtitle: "金庫を引き渡す唯一のコントロール。作動し、検証され、意図的。",
+    active: "作動中・デッドマンスイッチ",
+    standingDown: "待機中",
+    armed: "作動中",
+    disarmed: "解除中",
+    checkIn: "まだここにいます",
+    arm: "スイッチを作動",
+    disarm: "解除",
+    cadence: "間隔 · {duration}",
+    releaseIn: "{duration}後にリリース",
+    timelineAriaArmed: "デッドマンスイッチのタイムライン、間隔の{percent}%経過",
+    timelineAriaDisarmed: "デッドマンスイッチのタイムライン、解除済み",
+    lastCheckIn: "最終チェックイン",
+    armedAt: "作動日時",
+    cadenceLabel: "間隔",
+    standingDownTitle: "待機中",
+    standingDownBody: "解除するとデッドマンスイッチが停止します。金庫は封印されたままですが、チェックインを逃しても受益者へリリースされなくなります。",
+    disarmTheSwitch: "スイッチを解除",
+    armTitle: "スイッチを作動",
+    armBody: "金庫が次のチェックインを待つ時間を選択します。逃すと、金庫は受益者へリリースされます。",
+    cadenceError: "スイッチを作動する前に、0より大きいチェックイン間隔を選択してください。",
+    errorEyebrow: "スイッチに接続できません",
+    errorBody: "スイッチの状態を読み取れませんでした。もう一度お試しください。",
+    cadence24h: "24時間",
+    cadence7d: "7日",
+    cadence30d: "30日"
+  },
+  audit: {
+    eyebrow: "監査ログ",
+    title: "監査ログ",
+    ledger: "イベント台帳",
+    count: "{count}件のイベントを封印",
+    timestamp: "タイムスタンプ",
+    event: "イベント",
+    description: "説明",
+    tableAria: "金庫の監査ログ",
+    errorEyebrow: "台帳に接続できません",
+    errorBody: "監査台帳を読み取れませんでした。もう一度お試しください。",
+    emptyTitle: "まだイベントがありません",
+    emptyBody: "金庫に対して行われたすべてのアクションが、発生順にここに封印されます。",
+    footer: "すべてのエントリは台帳に封印されています。エントリは編集も削除もできません。"
+  },
+  settings: {
+    eyebrow: "設定",
+    title: "金庫の設定",
+    subtitle: "あなたの遺産を管理する設定を保持します — スイッチの作動/解除状態、チェックイン間隔、封印されている受益者。",
+    switchTitle: "スイッチ",
+    switchDesc: "金庫を作動または解除し、検証頻度を設定します。",
+    beneficiariesTitle: "受益者",
+    beneficiariesDesc: "あなたの遺産が封印されている人々と目的を編集します。",
+    cadence: "間隔 · {value}",
+    daily: "毎日",
+    weekly: "毎週",
+    monthly: "毎月",
+    yearly: "毎年",
+    h24: "24時間",
+    h7d: "7日",
+    h30d: "30日",
+    h365d: "365日",
+    emptyBeneficiaries: "まだ受益者が設定されていません",
+    editBeneficiary: "受益者を編集",
+    editBeneficiaryDesc: "この受益者の名前、配分比率、ウォレットアドレスを更新します。",
+    removeBeneficiary: "受益者を削除",
+    removeBeneficiaryDesc: "{name} を金庫から削除しますか？この操作は元に戻せません。",
+    toast: {
+      armed: "スイッチが作動しました",
+      armedDesc: "チェックイン間隔を{cadence}に設定しました。",
+      armError: "スイッチを作動できませんでした",
+      armErrorDesc: "金庫を作動できませんでした。もう一度お試しください。",
+      disarmed: "スイッチが解除されました",
+      disarmedDesc: "金庫はもう作動していません。",
+      disarmError: "スイッチを解除できませんでした",
+      disarmErrorDesc: "金庫を解除できませんでした。もう一度お試しください。",
+      beneficiaryUpdated: "受益者を更新しました",
+      beneficiaryUpdatedDesc: "受益者の設定が保存されました。",
+      updateError: "受益者を更新できませんでした",
+      updateErrorDesc: "変更は保存されませんでした。もう一度お試しください。",
+      beneficiaryRemoved: "受益者を削除しました",
+      beneficiaryRemovedDesc: "受益者が金庫から削除されました。",
+      removeError: "受益者を削除できませんでした",
+      removeErrorDesc: "受益者を削除できませんでした。もう一度お試しください。"
+    }
+  }
+};
+const ko = {
+  meta: {
+    title: "Sovereign Legacy — 금고",
+    description: "Sovereign Legacy — 금고. 당신의 금고. 봉인이 풀릴 때까지 봉인된 채로."
+  },
+  common: {
+    cancel: "취소",
+    saveChanges: "변경 사항 저장",
+    edit: "편집",
+    remove: "삭제",
+    name: "이름",
+    optional: "선택 사항",
+    addBeneficiary: "수혜자 추가",
+    allocationShare: "배분 비율 (%)",
+    walletAddress: "지갑 주소",
+    checkInCadence: "체크인 주기",
+    selectCadence: "주기 선택",
+    armed: "작동 중",
+    disarmed: "해제됨",
+    arming: "작동 중…",
+    disarming: "해제 중…",
+    saving: "저장 중…",
+    removing: "삭제 중…",
+    arm: "작동",
+    disarm: "해제"
+  },
+  nav: {
+    dashboard: "대시보드",
+    beneficiaries: "수혜자",
+    legacyAssets: "유산 및 자산",
+    theSwitch: "스위치",
+    auditLogs: "감사 로그",
+    settings: "설정"
+  },
+  header: {
+    home: "Sovereign Legacy 홈",
+    networkBadge: "네트워크 · 신원",
+    mobileMenu: "내비게이션 메뉴 열기",
+    mobilePrimary: "모바일 기본 내비게이션"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — 금고. 모든 권리 보유.",
+    tagline: "봉인이 풀릴 때까지 봉인된 채로"
+  },
+  loading: {
+    openingVault: "금고를 여는 중…"
+  },
+  language: {
+    label: "언어"
+  },
+  landing: {
+    eyebrow: "자기주권형 상속",
+    headline1: "당신의 금고.",
+    headline2: "열릴 때까지 봉인됩니다.",
+    login: "Internet Identity로 로그인",
+    subhead: "Internet Computer 위에 네이티브로 구축된 암호자산을 위한 디지털 데드맨 스위치 — 검인 절차도, 지연도 없이, 체인 자체 외에는 아무도 지켜보지 않습니다.",
+    vaultDoorAlt: "바람과 비에 낡은 황동과 강철로 된 은행 금고 문이 닫혀 있고, 그 중앙에 Internet Computer의 무한 루프 엠블럼이 희미하게 빛나고 있습니다.",
+    introduction: {
+      eyebrow: "소개",
+      heading: "데드맨 스위치 — 증기 시대에 태어나다",
+      p1: "19세기 마지막 수십 년 동안, 새로운 종류의 기계가 문명을 재편하고 있었습니다. 전기 노면전차가 붐비는 도시를 누비고, 엘리베이터는 전례 없는 높이의 건물로 승객을 들어 올렸습니다. 그것들은 경이로웠고 — 동시에 위험했습니다.",
+      p2: "문제는 단순하고도 끔찍했습니다. 통제권을 쥔 사람이 더 이상 통제할 수 없게 되면 어떻게 될까? 전차 기관사는 운전대에서 심장마비를 일으킬 수 있었습니다. 엘리베이터 기사는 운행 중 의식을 잃을 수 있었습니다. 그리고 기계는 기사의 운명에 무관심하게, 그저 계속 달렸습니다 — 그것을 멈추게 하는 무언가에 부딪힐 때까지.",
+      p3: "1888년, 미국의 기술자 프랭크 J. 스프라그가 버지니아주 리치먼드의 노면전차 노선을 전철화했습니다 — 미국 최초의 성공적인 전기 도시 철도였습니다. 그의 혁신은 모터에서 끝나지 않았습니다. 스프라그는 빠른 속도로 승객을 실어 나르는 차량은 기사가 무력해질 경우 스스로 멈출 수 있는 방법이 필요하다는 것을 이해했습니다.",
+      p4: "그들은 그것을 데드맨 스위치라고 불렀습니다. 손잡이를 잡고 있으면 계속 움직입니다. 주의가 산만해지든, 병에 걸리든, 죽음이든 — 손을 놓으면 기계는 스스로 멈춥니다. 그 이름은 극적인 효과를 위해 선택된 것이 아니었습니다. 정밀함을 위해 선택된 것이었습니다. 스위치는 살아있는 손의 부재로 작동했습니다.",
+      p5: "이 아이디어는 빠르게 퍼졌습니다. 뉴욕, 런던, 도쿄의 지하철이 채택했습니다. 원자력 발전소는 제어봉에 이를 내장했습니다. 상업용 항공기는 자동 조종 장치에 이를 통합했습니다. 기계가 생명을 실어 나르는 곳이라면 어디든 데드맨 스위치가 따랐습니다 — 조용히, 인내심 있게, 기다리며.",
+      h3a: "오늘날 데드맨 스위치는 어떻게 작동할까요?",
+      p6: "당신은 열심히 일했습니다. ICP, 비트코인, 이더리움, 스테이블코인 같은 암호화폐 자산을 모았습니다. 그것들은 지갑과 캐니스터에 있으며, 오직 당신만이 가진 개인 키로 보호됩니다. 그리고 손잡이를 움켜쥔 전차 기관사처럼, 네트워크에서 당신의 살아있고 활동적인 존재만이 회로를 닫힌 상태로 유지합니다.",
+      p7: "Sovereign Legacy가 같은 원리를 적용하는 방법은 다음과 같습니다. 당신은 자산을 안전한 온체인 캐니스터 금고에 예치합니다. 한 명 이상의 수혜자를 지정하고 네트워크 비활성 기간을 설정합니다. 정기적으로 로그인하는 한 스위치는 닫힌 상태를 유지합니다. 그 활동이 멈추는 순간, Sovereign Legacy는 당신에게 알림을 보냅니다. 응답하지 않으면 변호사도, 법원도, 지연도 없이 자산이 선택한 수혜자에게 자동으로 이전됩니다.",
+      h3b: "당신의 뜻을 개인화하고 싶으신가요?",
+      p8: "배우자, 자녀, 신뢰하는 친구, 자선 단체 등 한 명 이상의 수령인을 원한다면, Sovereign Legacy는 자산을 비율로 나눌 수 있게 해줍니다. 당신이 몫을 정합니다. 수혜자들은 당신이 의도한 그대로를 받습니다."
+    },
+    advantages: {
+      eyebrow: "왜 효과적인가",
+      heading: "모든 단계에 내장된 이점",
+      card1: {
+        title: "변호사도, 검인도, 지연도 없습니다.",
+        body: "데드맨 스위치가 작동하는 순간 캐니스터가 당신의 지시를 실행합니다. 당신의 뜻과 사랑하는 사람들 사이에 어떤 기관도 개입하지 않습니다."
+      },
+      card2: {
+        title: "당신이 통제권을 유지합니다.",
+        body: "언제든 수혜자를 바꾸고, 비율을 조정하고, 메시지를 업데이트할 수 있습니다. 모든 것이 온체인에서 즉시 업데이트됩니다."
+      },
+      card3: {
+        title: "당신이 잠든 사이에도 작동합니다.",
+        body: "삶이 계속된다면 Sovereign Legacy는 조용히 있습니다. 그렇지 않다면, 모든 것이 당신이 계획한 대로 진행됩니다."
+      },
+      card4: {
+        title: "글로벌 도달 범위.",
+        body: "수혜자는 세계 어디에나 있을 수 있습니다. Sovereign Legacy는 여러 언어를 지원하며 설명까지 처리하므로 당신이 할 필요가 없습니다."
+      },
+      card5: {
+        title: "당신의 데이터는 당신의 것입니다.",
+        body: "당신의 금고는 Internet Computer의 캐니스터이며, 당신의 Internet Identity로 보호됩니다. Sovereign Legacy 자신을 포함한 어떤 제3자도 그 내용에 접근할 수 없습니다."
+      }
+    },
+    faq: {
+      eyebrow: "질문",
+      heading: "자주 묻는 질문",
+      q1: {
+        q: "Sovereign Legacy는 어떤 언어를 지원하나요?",
+        a: "이 앱은 아랍어, 페르시아어, 우르두어 같은 오른쪽에서 왼쪽으로 쓰는 언어를 포함해 22개 언어를 지원하므로, 세계 어디에 있든 수혜자들이 해제 통지를 자신의 언어로 이해할 수 있습니다."
+      },
+      q2: {
+        q: "내 금고는 얼마나 안전한가요?",
+        a: "당신의 금고는 Internet Computer의 캐니스터이며, 당신의 Internet Identity로 보호됩니다. 인증된 당신의 프린시펄만이 그 내용을 보거나 관리할 수 있습니다."
+      },
+      q3: {
+        q: "금고를 잃을 수도 있나요?",
+        a: "Internet Identity에 대한 접근 권한을 유지하는 한, 금고는 당신의 통제 아래 있습니다. 주요 위험은 Internet Identity 자격 증명을 잃는 것이며, 그래서 복구 방법의 안전한 백업을 보관하는 것이 중요합니다."
+      },
+      q4: {
+        q: "자산은 수혜자들 사이에 어떻게 나뉘나요?",
+        a: "각 수혜자에게 백분율 몫을 지정합니다. 몫은 해제 전 언제든 조정할 수 있으며, 모든 수혜자에게 배분된 총액은 절대 100%를 초과할 수 없습니다."
+      },
+      q5: {
+        q: "네트워크 비활성 타이머를 어떻게 재설정하나요?",
+        a: "Internet Identity로 로그인하기만 하면 됩니다. 인증된 체크인은 비활성 시계를 재설정하고 데드맨 스위치를 작동 상태로 유지합니다."
+      },
+      q6: {
+        q: "수혜자를 어떻게 추가하나요?",
+        a: "대시보드에서 수혜자 패널을 열고 이름, 연락처 정보, 배분 비율을 추가하세요."
+      },
+      q7: {
+        q: "설정 후 수혜자를 변경할 수 있나요?",
+        a: "네. 수혜자, 배분, 개인 메시지는 언제든 업데이트할 수 있습니다 — 변경 사항은 온체인에서 즉시 적용됩니다."
+      },
+      q8: {
+        q: "누가 내 수혜자를 볼 수 있나요?",
+        a: "금고 소유자로 인증된 동안에는 오직 당신뿐입니다."
+      }
+    },
+    terms: {
+      eyebrow: "약관",
+      heading: "이용 약관",
+      card1: {
+        title: "1. 개요",
+        body: "ICP Sovereign Legacy는 Internet Computer Protocol(ICP) 위에 구축된 분산형, 완전 온체인 상속 및 데드맨 스위치 플랫폼입니다. 본 서비스를 사용함으로써 귀하는 본 약관에 동의하게 됩니다."
+      },
+      card2: {
+        title: "2. 책임 없음",
+        body: "개발자는 잘못된 구성, Internet Identity 자격 증명 분실, 블록체인 네트워크 상태 또는 기타 어떤 원인으로 인한 자산 손실에 대해 책임을 지지 않습니다. 본 서비스는 본인의 책임 하에 사용하십시오."
+      },
+      card3: {
+        title: "3. 자율 실행",
+        body: "자산 분배는 데드맨 스위치가 작동할 때 온체인 스마트 계약 로직에 의해 자동으로 실행됩니다. 작동 후에는 인간의 개입이 필요하지도, 가능하지도 않습니다."
+      },
+      card4: {
+        title: "4. 개인정보 보호",
+        body: "수혜자 목록은 온체인에 저장되며 인증된 귀하의 Internet Identity 프린시펄만 접근할 수 있습니다. 어떤 제3자도 귀하의 데이터를 볼 수 없습니다."
+      },
+      card5: {
+        title: "5. 수수료",
+        body: "본 서비스는 앱에 설명된 대로 제공됩니다. 특정 행동에 적용되는 수수료는 해당 행동을 확인하기 전에 앱에 명확히 표시됩니다 — 숨겨진 수수료나 반복 청구는 없습니다."
+      },
+      card6: {
+        title: "6. 자격",
+        body: "본 서비스를 이용하려면 만 18세 이상(또는 해당 관할권의 성년 연령)이어야 하며 본 약관을 체결할 법적 능력이 있어야 합니다."
+      },
+      card7: {
+        title: "7. 보증 없음",
+        body: "본 서비스는 명시적이든 묵시적이든 어떠한 종류의 보증 없이 «있는 그대로» 및 «이용 가능한 상태로» 제공되며, 중단 없음 또는 오류 없음에 대한 보증을 포함합니다."
+      },
+      card8: {
+        title: "8. 위험 부담",
+        body: "암호화폐와 블록체인 기술은 가격 변동성, 네트워크 혼잡, 스마트 계약 취약점, 기반 프로토콜 변경 등 고유한 위험을 수반합니다. 본 서비스를 사용함으로써 귀하는 이러한 위험을 수용합니다."
+      },
+      card9: {
+        title: "9. 종료",
+        body: "본 약관 위반 또는 Sovereign Legacy가 재량에 따라 다른 사용자나 서비스 자체에 해롭다고 판단하는 행위에 대해 본 서비스 접근이 중단되거나 종료될 수 있습니다."
+      },
+      card10: {
+        title: "10. 본 약관의 변경",
+        body: "본 약관은 수시로 업데이트될 수 있습니다. 중요한 변경 사항은 앱 내에서 제시되며, 그러한 변경 후에도 서비스를 계속 사용하는 것은 업데이트된 약관에 대한 수락으로 간주됩니다."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "대시보드",
+    title: "금고",
+    balance: "금고 잔액",
+    assetsHeld: "자산 {count}개 보유",
+    noAssets: "아직 보유 자산 없음",
+    beneficiaries: "수혜자",
+    named: "명 지정됨",
+    sealed: "수혜자 {count}명 봉인됨",
+    none: "아직 수혜자 없음",
+    allocation: "수혜자 배분",
+    allocationNone: "아직 배분이 없습니다. 수혜자를 추가하여 시작하세요.",
+    allocationAria: "수혜자 배분 몫",
+    switch: "스위치",
+    lastVerified: "마지막 확인 · {time}",
+    notVerified: "아직 확인되지 않음"
+  },
+  beneficiaries: {
+    eyebrow: "수혜자",
+    title: "수혜자",
+    subtitle: "당신의 유산이 봉인된 사람들과 목적. 배분, 순서, 조건이 여기에 있습니다.",
+    allocation: "배분",
+    count: "수혜자 {count}명",
+    noAllocations: "아직 배분이 없습니다. 수혜자를 추가하여 시작하세요.",
+    allocationAria: "수혜자 배분 몫",
+    manage: "관리",
+    manageBody: "수혜자를 추가하고 금고의 몫을 지정하세요. 몫은 언제든 편집하거나 취소할 수 있습니다.",
+    loadError: "수혜자를 불러올 수 없습니다. 다시 시도해 주세요.",
+    emptyTitle: "아직 수혜자 없음",
+    emptyBody: "당신의 유산은 아직 지정되지 않았습니다. 첫 수혜자를 추가하여 누군가를 위해 금고를 봉인하세요.",
+    noWallet: "지갑 주소 없음",
+    editAria: "{name} 편집",
+    removeAria: "{name} 삭제",
+    modal: {
+      editTitle: "수혜자 편집",
+      addTitle: "수혜자 추가",
+      editDesc: "이 수혜자의 이름, 몫 또는 지갑 주소를 업데이트하세요.",
+      addDesc: "새 수혜자에게 이름과 배분 몫을 지정하세요."
+    },
+    namePlaceholder: "예: Elena Marchetti",
+    sharePlaceholder: "예: 40",
+    errors: {
+      nameRequired: "이 수혜자의 이름을 입력하세요.",
+      sharePositive: "배분 몫은 0보다 커야 합니다.",
+      invalidChecksum: "이 ICP 계정 식별자의 체크섬이 유효하지 않습니다. 주소를 다시 확인하세요.",
+      invalidWallet: "유효한 ICP 지갑 주소를 입력하세요 — 64자 계정 식별자 또는 ICP 프린시펄.",
+      totalExceedsEdit: "이렇게 하면 총 배분이 {total}%가 되어 100% 한도를 초과합니다.",
+      totalExceedsAdd: "총 배분이 {total}%가 되어 100% 한도를 초과합니다.",
+      saveFailed: "변경 사항을 저장할 수 없습니다. 다시 시도해 주세요.",
+      addFailed: "수혜자를 추가할 수 없습니다. 다시 시도해 주세요."
+    }
+  },
+  assets: {
+    eyebrow: "유산 및 자산",
+    title: "보유 자산",
+    subtitle: "금고에 보관된 모든 것 — 잔액, 보유 내역, 그리고 이를 관리하는 지시.",
+    assetsHeld: "보유 자산",
+    beneficiaries: "수혜자",
+    allocationStatus: "배분 상태",
+    sealed: "봉인됨",
+    unallocated: "미배분",
+    beneficiaryFallback: "수혜자 #{id}",
+    errorEyebrow: "금고에 연결할 수 없음",
+    errorBody: "보유 자산을 읽을 수 없습니다. 다시 시도해 주세요.",
+    emptyEyebrow: "보유 자산 없음",
+    emptyBody: "금고에는 현재 암호화폐 자산이 없습니다. 자산이 추가되면 잔액과 수혜자 배분이 여기에 표시됩니다.",
+    allocationLabel: "수혜자 배분"
+  },
+  switch: {
+    eyebrow: "스위치",
+    title: "스위치",
+    subtitle: "금고를 넘겨주는 유일한 제어 장치. 작동되고, 확인되고, 신중하게.",
+    active: "작동 중 · 데드맨 스위치",
+    standingDown: "대기 중",
+    armed: "작동 중",
+    disarmed: "해제됨",
+    checkIn: "아직 여기 있습니다",
+    arm: "스위치 작동",
+    disarm: "해제",
+    cadence: "주기 · {duration}",
+    releaseIn: "{duration} 후 해제",
+    timelineAriaArmed: "데드맨 스위치 타임라인, 주기의 {percent}% 경과",
+    timelineAriaDisarmed: "데드맨 스위치 타임라인, 해제됨",
+    lastCheckIn: "마지막 체크인",
+    armedAt: "작동 시각",
+    cadenceLabel: "주기",
+    standingDownTitle: "대기 중",
+    standingDownBody: "해제하면 데드맨 스위치가 중단됩니다. 금고는 봉인된 채로 유지되지만, 체크인을 놓쳐도 수혜자에게 해제되지 않습니다.",
+    disarmTheSwitch: "스위치 해제",
+    armTitle: "스위치 작동",
+    armBody: "금고가 다음 체크인을 기다릴 시간을 선택하세요. 놓치면 금고가 수혜자에게 해제됩니다.",
+    cadenceError: "스위치를 작동하기 전에 0보다 큰 체크인 주기를 선택하세요.",
+    errorEyebrow: "스위치에 연결할 수 없음",
+    errorBody: "스위치 상태를 읽을 수 없습니다. 다시 시도해 주세요.",
+    cadence24h: "24시간",
+    cadence7d: "7일",
+    cadence30d: "30일"
+  },
+  audit: {
+    eyebrow: "감사 로그",
+    title: "감사 로그",
+    ledger: "이벤트 원장",
+    count: "이벤트 {count}개 봉인됨",
+    timestamp: "타임스탬프",
+    event: "이벤트",
+    description: "설명",
+    tableAria: "금고 감사 로그",
+    errorEyebrow: "원장에 연결할 수 없음",
+    errorBody: "감사 원장을 읽을 수 없습니다. 다시 시도해 주세요.",
+    emptyTitle: "아직 이벤트 없음",
+    emptyBody: "금고에 대해 수행된 모든 작업이 발생하는 순서대로 여기에 봉인됩니다.",
+    footer: "모든 항목은 원장에 봉인되어 있습니다. 항목은 편집하거나 삭제할 수 없습니다."
+  },
+  settings: {
+    eyebrow: "설정",
+    title: "금고 구성",
+    subtitle: "당신의 유산을 관리하는 구성을 보존하세요 — 스위치의 작동/해제 상태, 체크인 주기, 그리고 봉인된 수혜자.",
+    switchTitle: "스위치",
+    switchDesc: "금고를 작동하거나 해제하고 확인 빈도를 설정하세요.",
+    beneficiariesTitle: "수혜자",
+    beneficiariesDesc: "당신의 유산이 봉인된 사람들과 목적을 편집하세요.",
+    cadence: "주기 · {value}",
+    daily: "매일",
+    weekly: "매주",
+    monthly: "매월",
+    yearly: "매년",
+    h24: "24시간",
+    h7d: "7일",
+    h30d: "30일",
+    h365d: "365일",
+    emptyBeneficiaries: "아직 구성된 수혜자 없음",
+    editBeneficiary: "수혜자 편집",
+    editBeneficiaryDesc: "이 수혜자의 이름, 배분 몫, 지갑 주소를 업데이트하세요.",
+    removeBeneficiary: "수혜자 삭제",
+    removeBeneficiaryDesc: "금고에서 {name}을(를) 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.",
+    toast: {
+      armed: "스위치가 작동되었습니다",
+      armedDesc: "체크인 주기가 {cadence}(으)로 설정되었습니다.",
+      armError: "스위치를 작동할 수 없습니다",
+      armErrorDesc: "금고를 작동할 수 없습니다. 다시 시도해 주세요.",
+      disarmed: "스위치가 해제되었습니다",
+      disarmedDesc: "금고가 더 이상 작동하지 않습니다.",
+      disarmError: "스위치를 해제할 수 없습니다",
+      disarmErrorDesc: "금고를 해제할 수 없습니다. 다시 시도해 주세요.",
+      beneficiaryUpdated: "수혜자가 업데이트되었습니다",
+      beneficiaryUpdatedDesc: "수혜자 구성이 저장되었습니다.",
+      updateError: "수혜자를 업데이트할 수 없습니다",
+      updateErrorDesc: "변경 사항이 저장되지 않았습니다. 다시 시도해 주세요.",
+      beneficiaryRemoved: "수혜자가 삭제되었습니다",
+      beneficiaryRemovedDesc: "수혜자가 금고에서 삭제되었습니다.",
+      removeError: "수혜자를 삭제할 수 없습니다",
+      removeErrorDesc: "수혜자를 삭제할 수 없습니다. 다시 시도해 주세요."
+    }
+  }
+};
+const pl = {
+  meta: {
+    title: "Sovereign Legacy — Skarbiec",
+    description: "Sovereign Legacy — Skarbiec. Twój skarbiec. Zapieczętowany, dopóki nie przestanie być."
+  },
+  common: {
+    cancel: "Anuluj",
+    saveChanges: "Zapisz zmiany",
+    edit: "Edytuj",
+    remove: "Usuń",
+    name: "Imię",
+    optional: "Opcjonalne",
+    addBeneficiary: "Dodaj beneficjenta",
+    allocationShare: "Udział w podziale (%)",
+    walletAddress: "Adres portfela",
+    checkInCadence: "Częstotliwość logowania",
+    selectCadence: "Wybierz częstotliwość",
+    armed: "Uzbrojony",
+    disarmed: "Rozbrojony",
+    arming: "Uzbrajanie…",
+    disarming: "Rozbrajanie…",
+    saving: "Zapisywanie…",
+    removing: "Usuwanie…",
+    arm: "Uzbrój",
+    disarm: "Rozbrój"
+  },
+  nav: {
+    dashboard: "Pulpit",
+    beneficiaries: "Beneficjenci",
+    legacyAssets: "Spuścizna i Aktywa",
+    theSwitch: "Przełącznik",
+    auditLogs: "Dzienniki Audytu",
+    settings: "Ustawienia"
+  },
+  header: {
+    home: "Strona główna Sovereign Legacy",
+    networkBadge: "Sieć · Tożsamość",
+    mobileMenu: "Otwórz menu nawigacji",
+    mobilePrimary: "Główna nawigacja mobilna"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Skarbiec. Wszelkie prawa zastrzeżone.",
+    tagline: "Zapieczętowany, dopóki nie przestanie być"
+  },
+  loading: {
+    openingVault: "Otwieranie skarbca…"
+  },
+  language: {
+    label: "Język"
+  },
+  landing: {
+    eyebrow: "Suwerenne dziedzictwo",
+    headline1: "Twój skarbiec.",
+    headline2: "Zapieczętowany, dopóki nie nadejdzie czas.",
+    login: "Zaloguj się przez Internet Identity",
+    subhead: "Cyfrowy wyłącznik czuwania dla kryptowalut, zbudowany natywnie na Internet Computer — bez postępowania spadkowego, bez opóźnień, bez nikogo pilnującego poza samym łańcuchem.",
+    vaultDoorAlt: "Zwietrzałe mosiężno-stalowe drzwi bankowego skarbca, zamknięte, z emblematem pętli nieskończoności Internet Computer delikatnie świecącym w ich centrum.",
+    introduction: {
+      eyebrow: "Wprowadzenie",
+      heading: "Wyłącznik Martwego Człowieka — Narodzony w Erze Pary",
+      p1: "W ostatnich dekadach dziewiętnastego wieku nowy rodzaj maszyny przekształcał cywilizację. Elektryczne tramwaje przecinały teraz zatłoczone miasta, a windy wznosiły pasażerów w budynki o niespotykanej wysokości. Były cudem — i były niebezpieczne.",
+      p2: "Problem był prosty i przerażający: co się dzieje, gdy człowiek u sterów przestaje być u sterów? Motorniczy mógł dostać zawału serca za kierownicą. Operator windy mógł stracić przytomność w trakcie jazdy. A maszyna, obojętna na los swojego operatora, po prostu jechała dalej — aż uderzyła w coś, co ją zatrzymało.",
+      p3: "To amerykański inżynier Frank J. Sprague w 1888 roku zelektryfikował linie tramwajowe w Richmond w Wirginii — pierwszą udaną elektryczną kolej miejską w Stanach Zjednoczonych. Jego innowacja nie kończyła się na silniku. Sprague zrozumiał, że pojazd przewożący pasażerów z dużą prędkością potrzebuje sposobu na samozatrzymanie, jeśli operator stanie się niezdolny do działania.",
+      p4: "Nazwali to wyłącznikiem martwego człowieka. Trzymaj uchwyt, aby jechać dalej. Puść go — czy to z roztargnienia, choroby, czy śmierci — a maszyna zatrzyma się sama. Nazwa nie została wybrana dla dramatyzmu. Została wybrana dla precyzji. Wyłącznik był aktywowany przez nieobecność żywej dłoni.",
+      p5: "Pomysł szybko się rozprzestrzenił. Metro w Nowym Jorku, Londynie i Tokio go przyjęło. Elektrownie jądrowe wbudowały go w swoje pręty kontrolne. Samoloty komercyjne osadziły go w autopilotach. Wszędzie tam, gdzie maszyna niosła życie, wyłącznik martwego człowieka podążał za nią — cichy, cierpliwy, czekający.",
+      h3a: "Jak Wyłącznik Martwego Człowieka Działa w Dzisiejszych Czasach?",
+      p6: "Ciężko pracowałeś. Zgromadziłeś aktywa kryptowalutowe — ICP, Bitcoin, Ethereum, stablecoiny. Leżą w portfelach i canisterach, zabezpieczone prywatnymi kluczami, które posiadasz tylko ty. I jak motorniczy ściskający uchwyt, tylko twoja żywa, aktywna obecność w sieci utrzymuje obwód zamknięty.",
+      p7: "Oto jak Sovereign Legacy stosuje tę samą zasadę. Deponujesz aktywa w bezpiecznym skarbcu-canisterze on-chain. Wyznaczasz jednego lub więcej beneficjentów i ustawiasz okres braku aktywności w sieci. Dopóki logujesz się okresowo, wyłącznik pozostaje zamknięty. W chwili, gdy ta aktywność ustaje, Sovereign Legacy wysyła ci alerty. Jeśli nie odpowiesz, transfer wykonuje się automatycznie, przenosząc twoje aktywa do wybranych beneficjentów bez prawników, sądów i opóźnień.",
+      h3b: "Chcesz Spersonalizować Swoje Życzenia?",
+      p8: "Jeśli chcesz więcej niż jednego odbiorcę — małżonka, dzieci, zaufanego przyjaciela, cel charytatywny — Sovereign Legacy pozwala ci podzielić aktywa procentowo. Ty ustalasz udziały. Twoi beneficjenci otrzymują dokładnie to, co zamierzałeś."
+    },
+    advantages: {
+      eyebrow: "Dlaczego to działa",
+      heading: "Zalety Są Wbudowane w Każdy Krok",
+      card1: {
+        title: "Bez prawników. Bez spadku. Bez opóźnień.",
+        body: "Canister wykonuje twoje instrukcje w momencie zadziałania wyłącznika martwego człowieka. Żadna instytucja nie stoi między twoimi życzeniami a ludźmi, których kochasz."
+      },
+      card2: {
+        title: "Ty zachowujesz kontrolę.",
+        body: "Zmieniaj beneficjentów, dostosowuj procenty lub aktualizuj swoją wiadomość w dowolnym momencie. Wszystko aktualizuje się natychmiast, on-chain."
+      },
+      card3: {
+        title: "Działa, gdy śpisz.",
+        body: "Jeśli życie toczy się dalej, Sovereign Legacy milczy. Jeśli nie, wszystko przebiega dokładnie tak, jak zaplanowałeś."
+      },
+      card4: {
+        title: "Globalny zasięg.",
+        body: "Beneficjenci mogą być gdziekolwiek na świecie. Sovereign Legacy mówi w wielu językach i zajmuje się wyjaśnieniami, abyś ty nie musiał."
+      },
+      card5: {
+        title: "Twoje dane pozostają twoje.",
+        body: "Twój skarbiec to canister na Internet Computer, zabezpieczony twoją Internet Identity. Żadna strona trzecia — w tym sam Sovereign Legacy — nie ma dostępu do jego zawartości."
+      }
+    },
+    faq: {
+      eyebrow: "Pytania",
+      heading: "Często Zadawane Pytania",
+      q1: {
+        q: "Jakie języki obsługuje Sovereign Legacy?",
+        a: "Aplikacja obsługuje 22 języki, w tym języki pisane od prawej do lewej, takie jak arabski, perski i urdu, aby beneficjenci gdziekolwiek na świecie mogli zrozumieć powiadomienie o zwolnieniu w swoim własnym języku."
+      },
+      q2: {
+        q: "Jak bezpieczny jest mój skarbiec?",
+        a: "Twój skarbiec to canister na Internet Computer, zabezpieczony twoją Internet Identity. Tylko twój uwierzytelniony principal może przeglądać lub zarządzać jego zawartością."
+      },
+      q3: {
+        q: "Czy mogę kiedyś stracić swój skarbiec?",
+        a: "Dopóki zachowujesz dostęp do swojej Internet Identity, twój skarbiec pozostaje pod twoją kontrolą. Głównym ryzykiem jest utrata danych uwierzytelniających Internet Identity, dlatego ważne jest przechowywanie bezpiecznej kopii zapasowej metody odzyskiwania."
+      },
+      q4: {
+        q: "Jak aktywa są dzielone między beneficjentów?",
+        a: "Przydzielasz każdemu beneficjentowi udział procentowy. Udziały można dostosowywać w dowolnym momencie przed zwolnieniem, a łączna kwota przydzielona wszystkim beneficjentom nigdy nie może przekroczyć 100%."
+      },
+      q5: {
+        q: "Jak zresetować licznik braku aktywności w sieci?",
+        a: "Po prostu zaloguj się przez swoją Internet Identity. Każde uwierzytelnione logowanie resetuje zegar braku aktywności i utrzymuje wyłącznik martwego człowieka uzbrojony."
+      },
+      q6: {
+        q: "Jak dodać beneficjenta?",
+        a: "Z pulpitu otwórz panel Beneficjenci i dodaj imię, dane kontaktowe oraz procent przydziału."
+      },
+      q7: {
+        q: "Czy mogę zmienić beneficjentów po konfiguracji?",
+        a: "Tak. Beneficjenci, przydziały i osobiste wiadomości mogą być aktualizowane w dowolnym momencie — zmiany wchodzą w życie natychmiast, on-chain."
+      },
+      q8: {
+        q: "Kto może zobaczyć moich beneficjentów?",
+        a: "Tylko ty, dopóki jesteś uwierzytelniony jako właściciel skarbca."
+      }
+    },
+    terms: {
+      eyebrow: "Warunki",
+      heading: "Warunki i Postanowienia",
+      card1: {
+        title: "1. Przegląd",
+        body: "ICP Sovereign Legacy to zdecentralizowana, w pełni on-chain platforma dziedziczenia i wyłącznika martwego człowieka, zbudowana na protokole Internet Computer (ICP). Korzystając z tej usługi, akceptujesz niniejsze warunki."
+      },
+      card2: {
+        title: "2. Brak Odpowiedzialności",
+        body: "Deweloperzy nie ponoszą odpowiedzialności za jakąkolwiek utratę aktywów wynikającą z nieprawidłowej konfiguracji, utraty danych uwierzytelniających Internet Identity, warunków sieci blockchain lub jakiejkolwiek innej przyczyny. Korzystasz z tej usługi na własne ryzyko."
+      },
+      card3: {
+        title: "3. Autonomiczne Wykonanie",
+        body: "Dystrybucja aktywów jest wykonywana automatycznie przez logikę inteligentnych kontraktów on-chain, gdy zadziała twój wyłącznik martwego człowieka. Po zadziałaniu interwencja człowieka nie jest wymagana ani możliwa."
+      },
+      card4: {
+        title: "4. Prywatność",
+        body: "Twoja lista beneficjentów jest przechowywana on-chain i dostępna tylko dla twojego uwierzytelnionego principala Internet Identity. Żadna strona trzecia nie może zobaczyć twoich danych."
+      },
+      card5: {
+        title: "5. Opłaty",
+        body: "Usługa jest świadczona zgodnie z opisem w aplikacji. Wszelkie opłaty dotyczące konkretnej czynności są jasno pokazane w aplikacji przed jej potwierdzeniem — bez ukrytych lub cyklicznych opłat."
+      },
+      card6: {
+        title: "6. Kwalifikowalność",
+        body: "Musisz mieć co najmniej 18 lat (lub wiek pełnoletności w twojej jurysdykcji) i posiadać zdolność prawną do zawarcia niniejszych warunków, aby korzystać z tej usługi."
+      },
+      card7: {
+        title: "7. Brak Gwarancji",
+        body: "Usługa jest świadczona «tak jak jest» i «jak dostępna», bez jakichkolwiek gwarancji, wyraźnych lub dorozumianych, w tym jakiejkolwiek gwarancji nieprzerwanego lub bezbłędnego działania."
+      },
+      card8: {
+        title: "8. Przyjęcie Ryzyka",
+        body: "Kryptowaluty i technologia blockchain niosą ze sobą nieodłączne ryzyko, w tym zmienność cen, przeciążenie sieci, podatności inteligentnych kontraktów i zmiany w bazowych protokołach. Korzystając z tej usługi, akceptujesz te ryzyka."
+      },
+      card9: {
+        title: "9. Wypowiedzenie",
+        body: "Dostęp do tej usługi może zostać zawieszony lub wypowiedziany z powodu naruszenia niniejszych warunków lub zachowania, które Sovereign Legacy uzna, według własnego uznania, za szkodliwe dla innych użytkowników lub samej usługi."
+      },
+      card10: {
+        title: "10. Zmiany Niniejszych Warunków",
+        body: "Niniejsze warunki mogą być od czasu do czasu aktualizowane. Istotne zmiany zostaną przedstawione w aplikacji, a dalsze korzystanie z usługi po takich zmianach stanowi akceptację zaktualizowanych warunków."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Pulpit",
+    title: "Skarbiec",
+    balance: "Saldo Skarbca",
+    assetsHeld: "Przechowywane aktywa: {count}",
+    noAssets: "Brak przechowywanych aktywów",
+    beneficiaries: "Beneficjenci",
+    named: "wyznaczonych",
+    sealed: "Zapieczętowano beneficjentów: {count}",
+    none: "Brak beneficjentów",
+    allocation: "Przydział Beneficjentów",
+    allocationNone: "Brak przydziałów. Dodaj beneficjenta, aby rozpocząć.",
+    allocationAria: "Udziały przydziału beneficjentów",
+    switch: "Przełącznik",
+    lastVerified: "Ostatnia weryfikacja · {time}",
+    notVerified: "Jeszcze nie zweryfikowano"
+  },
+  beneficiaries: {
+    eyebrow: "Beneficjenci",
+    title: "Beneficjenci",
+    subtitle: "Ludzie i sprawy, dla których zapieczętowana jest twoja spuścizna. Przydział, kolejność i warunki mieszkają tutaj.",
+    allocation: "Przydział",
+    count: "Beneficjenci: {count}",
+    noAllocations: "Brak przydziałów. Dodaj beneficjenta, aby rozpocząć.",
+    allocationAria: "Udziały przydziału beneficjentów",
+    manage: "Zarządzaj",
+    manageBody: "Dodaj beneficjenta i przydziel mu udział w skarbcu. Udziały można edytować lub odwoływać w dowolnym momencie.",
+    loadError: "Nie udało się załadować beneficjentów. Spróbuj ponownie.",
+    emptyTitle: "Brak beneficjentów",
+    emptyBody: "Twoja spuścizna nie jest przypisana. Dodaj pierwszego beneficjenta, aby zapieczętować skarbiec dla kogoś.",
+    noWallet: "Brak adresu portfela",
+    editAria: "Edytuj {name}",
+    removeAria: "Usuń {name}",
+    modal: {
+      editTitle: "Edytuj beneficjenta",
+      addTitle: "Dodaj beneficjenta",
+      editDesc: "Zaktualizuj imię, udział lub adres portfela tego beneficjenta.",
+      addDesc: "Przypisz nowemu beneficjentowi imię i udział w przydziale."
+    },
+    namePlaceholder: "np. Elena Marchetti",
+    sharePlaceholder: "np. 40",
+    errors: {
+      nameRequired: "Wprowadź imię dla tego beneficjenta.",
+      sharePositive: "Udział w przydziale musi być większy od zera.",
+      invalidChecksum: "Ten identyfikator konta ICP ma nieprawidłową sumę kontrolną. Sprawdź adres.",
+      invalidWallet: "Wprowadź prawidłowy adres portfela ICP — 64-znakowy identyfikator konta lub principal ICP.",
+      totalExceedsEdit: "To zwiększy łączny przydział do {total}%, przekraczając limit 100%.",
+      totalExceedsAdd: "Łączny przydział wyniesie {total}%, przekraczając limit 100%.",
+      saveFailed: "Nie udało się zapisać zmian. Spróbuj ponownie.",
+      addFailed: "Nie udało się dodać beneficjenta. Spróbuj ponownie."
+    }
+  },
+  assets: {
+    eyebrow: "Spuścizna i Aktywa",
+    title: "Przechowywane Aktywa",
+    subtitle: "Wszystko, co znajduje się w skarbcu — salda, zasoby i instrukcje, które nimi rządzą.",
+    assetsHeld: "Przechowywane Aktywa",
+    beneficiaries: "Beneficjenci",
+    allocationStatus: "Status Przydziału",
+    sealed: "Zapieczętowany",
+    unallocated: "Nieprzydzielony",
+    beneficiaryFallback: "Beneficjent #{id}",
+    errorEyebrow: "Skarbiec niedostępny",
+    errorBody: "Nie udało się odczytać przechowywanych aktywów. Spróbuj ponownie.",
+    emptyEyebrow: "Brak przechowywanych aktywów",
+    emptyBody: "Skarbiec obecnie nie przechowuje aktywów kryptowalutowych. Po dodaniu aktywów ich salda i przydziały dla beneficjentów pojawią się tutaj.",
+    allocationLabel: "Przydział Beneficjentów"
+  },
+  switch: {
+    eyebrow: "Przełącznik",
+    title: "Przełącznik",
+    subtitle: "Jedyna kontrola, która przekazuje skarbiec. Uzbrojony, zweryfikowany i przemyślany.",
+    active: "Aktywny · Wyłącznik martwego człowieka",
+    standingDown: "W gotowości",
+    armed: "UZBROJONY",
+    disarmed: "ROZBROJONY",
+    checkIn: "Wciąż tu jestem",
+    arm: "Uzbrój przełącznik",
+    disarm: "Rozbrój",
+    cadence: "Częstotliwość · {duration}",
+    releaseIn: "Zwolnienie za {duration}",
+    timelineAriaArmed: "Oś czasu wyłącznika martwego człowieka, upłynęło {percent}% częstotliwości",
+    timelineAriaDisarmed: "Oś czasu wyłącznika martwego człowieka, rozbrojony",
+    lastCheckIn: "Ostatnie logowanie",
+    armedAt: "Uzbrojony o",
+    cadenceLabel: "Częstotliwość",
+    standingDownTitle: "W gotowości",
+    standingDownBody: "Rozbrojenie zatrzymuje wyłącznik martwego człowieka. Skarbiec pozostaje zapieczętowany, ale nie zwolni już aktywów twoim beneficjentom po pominiętym logowaniu.",
+    disarmTheSwitch: "Rozbrój przełącznik",
+    armTitle: "Uzbrój przełącznik",
+    armBody: "Wybierz, jak długo skarbiec czeka na twoje następne logowanie. Jeśli je pominiesz, skarbiec zwolni aktywa twoim beneficjentom.",
+    cadenceError: "Wybierz częstotliwość logowania większą od zera przed uzbrojeniem przełącznika.",
+    errorEyebrow: "Przełącznik niedostępny",
+    errorBody: "Nie udało się odczytać stanu przełącznika. Spróbuj ponownie.",
+    cadence24h: "24 godziny",
+    cadence7d: "7 dni",
+    cadence30d: "30 dni"
+  },
+  audit: {
+    eyebrow: "Dzienniki Audytu",
+    title: "Dzienniki Audytu",
+    ledger: "Rejestr Zdarzeń",
+    count: "Zapieczętowano zdarzeń: {count}",
+    timestamp: "Znacznik czasu",
+    event: "Zdarzenie",
+    description: "Opis",
+    tableAria: "Dziennik audytu skarbca",
+    errorEyebrow: "Rejestr niedostępny",
+    errorBody: "Nie udało się odczytać rejestru audytu. Spróbuj ponownie.",
+    emptyTitle: "Brak zdarzeń",
+    emptyBody: "Każda czynność wykonana wobec skarbca zostanie zapieczętowana tutaj, w kolejności, w miarę jej występowania.",
+    footer: "Każdy wpis jest zapieczętowany w rejestrze. Wpisów nie można edytować ani usuwać."
+  },
+  settings: {
+    eyebrow: "Ustawienia",
+    title: "Konfiguracja Skarbca",
+    subtitle: "Zachowaj konfigurację zarządzającą twoją spuścizną — stan uzbrojenia/rozbrojenia przełącznika, częstotliwość logowania i beneficjentów, dla których jest zapieczętowany.",
+    switchTitle: "Przełącznik",
+    switchDesc: "Uzbrój lub rozbrój skarbiec i ustaw, jak często ma być weryfikowany.",
+    beneficiariesTitle: "Beneficjenci",
+    beneficiariesDesc: "Edytuj ludzi i sprawy, dla których zapieczętowana jest twoja spuścizna.",
+    cadence: "Częstotliwość · {value}",
+    daily: "Codziennie",
+    weekly: "Co tydzień",
+    monthly: "Co miesiąc",
+    yearly: "Co rok",
+    h24: "24 godziny",
+    h7d: "7 dni",
+    h30d: "30 dni",
+    h365d: "365 dni",
+    emptyBeneficiaries: "Brak skonfigurowanych beneficjentów",
+    editBeneficiary: "Edytuj beneficjenta",
+    editBeneficiaryDesc: "Zaktualizuj imię, udział w przydziale i adres portfela tego beneficjenta.",
+    removeBeneficiary: "Usuń beneficjenta",
+    removeBeneficiaryDesc: "Usunąć {name} ze skarbca? Tej operacji nie można cofnąć.",
+    toast: {
+      armed: "Przełącznik uzbrojony",
+      armedDesc: "Częstotliwość logowania ustawiona na {cadence}.",
+      armError: "Nie udało się uzbroić przełącznika",
+      armErrorDesc: "Skarbiec nie mógł zostać uzbrojony. Spróbuj ponownie.",
+      disarmed: "Przełącznik rozbrojony",
+      disarmedDesc: "Skarbiec nie jest już uzbrojony.",
+      disarmError: "Nie udało się rozbroić przełącznika",
+      disarmErrorDesc: "Skarbiec nie mógł zostać rozbrojony. Spróbuj ponownie.",
+      beneficiaryUpdated: "Beneficjent zaktualizowany",
+      beneficiaryUpdatedDesc: "Konfiguracja beneficjenta została zapisana.",
+      updateError: "Nie udało się zaktualizować beneficjenta",
+      updateErrorDesc: "Zmiany nie zostały zapisane. Spróbuj ponownie.",
+      beneficiaryRemoved: "Beneficjent usunięty",
+      beneficiaryRemovedDesc: "Beneficjent został usunięty ze skarbca.",
+      removeError: "Nie udało się usunąć beneficjenta",
+      removeErrorDesc: "Beneficjent nie mógł zostać usunięty. Spróbuj ponownie."
+    }
+  }
+};
+const pt = {
+  meta: {
+    title: "Sovereign Legacy — O Cofre",
+    description: "Sovereign Legacy — O Cofre. O seu cofre. Selado até deixar de estar."
+  },
+  common: {
+    cancel: "Cancelar",
+    saveChanges: "Guardar alterações",
+    edit: "Editar",
+    remove: "Remover",
+    name: "Nome",
+    optional: "Opcional",
+    addBeneficiary: "Adicionar beneficiário",
+    allocationShare: "Percentagem de atribuição (%)",
+    walletAddress: "Endereço da carteira",
+    checkInCadence: "Cadência de verificação",
+    selectCadence: "Selecionar cadência",
+    armed: "Armado",
+    disarmed: "Desarmado",
+    arming: "A armar…",
+    disarming: "A desarmar…",
+    saving: "A guardar…",
+    removing: "A remover…",
+    arm: "Armar",
+    disarm: "Desarmar"
+  },
+  nav: {
+    dashboard: "Painel",
+    beneficiaries: "Beneficiários",
+    legacyAssets: "Legado e Ativos",
+    theSwitch: "O Interruptor",
+    auditLogs: "Registos de Auditoria",
+    settings: "Definições"
+  },
+  header: {
+    home: "Início do Sovereign Legacy",
+    networkBadge: "Rede · Identidade",
+    mobileMenu: "Abrir menu de navegação",
+    mobilePrimary: "Navegação principal móvel"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — O Cofre. Todos os direitos reservados.",
+    tagline: "Selado até deixar de estar"
+  },
+  loading: {
+    openingVault: "A abrir o cofre…"
+  },
+  language: {
+    label: "Idioma"
+  },
+  landing: {
+    eyebrow: "Herança autossoberana",
+    headline1: "Seu cofre.",
+    headline2: "Selado até deixar de ser.",
+    login: "Entrar com Internet Identity",
+    subhead: "Um interruptor de homem morto digital para criptoativos, construído nativamente no Internet Computer — sem inventário, sem atrasos, sem ninguém observando além da própria cadeia.",
+    vaultDoorAlt: "Uma porta de cofre bancário de latão e aço desgastados, fechada, com o emblema do laço infinito da Internet Computer brilhando levemente ao centro.",
+    introduction: {
+      eyebrow: "Introdução",
+      heading: "O Interruptor de Homem Morto — Nascido na Era do Vapor",
+      p1: "Nas últimas décadas do século XIX, um novo tipo de máquina remodelava a civilização. Os elétricos atravessavam agora as cidades apinhadas e os elevadores erguiam os passageiros em edifícios de altura sem precedentes. Eram maravilhas — e eram perigosos.",
+      p2: "O problema era simples e aterrador: o que acontece quando o homem no comando deixa de estar no comando? Um condutor podia sofrer um ataque cardíaco ao volante. Um operador de elevador podia perder a consciência a meio da viagem. E a máquina, indiferente ao destino do seu operador, simplesmente continuava — até embater em algo que a detivesse.",
+      p3: "Foi o engenheiro americano Frank J. Sprague quem, em 1888, eletrificou as linhas de elétrico de Richmond, na Virgínia — o primeiro caminho de ferro elétrico urbano bem-sucedido dos Estados Unidos. A sua inovação não parou no motor. Sprague percebeu que um veículo que transportava passageiros a alta velocidade precisava de uma forma de se deter se o operador ficasse incapacitado.",
+      p4: "Chamaram-lhe o interruptor de homem morto. Segure na pega para continuar a avançar. Solte-a — seja por distração, doença ou morte — e a máquina detém-se sozinha. O nome não foi escolhido por drama. Foi escolhido por precisão. O interruptor era ativado pela ausência da mão viva.",
+      p5: "A ideia espalhou-se rapidamente. Os metros de Nova Iorque, Londres e Tóquio adotaram-na. As centrais nucleares integraram-na nas suas barras de controlo. Os aviões comerciais incorporaram-na nos seus pilotos automáticos. Em qualquer lugar onde uma máquina transportasse vidas, o interruptor de homem morto seguia — silencioso, paciente, à espera.",
+      h3a: "Como Funciona um Interruptor de Homem Morto nos Dias de Hoje?",
+      p6: "Trabalhou arduamente. Acumulou ativos de criptomoedas — ICP, Bitcoin, Ethereum, stablecoins. Estão em carteiras e canisters, protegidos por chaves privadas que só você possui. E como o condutor que agarra a pega, só a sua presença viva e ativa na rede mantém o circuito fechado.",
+      p7: "Eis como o Sovereign Legacy aplica o mesmo princípio. Deposita ativos num cofre canister seguro na cadeia. Designa um ou mais beneficiários e define um período de inatividade na rede. Enquanto iniciar sessão periodicamente, o interruptor permanece fechado. No momento em que essa atividade cessa, o Sovereign Legacy envia-lhe alertas. Se não responder, a transferência é executada automaticamente, movendo os seus ativos para os beneficiários escolhidos, sem advogados, tribunais ou atrasos.",
+      h3b: "Quer Personalizar os Seus Desejos?",
+      p8: "Se quiser mais do que um destinatário — um cônjuge, filhos, um amigo de confiança, uma causa de caridade — o Sovereign Legacy permite-lhe dividir os seus ativos por percentagem. Você define as partes. Os seus beneficiários recebem exatamente o que pretendia."
+    },
+    advantages: {
+      eyebrow: "Porque funciona",
+      heading: "As Vantagens Estão Integradas em Cada Passo",
+      card1: {
+        title: "Sem advogados. Sem inventário. Sem atrasos.",
+        body: "O canister executa as suas instruções no momento em que o interruptor de homem morto dispara. Nenhuma instituição se interpõe entre os seus desejos e as pessoas que ama."
+      },
+      card2: {
+        title: "Você mantém o controlo.",
+        body: "Altere beneficiários, ajuste percentagens ou atualize a sua mensagem a qualquer momento. Tudo é atualizado instantaneamente, na cadeia."
+      },
+      card3: {
+        title: "Funciona enquanto dorme.",
+        body: "Se a vida continuar, o Sovereign Legacy permanece em silêncio. Se não continuar, tudo avança exatamente como planeou."
+      },
+      card4: {
+        title: "Alcance global.",
+        body: "Os beneficiários podem estar em qualquer parte do mundo. O Sovereign Legacy fala várias línguas e trata da explicação para que você não tenha de o fazer."
+      },
+      card5: {
+        title: "Os seus dados continuam seus.",
+        body: "O seu cofre é um canister no Internet Computer, protegido pela sua Internet Identity. Nenhum terceiro — incluindo o próprio Sovereign Legacy — tem acesso ao seu conteúdo."
+      }
+    },
+    faq: {
+      eyebrow: "Perguntas",
+      heading: "Perguntas Frequentes",
+      q1: {
+        q: "Que idiomas o Sovereign Legacy suporta?",
+        a: "A aplicação suporta 22 idiomas, incluindo idiomas da direita para a esquerda como o árabe, o persa e o urdu, para que beneficiários em qualquer parte do mundo possam compreender um aviso de libertação no seu próprio idioma."
+      },
+      q2: {
+        q: "Quão seguro é o meu cofre?",
+        a: "O seu cofre é um canister no Internet Computer, protegido pela sua Internet Identity. Apenas o seu principal autenticado pode ver ou gerir o seu conteúdo."
+      },
+      q3: {
+        q: "Poderei alguma vez perder o meu cofre?",
+        a: "Enquanto mantiver acesso à sua Internet Identity, o seu cofre permanece sob o seu controlo. O principal risco é perder as suas credenciais de Internet Identity, por isso é importante manter uma cópia de segurança segura do seu método de recuperação."
+      },
+      q4: {
+        q: "Como são divididos os ativos entre os beneficiários?",
+        a: "Atribui a cada beneficiário uma parte percentual. As partes podem ser ajustadas a qualquer momento antes da libertação, e o total atribuído a todos os beneficiários nunca deve exceder 100%."
+      },
+      q5: {
+        q: "Como reponho o temporizador de inatividade da rede?",
+        a: "Basta iniciar sessão com a sua Internet Identity. Qualquer verificação autenticada repõe o relógio de inatividade e mantém o interruptor de homem morto armado."
+      },
+      q6: {
+        q: "Como adiciono um beneficiário?",
+        a: "A partir do seu painel, abra o painel Beneficiários e adicione um nome, informações de contacto e percentagem de atribuição."
+      },
+      q7: {
+        q: "Posso alterar os meus beneficiários após a configuração?",
+        a: "Sim. Beneficiários, atribuições e mensagens pessoais podem ser atualizados a qualquer momento — as alterações entram em vigor imediatamente, na cadeia."
+      },
+      q8: {
+        q: "Quem pode ver os meus beneficiários?",
+        a: "Apenas você, enquanto estiver autenticado como proprietário do cofre."
+      }
+    },
+    terms: {
+      eyebrow: "Termos",
+      heading: "Termos e Condições",
+      card1: {
+        title: "1. Visão Geral",
+        body: "O ICP Sovereign Legacy é uma plataforma descentralizada de herança e interruptor de homem morto, totalmente na cadeia, construída sobre o Protocolo Internet Computer (ICP). Ao utilizar este serviço, concorda com estes termos."
+      },
+      card2: {
+        title: "2. Sem Responsabilidade",
+        body: "Os programadores não são responsáveis por qualquer perda de ativos resultante de configuração incorreta, credenciais de Internet Identity perdidas, condições da rede blockchain ou qualquer outra causa. Utilize este serviço por sua conta e risco."
+      },
+      card3: {
+        title: "3. Execução Autónoma",
+        body: "A distribuição de ativos é executada automaticamente pela lógica de contratos inteligentes na cadeia quando o seu interruptor de homem morto dispara. Nenhuma intervenção humana é necessária ou possível depois de disparado."
+      },
+      card4: {
+        title: "4. Privacidade",
+        body: "A sua lista de beneficiários é armazenada na cadeia e acessível apenas ao seu principal autenticado de Internet Identity. Nenhum terceiro pode ver os seus dados."
+      },
+      card5: {
+        title: "5. Taxas",
+        body: "Este serviço é prestado conforme descrito na aplicação. Quaisquer taxas aplicáveis a uma ação específica são mostradas claramente na aplicação antes de confirmar essa ação — sem cobranças ocultas ou recorrentes."
+      },
+      card6: {
+        title: "6. Elegibilidade",
+        body: "Deve ter pelo menos 18 anos (ou a maioridade na sua jurisdição) e capacidade legal para celebrar estes termos para utilizar este serviço."
+      },
+      card7: {
+        title: "7. Sem Garantia",
+        body: "Este serviço é prestado «tal como está» e «conforme disponível», sem garantias de qualquer tipo, expressas ou implícitas, incluindo qualquer garantia de funcionamento ininterrupto ou sem erros."
+      },
+      card8: {
+        title: "8. Assunção de Riscos",
+        body: "As criptomoedas e a tecnologia blockchain acarretam riscos inerentes, incluindo volatilidade de preços, congestionamento da rede, vulnerabilidades de contratos inteligentes e alterações nos protocolos subjacentes. Ao utilizar este serviço, aceita estes riscos."
+      },
+      card9: {
+        title: "9. Rescisão",
+        body: "O acesso a este serviço pode ser suspenso ou rescindido por violação destes termos ou por conduta que o Sovereign Legacy determine, a seu critério, como prejudicial para outros utilizadores ou para o próprio serviço."
+      },
+      card10: {
+        title: "10. Modificações Destes Termos",
+        body: "Estes termos podem ser atualizados de tempos a tempos. As alterações materiais serão apresentadas na aplicação, e a utilização continuada do serviço após tais alterações constitui aceitação dos termos atualizados."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Painel",
+    title: "O Cofre",
+    balance: "Saldo do Cofre",
+    assetsHeld: "{count} ativo(s) detido(s)",
+    noAssets: "Ainda sem ativos detidos",
+    beneficiaries: "Beneficiários",
+    named: "designados",
+    sealed: "{count} beneficiário(s) selado(s)",
+    none: "Ainda sem beneficiários",
+    allocation: "Atribuição de Beneficiários",
+    allocationNone: "Ainda sem atribuições. Adicione um beneficiário para começar.",
+    allocationAria: "Partes de atribuição dos beneficiários",
+    switch: "O Interruptor",
+    lastVerified: "Última verificação · {time}",
+    notVerified: "Ainda não verificado"
+  },
+  beneficiaries: {
+    eyebrow: "Beneficiários",
+    title: "Beneficiários",
+    subtitle: "As pessoas e causas para as quais o seu legado está selado. A atribuição, a ordem e as condições vivem aqui.",
+    allocation: "Atribuição",
+    count: "{count} beneficiário(s)",
+    noAllocations: "Ainda sem atribuições. Adicione um beneficiário para começar.",
+    allocationAria: "Partes de atribuição dos beneficiários",
+    manage: "Gerir",
+    manageBody: "Adicione um beneficiário e atribua-lhe a sua parte do cofre. As partes podem ser editadas ou revogadas a qualquer momento.",
+    loadError: "Não foi possível carregar os beneficiários. Tente novamente.",
+    emptyTitle: "Ainda sem beneficiários",
+    emptyBody: "O seu legado não está atribuído. Adicione o seu primeiro beneficiário para selar o cofre para alguém.",
+    noWallet: "Sem endereço de carteira",
+    editAria: "Editar {name}",
+    removeAria: "Remover {name}",
+    modal: {
+      editTitle: "Editar beneficiário",
+      addTitle: "Adicionar beneficiário",
+      editDesc: "Atualize o nome, a parte ou o endereço da carteira deste beneficiário.",
+      addDesc: "Atribua um nome e uma parte de atribuição a um novo beneficiário."
+    },
+    namePlaceholder: "p. ex. Elena Marchetti",
+    sharePlaceholder: "p. ex. 40",
+    errors: {
+      nameRequired: "Introduza um nome para este beneficiário.",
+      sharePositive: "A parte de atribuição deve ser maior que zero.",
+      invalidChecksum: "Este identificador de conta ICP tem uma soma de verificação inválida. Verifique o endereço.",
+      invalidWallet: "Introduza um endereço de carteira ICP válido — um identificador de conta de 64 caracteres ou um principal ICP.",
+      totalExceedsEdit: "Isto elevaria a atribuição total para {total}%, excedendo o limite de 100%.",
+      totalExceedsAdd: "A atribuição total seria de {total}%, excedendo o limite de 100%.",
+      saveFailed: "Não foi possível guardar as alterações. Tente novamente.",
+      addFailed: "Não foi possível adicionar o beneficiário. Tente novamente."
+    }
+  },
+  assets: {
+    eyebrow: "Legado e Ativos",
+    title: "Ativos Detidos",
+    subtitle: "Tudo o que está guardado no cofre — saldos, participações e as instruções que os regem.",
+    assetsHeld: "Ativos Detidos",
+    beneficiaries: "Beneficiários",
+    allocationStatus: "Estado da Atribuição",
+    sealed: "Selado",
+    unallocated: "Não atribuído",
+    beneficiaryFallback: "Beneficiário #{id}",
+    errorEyebrow: "Cofre inacessível",
+    errorBody: "Não foi possível ler os ativos detidos. Tente novamente.",
+    emptyEyebrow: "Sem ativos detidos",
+    emptyBody: "O cofre não contém atualmente ativos de criptomoedas. Quando forem adicionados ativos, os seus saldos e atribuições aos beneficiários aparecerão aqui.",
+    allocationLabel: "Atribuição de Beneficiários"
+  },
+  switch: {
+    eyebrow: "O Interruptor",
+    title: "O Interruptor",
+    subtitle: "O único controlo que entrega o cofre. Armado, verificado e deliberado.",
+    active: "Ativo · Interruptor de homem morto",
+    standingDown: "Em repouso",
+    armed: "ARMADO",
+    disarmed: "DESARMADO",
+    checkIn: "Ainda estou aqui",
+    arm: "Armar o interruptor",
+    disarm: "Desarmar",
+    cadence: "Cadência · {duration}",
+    releaseIn: "Libertação em {duration}",
+    timelineAriaArmed: "Cronologia do interruptor de homem morto, {percent}% da cadência decorrida",
+    timelineAriaDisarmed: "Cronologia do interruptor de homem morto, desarmado",
+    lastCheckIn: "Última verificação",
+    armedAt: "Armado em",
+    cadenceLabel: "Cadência",
+    standingDownTitle: "Em repouso",
+    standingDownBody: "Desarmar interrompe o interruptor de homem morto. O cofre permanece selado, mas deixará de libertar para os seus beneficiários numa verificação falhada.",
+    disarmTheSwitch: "Desarmar o interruptor",
+    armTitle: "Armar o interruptor",
+    armBody: "Escolha quanto tempo o cofre espera pela sua próxima verificação. Se a falhar, o cofre liberta-se para os seus beneficiários.",
+    cadenceError: "Escolha uma cadência de verificação maior que zero antes de armar o interruptor.",
+    errorEyebrow: "Interruptor inacessível",
+    errorBody: "Não foi possível ler o estado do interruptor. Tente novamente.",
+    cadence24h: "24 horas",
+    cadence7d: "7 dias",
+    cadence30d: "30 dias"
+  },
+  audit: {
+    eyebrow: "Registos de Auditoria",
+    title: "Registos de Auditoria",
+    ledger: "Registo de Eventos",
+    count: "{count} evento(s) selado(s)",
+    timestamp: "Data/hora",
+    event: "Evento",
+    description: "Descrição",
+    tableAria: "Registo de auditoria do cofre",
+    errorEyebrow: "Registo inacessível",
+    errorBody: "Não foi possível ler o registo de auditoria. Tente novamente.",
+    emptyTitle: "Ainda sem eventos",
+    emptyBody: "Cada ação executada contra o cofre será selada aqui, por ordem, à medida que acontece.",
+    footer: "Cada entrada está selada no registo. As entradas não podem ser editadas nem removidas."
+  },
+  settings: {
+    eyebrow: "Definições",
+    title: "Configuração do Cofre",
+    subtitle: "Preserve a configuração que rege o seu legado — o estado armado/desarmado do Interruptor, a sua cadência de verificação e os beneficiários para os quais está selado.",
+    switchTitle: "O Interruptor",
+    switchDesc: "Arme ou desarme o cofre e defina com que frequência deve ser verificado.",
+    beneficiariesTitle: "Beneficiários",
+    beneficiariesDesc: "Edite as pessoas e causas para as quais o seu legado está selado.",
+    cadence: "Cadência · {value}",
+    daily: "Diário",
+    weekly: "Semanal",
+    monthly: "Mensal",
+    yearly: "Anual",
+    h24: "24 horas",
+    h7d: "7 dias",
+    h30d: "30 dias",
+    h365d: "365 dias",
+    emptyBeneficiaries: "Ainda sem beneficiários configurados",
+    editBeneficiary: "Editar beneficiário",
+    editBeneficiaryDesc: "Atualize o nome, a parte de atribuição e o endereço da carteira deste beneficiário.",
+    removeBeneficiary: "Remover beneficiário",
+    removeBeneficiaryDesc: "Remover {name} do cofre? Esta ação não pode ser anulada.",
+    toast: {
+      armed: "O Interruptor foi armado",
+      armedDesc: "Cadência de verificação definida para {cadence}.",
+      armError: "Não foi possível armar o Interruptor",
+      armErrorDesc: "O cofre não pôde ser armado. Tente novamente.",
+      disarmed: "O Interruptor foi desarmado",
+      disarmedDesc: "O cofre já não está armado.",
+      disarmError: "Não foi possível desarmar o Interruptor",
+      disarmErrorDesc: "O cofre não pôde ser desarmado. Tente novamente.",
+      beneficiaryUpdated: "Beneficiário atualizado",
+      beneficiaryUpdatedDesc: "A configuração do beneficiário foi guardada.",
+      updateError: "Não foi possível atualizar o beneficiário",
+      updateErrorDesc: "As alterações não foram guardadas. Tente novamente.",
+      beneficiaryRemoved: "Beneficiário removido",
+      beneficiaryRemovedDesc: "O beneficiário foi removido do cofre.",
+      removeError: "Não foi possível remover o beneficiário",
+      removeErrorDesc: "O beneficiário não pôde ser removido. Tente novamente."
+    }
+  }
+};
+const sw = {
+  meta: {
+    title: "Sovereign Legacy — Hazina",
+    description: "Sovereign Legacy — Hazina. Hazina yako. Imefungwa hadi isipokuwa hivyo."
+  },
+  common: {
+    cancel: "Ghairi",
+    saveChanges: "Hifadhi mabadiliko",
+    edit: "Hariri",
+    remove: "Ondoa",
+    name: "Jina",
+    optional: "Si lazima",
+    addBeneficiary: "Ongeza mnufaika",
+    allocationShare: "Sehemu ya mgao (%)",
+    walletAddress: "Anwani ya pochi",
+    checkInCadence: "Muda wa kuingia",
+    selectCadence: "Chagua muda",
+    armed: "Imewashwa",
+    disarmed: "Imezimwa",
+    arming: "Inawasha…",
+    disarming: "Inazima…",
+    saving: "Inahifadhi…",
+    removing: "Inaondoa…",
+    arm: "Washa",
+    disarm: "Zima"
+  },
+  nav: {
+    dashboard: "Dashibodi",
+    beneficiaries: "Wanufaika",
+    legacyAssets: "Urithi na Mali",
+    theSwitch: "Swichi",
+    auditLogs: "Kumbukumbu za Ukaguzi",
+    settings: "Mipangilio"
+  },
+  header: {
+    home: "Nyumbani kwa Sovereign Legacy",
+    networkBadge: "Mtandao · Utambulisho",
+    mobileMenu: "Fungua menyu ya urambazaji",
+    mobilePrimary: "Urambazaji mkuu wa simu"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Hazina. Haki zote zimehifadhiwa.",
+    tagline: "Imefungwa hadi isipokuwa hivyo"
+  },
+  loading: {
+    openingVault: "Inafungua hazina…"
+  },
+  language: {
+    label: "Lugha"
+  },
+  landing: {
+    eyebrow: "Urithi wenye enzi binafsi",
+    headline1: "Hazina yako.",
+    headline2: "Imefungwa hadi wakati utakapofika.",
+    login: "Ingia kwa kutumia Internet Identity",
+    subhead: "Kifaa cha kidijitali cha kudhibiti urithi kwa ajili ya sarafu za kripto, kilichojengwa moja kwa moja kwenye Internet Computer — hakuna mchakato wa mahakama wa urithi, hakuna ucheleweshaji, hakuna mtu anayeangalia isipokuwa mnyororo wenyewe.",
+    vaultDoorAlt: "Mlango wa hazina ya benki uliochakaa wa shaba na chuma, umefungwa, na nembo ya kitanzi kisicho na mwisho cha Internet Computer iking'aa hafifu katikati yake.",
+    introduction: {
+      eyebrow: "Utangulizi",
+      heading: "Swichi ya Mtu Aliyekufa — Iliyozaliwa katika Enzi ya Mvuke",
+      p1: "Katika miongo ya mwisho ya karne ya kumi na tisa, aina mpya ya mashine ilikuwa ikibadilisha ustaarabu. Tramu za umeme sasa zilipitia miji iliyojaa watu, na lifti ziliinua abiria hadi majengo ya urefu usio na kifani. Zilikuwa maajabu — na zilikuwa hatari.",
+      p2: "Tatizo lilikuwa rahisi na la kutisha: nini kinatokea wakati mtu anayesimamia hawezi tena kusimamia? Dereva wa tramu angeweza kupata mshtuko wa moyo akiwa kwenye usukani. Opereta wa lifti angeweza kupoteza fahamu katikati ya safari. Na mashine, isiyojali hatima ya opereta wake, ingeendelea tu — hadi igonge kitu kinachoisimamisha.",
+      p3: "Mhandisi wa Kimarekani Frank J. Sprague ndiye, mwaka 1888, aliyewasha umeme kwenye njia za tramu za Richmond, Virginia — reli ya kwanza ya umeme ya mijini iliyofanikiwa nchini Marekani. Ubunifu wake haukusimama kwenye injini. Sprague alielewa kwamba gari linalosafirisha abiria kwa kasi lilihitaji njia ya kujisimamisha ikiwa opereta angepoteza uwezo.",
+      p4: "Waliita swichi ya mtu aliyekufa. Shika mpini kuendelea kusonga. Uiachie — iwe kwa kukengeushwa, ugonjwa, au kifo — na mashine inajisimamisha yenyewe. Jina halikuchaguliwa kwa ajili ya drama. Lilichaguliwa kwa usahihi. Swichi ilikuwa inawashwa na kukosekana kwa mkono ulio hai.",
+      p5: "Wazo lilienea haraka. Metro za New York, London, na Tokyo zililikubali. Vituo vya nishati ya nyuklia viliijenga kwenye vijiti vyake vya udhibiti. Ndege za kibiashara ziliipachika kwenye marubani wake wa kiotomatiki. Popote ambapo mashine ilibeba maisha, swichi ya mtu aliyekufa ilifuata — kimya, kwa subira, ikingoja.",
+      h3a: "Basi swichi ya mtu aliyekufa inafanya kazi vipi katika nyakati hizi?",
+      p6: "Umefanya kazi kwa bidii. Umejilimbikizia mali za crypto — ICP, Bitcoin, Ethereum, sarafu thabiti. Ziko kwenye pochi na canister, zikilindwa na funguo za kibinafsi ambazo wewe pekee unazo. Na kama dereva wa tramu anayeshika mpini, uwepo wako hai na wenye shughuli kwenye mtandao ndio unaofunga mzunguko.",
+      p7: "Hivi ndivyo Sovereign Legacy inavyotumia kanuni hiyo hiyo. Unaweka mali kwenye hazina salama ya canister kwenye mnyororo. Unateua mnufaika mmoja au zaidi na kuweka kipindi cha kutokuwa na shughuli kwenye mtandao. Muda wote unapoingia mara kwa mara, swichi inabaki imefungwa. Wakati shughuli hiyo inaposimama, Sovereign Legacy inakutumia arifa. Usipojibu, uhamisho unatekelezwa kiotomatiki, ukihamisha mali zako kwa wanufaika uliochagua bila mawakili, mahakama, au ucheleweshaji.",
+      h3b: "Unataka kubinafsisha matakwa yako?",
+      p8: "Ikiwa ungependa zaidi ya mpokeaji mmoja — mwenzi, watoto, rafiki wa kuaminika, shughuli ya hisani — Sovereign Legacy inakuruhusu kugawanya mali zako kwa asilimia. Wewe unaweka sehemu. Wanufaika wako wanapokea hasa kile ulichokusudia."
+    },
+    advantages: {
+      eyebrow: "Kwa nini inafanya kazi",
+      heading: "Faida Zimejengwa Katika Kila Hatua",
+      card1: {
+        title: "Hakuna mawakili. Hakuna urithi wa kisheria. Hakuna ucheleweshaji.",
+        body: "Canister inatekeleza maagizo yako wakati swichi ya mtu aliyekufa inapowashwa. Hakuna taasisi inayosimama kati ya matakwa yako na watu unaowapenda."
+      },
+      card2: {
+        title: "Wewe unabaki kwenye udhibiti.",
+        body: "Badilisha wanufaika, rekebisha asilimia, au sasisha ujumbe wako wakati wowote. Kila kitu kinasasishwa papo hapo, kwenye mnyororo."
+      },
+      card3: {
+        title: "Inafanya kazi unapolala.",
+        body: "Ikiwa maisha yanaendelea, Sovereign Legacy inabaki kimya. Isipoendelea, kila kitu kinasonga mbele hasa kama ulivyopanga."
+      },
+      card4: {
+        title: "Ufikiaji wa kimataifa.",
+        body: "Wanufaika wanaweza kuwa popote duniani. Sovereign Legacy inazungumza lugha nyingi na inashughulikia maelezo ili usilazimike wewe."
+      },
+      card5: {
+        title: "Data yako inabaki yako.",
+        body: "Hazina yako ni canister kwenye Internet Computer, inayolindwa na Internet Identity yako. Hakuna mtu wa tatu — ikiwa ni pamoja na Sovereign Legacy yenyewe — anayeweza kufikia yaliyomo."
+      }
+    },
+    faq: {
+      eyebrow: "Maswali",
+      heading: "Maswali Yanayoulizwa Mara kwa Mara",
+      q1: {
+        q: "Sovereign Legacy inasaidia lugha gani?",
+        a: "Programu inasaidia lugha 22, ikiwa ni pamoja na lugha za kulia-kushoto kama Kiarabu, Kiajemi, na Kiurdu, ili wanufaika popote duniani waweze kuelewa taarifa ya kutolewa kwa lugha yao wenyewe."
+      },
+      q2: {
+        q: "Hazina yangu iko salama kiasi gani?",
+        a: "Hazina yako ni canister kwenye Internet Computer, inayolindwa na Internet Identity yako. Ni kanuni yako iliyothibitishwa pekee inayoweza kuona au kusimamia yaliyomo."
+      },
+      q3: {
+        q: "Je, ningeweza kupoteza hazina yangu?",
+        a: "Muda wote unapobaki na ufikiaji wa Internet Identity yako, hazina yako inabaki chini ya udhibiti wako. Hatari kuu ni kupoteza hati zako za Internet Identity, ndiyo maana kuweka nakala salama ya njia yako ya kurejesha ni muhimu."
+      },
+      q4: {
+        q: "Mali zinagawanywa vipi kati ya wanufaika?",
+        a: "Unampa kila mnufaika sehemu ya asilimia. Sehemu zinaweza kurekebishwa wakati wowote kabla ya kutolewa, na jumla iliyogawiwa kwa wanufaika wote haipaswi kuzidi 100%."
+      },
+      q5: {
+        q: "Ninawezaje kuweka upya kipima muda cha kutokuwa na shughuli kwenye mtandao?",
+        a: "Ingia tu kwa Internet Identity yako. Kuingia kozote kuthibitishwa kunaweka upya saa ya kutokuwa na shughuli na kuweka swichi ya mtu aliyekufa imewashwa."
+      },
+      q6: {
+        q: "Ninawezaje kuongeza mnufaika?",
+        a: "Kutoka kwenye dashibodi yako, fungua paneli ya Wanufaika na ongeza jina, maelezo ya mawasiliano, na asilimia ya mgao."
+      },
+      q7: {
+        q: "Je, ninaweza kubadilisha wanufaika wangu baada ya usanidi?",
+        a: "Ndiyo. Wanufaika, mgao, na ujumbe wa kibinafsi wote wanaweza kusasishwa wakati wowote — mabadiliko yanaanza kutumika mara moja, kwenye mnyororo."
+      },
+      q8: {
+        q: "Nani anaweza kuona wanufaika wangu?",
+        a: "Wewe pekee, unapothibitishwa kama mmiliki wa hazina."
+      }
+    },
+    terms: {
+      eyebrow: "Masharti",
+      heading: "Masharti na Vigezo",
+      card1: {
+        title: "1. Muhtasari",
+        body: "ICP Sovereign Legacy ni jukwaa la urithi na swichi ya mtu aliyekufa lililogatuliwa, likiwa kwenye mnyororo kabisa, lililojengwa kwenye Internet Computer Protocol (ICP). Kwa kutumia huduma hii, unakubali masharti haya."
+      },
+      card2: {
+        title: "2. Hakuna Dhima",
+        body: "Watengenezaji hawawajibiki kwa upotevu wowote wa mali unaotokana na usanidi usio sahihi, hati za Internet Identity zilizopotea, hali za mtandao wa blockchain, au sababu nyingine yoyote. Tumia huduma hii kwa hatari yako mwenyewe."
+      },
+      card3: {
+        title: "3. Utekelezaji wa Kujitegemea",
+        body: "Usambazaji wa mali unatekelezwa kiotomatiki na mantiki ya mkataba mahiri kwenye mnyororo wakati swichi yako ya mtu aliyekufa inapowashwa. Hakuna uingiliaji wa kibinadamu unaohitajika au unaowezekana mara tu inapowashwa."
+      },
+      card4: {
+        title: "4. Faragha",
+        body: "Orodha yako ya wanufaika inahifadhiwa kwenye mnyororo na inapatikana tu kwa kanuni yako ya Internet Identity iliyothibitishwa. Hakuna mtu wa tatu anayeweza kuona data yako."
+      },
+      card5: {
+        title: "5. Ada",
+        body: "Huduma hii inatolewa kama ilivyoelezwa ndani ya programu. Ada zozote zinazotumika kwa hatua mahususi zinaonyeshwa wazi kwenye programu kabla ya kuthibitisha hatua hiyo — hakuna ada zilizofichwa au zinazorudiwa."
+      },
+      card6: {
+        title: "6. Sifa",
+        body: "Lazima uwe na angalau miaka 18 (au umri wa kukomaa katika eneo lako la mamlaka) na uwe na uwezo wa kisheria wa kuingia masharti haya ili kutumia huduma hii."
+      },
+      card7: {
+        title: "7. Hakuna Dhamana",
+        body: 'Huduma hii inatolewa "kama ilivyo" na "kama inavyopatikana," bila dhamana za aina yoyote, ziwe wazi au zisizo wazi, ikiwa ni pamoja na dhamana yoyote ya uendeshaji usioingiliwa au usio na makosa.'
+      },
+      card8: {
+        title: "8. Kukubali Hatari",
+        body: "Sarafu za kidijitali na teknolojia ya blockchain hubeba hatari za asili, ikiwa ni pamoja na mabadiliko ya bei, msongamano wa mtandao, udhaifu wa mikataba mahiri, na mabadiliko ya itifaki za msingi. Kwa kutumia huduma hii, unakubali hatari hizi."
+      },
+      card9: {
+        title: "9. Kusitishwa",
+        body: "Ufikiaji wa huduma hii unaweza kusitishwa au kukomeshwa kwa ukiukaji wa masharti haya au kwa tabia ambayo Sovereign Legacy inaamua, kwa hiari yake, kuwa hatari kwa watumiaji wengine au kwa huduma yenyewe."
+      },
+      card10: {
+        title: "10. Marekebisho ya Masharti Haya",
+        body: "Masharti haya yanaweza kusasishwa mara kwa mara. Mabadiliko makubwa yatawasilishwa ndani ya programu, na kuendelea kutumia huduma baada ya mabadiliko hayo kunajumuisha kukubali masharti yaliyosasishwa."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Dashibodi",
+    title: "Hazina",
+    balance: "Salio la Hazina",
+    assetsHeld: "{count} mali inashikiliwa",
+    noAssets: "Hakuna mali inayoshikiliwa bado",
+    beneficiaries: "Wanufaika",
+    named: "wametajwa",
+    sealed: "{count} mnufaika amefungwa",
+    none: "Hakuna wanufaika bado",
+    allocation: "Mgao wa Wanufaika",
+    allocationNone: "Hakuna mgao bado. Ongeza mnufaika kuanza.",
+    allocationAria: "Sehemu za mgao wa wanufaika",
+    switch: "Swichi",
+    lastVerified: "Imethibitishwa mwisho · {time}",
+    notVerified: "Bado haijathibitishwa"
+  },
+  beneficiaries: {
+    eyebrow: "Wanufaika",
+    title: "Wanufaika",
+    subtitle: "Watu na shughuli ambazo urithi wako umefungwa kwa ajili yao. Mgao, mpangilio, na masharti huishi hapa.",
+    allocation: "Mgao",
+    count: "{count} mnufaika",
+    noAllocations: "Hakuna mgao bado. Ongeza mnufaika kuanza.",
+    allocationAria: "Sehemu za mgao wa wanufaika",
+    manage: "Simamia",
+    manageBody: "Ongeza mnufaika na ugawie sehemu yake ya hazina. Sehemu zinaweza kuhaririwa au kufutwa wakati wowote.",
+    loadError: "Haikuweza kupakia wanufaika. Tafadhali jaribu tena.",
+    emptyTitle: "Hakuna wanufaika bado",
+    emptyBody: "Urithi wako haujagawiwa. Ongeza mnufaika wako wa kwanza kufunga hazina kwa mtu.",
+    noWallet: "Hakuna anwani ya pochi",
+    editAria: "Hariri {name}",
+    removeAria: "Ondoa {name}",
+    modal: {
+      editTitle: "Hariri mnufaika",
+      addTitle: "Ongeza mnufaika",
+      editDesc: "Sasisha jina, sehemu, au anwani ya pochi ya mnufaika huyu.",
+      addDesc: "Gawia jina na sehemu ya mgao kwa mnufaika mpya."
+    },
+    namePlaceholder: "mf. Elena Marchetti",
+    sharePlaceholder: "mf. 40",
+    errors: {
+      nameRequired: "Ingiza jina la mnufaika huyu.",
+      sharePositive: "Sehemu ya mgao lazima iwe kubwa kuliko sifuri.",
+      invalidChecksum: "Kitambulisho hiki cha akaunti ya ICP kina jumla ya ukaguzi isiyo sahihi. Angalia anwani tena.",
+      invalidWallet: "Ingiza anwani sahihi ya pochi ya ICP — kitambulisho cha akaunti cha herufi 64 au kanuni ya ICP.",
+      totalExceedsEdit: "Hii itafanya jumla ya mgao kuwa {total}%, ikizidi kikomo cha 100%.",
+      totalExceedsAdd: "Jumla ya mgao itakuwa {total}%, ikizidi kikomo cha 100%.",
+      saveFailed: "Haikuweza kuhifadhi mabadiliko. Tafadhali jaribu tena.",
+      addFailed: "Haikuweza kuongeza mnufaika. Tafadhali jaribu tena."
+    }
+  },
+  assets: {
+    eyebrow: "Urithi na Mali",
+    title: "Mali Zinazoshikiliwa",
+    subtitle: "Kila kitu kinachoshikiliwa kwenye hazina — salio, mali, na maagizo yanayozisimamia.",
+    assetsHeld: "Mali Zinazoshikiliwa",
+    beneficiaries: "Wanufaika",
+    allocationStatus: "Hali ya Mgao",
+    sealed: "Imefungwa",
+    unallocated: "Haijagawiwa",
+    beneficiaryFallback: "Mnufaika #{id}",
+    errorEyebrow: "Hazina haipatikani",
+    errorBody: "Hatukuweza kusoma mali zinazoshikiliwa. Tafadhali jaribu tena.",
+    emptyEyebrow: "Hakuna mali zinazoshikiliwa",
+    emptyBody: "Hazina kwa sasa haina mali za crypto. Mara mali zitakapoongezwa, salio zake na mgao kwa wanufaika zitaonekana hapa.",
+    allocationLabel: "Mgao wa Wanufaika"
+  },
+  switch: {
+    eyebrow: "Swichi",
+    title: "Swichi",
+    subtitle: "Udhibiti mmoja unaokabidhi hazina. Imewashwa, imethibitishwa, na ya makusudi.",
+    active: "Inatumika · Swichi ya mtu aliyekufa",
+    standingDown: "Imesimama",
+    armed: "IMEWASHWA",
+    disarmed: "IMEZIMWA",
+    checkIn: "Bado niko hapa",
+    arm: "Washa swichi",
+    disarm: "Zima",
+    cadence: "Muda · {duration}",
+    releaseIn: "Tolewa katika {duration}",
+    timelineAriaArmed: "Mpangilio wa swichi ya mtu aliyekufa, {percent}% ya muda umepita",
+    timelineAriaDisarmed: "Mpangilio wa swichi ya mtu aliyekufa, imezimwa",
+    lastCheckIn: "Kuingia kwa mwisho",
+    armedAt: "Imewashwa saa",
+    cadenceLabel: "Muda",
+    standingDownTitle: "Imesimama",
+    standingDownBody: "Kuzima kunasimamisha swichi ya mtu aliyekufa. Hazina inabaki imefungwa, lakini haitatoa tena kwa wanufaika wako kwenye kuingia kukosekana.",
+    disarmTheSwitch: "Zima swichi",
+    armTitle: "Washa swichi",
+    armBody: "Chagua hazina inasubiri kwa muda gani kuingia kwako kwa pili. Ukikosa, hazina inatoa kwa wanufaika wako.",
+    cadenceError: "Chagua muda wa kuingia mkubwa kuliko sifuri kabla ya kuwasha swichi.",
+    errorEyebrow: "Swichi haipatikani",
+    errorBody: "Hatukuweza kusoma hali ya swichi. Tafadhali jaribu tena.",
+    cadence24h: "Saa 24",
+    cadence7d: "Siku 7",
+    cadence30d: "Siku 30"
+  },
+  audit: {
+    eyebrow: "Kumbukumbu za Ukaguzi",
+    title: "Kumbukumbu za Ukaguzi",
+    ledger: "Rejesta ya Matukio",
+    count: "{count} tukio limefungwa",
+    timestamp: "Muhuri wa wakati",
+    event: "Tukio",
+    description: "Maelezo",
+    tableAria: "Kumbukumbu ya ukaguzi wa hazina",
+    errorEyebrow: "Rejesta haipatikani",
+    errorBody: "Hatukuweza kusoma kumbukumbu ya ukaguzi. Tafadhali jaribu tena.",
+    emptyTitle: "Hakuna matukio bado",
+    emptyBody: "Kila hatua inayochukuliwa dhidi ya hazina itafungwa hapa, kwa mpangilio, inapotokea.",
+    footer: "Kila ingizo limefungwa kwenye rejesta. Ingozi haziwezi kuhaririwa au kuondolewa."
+  },
+  settings: {
+    eyebrow: "Mipangilio",
+    title: "Usanidi wa Hazina",
+    subtitle: "Hifadhi usanidi unaosimamia urithi wako — hali ya kuwasha/kuzima ya swichi, muda wake wa kuingia, na wanufaika ambao imefungwa kwa ajili yao.",
+    switchTitle: "Swichi",
+    switchDesc: "Washa au zima hazina na uweke mara ngapi inapaswa kuthibitishwa.",
+    beneficiariesTitle: "Wanufaika",
+    beneficiariesDesc: "Hariri watu na shughuli ambazo urithi wako umefungwa kwa ajili yao.",
+    cadence: "Muda · {value}",
+    daily: "Kila siku",
+    weekly: "Kila wiki",
+    monthly: "Kila mwezi",
+    yearly: "Kila mwaka",
+    h24: "Saa 24",
+    h7d: "Siku 7",
+    h30d: "Siku 30",
+    h365d: "Siku 365",
+    emptyBeneficiaries: "Hakuna wanufaika waliosanidiwa bado",
+    editBeneficiary: "Hariri mnufaika",
+    editBeneficiaryDesc: "Sasisha jina, sehemu ya mgao, na anwani ya pochi ya mnufaika huyu.",
+    removeBeneficiary: "Ondoa mnufaika",
+    removeBeneficiaryDesc: "Ondoa {name} kwenye hazina? Hili haliwezi kutenduliwa.",
+    toast: {
+      armed: "Swichi imewashwa",
+      armedDesc: "Muda wa kuingia umewekwa kuwa {cadence}.",
+      armError: "Haikuweza kuwasha swichi",
+      armErrorDesc: "Hazina haikuweza kuwashwa. Tafadhali jaribu tena.",
+      disarmed: "Swichi imezimwa",
+      disarmedDesc: "Hazina haiwashwi tena.",
+      disarmError: "Haikuweza kuzima swichi",
+      disarmErrorDesc: "Hazina haikuweza kuzimwa. Tafadhali jaribu tena.",
+      beneficiaryUpdated: "Mnufaika amesasishwa",
+      beneficiaryUpdatedDesc: "Usanidi wa mnufaika umehifadhiwa.",
+      updateError: "Haikuweza kusasisha mnufaika",
+      updateErrorDesc: "Mabadiliko hayakuhifadhiwa. Tafadhali jaribu tena.",
+      beneficiaryRemoved: "Mnufaika ameondolewa",
+      beneficiaryRemovedDesc: "Mnufaika ameondolewa kwenye hazina.",
+      removeError: "Haikuweza kuondoa mnufaika",
+      removeErrorDesc: "Mnufaika haukuweza kuondolewa. Tafadhali jaribu tena."
+    }
+  }
+};
+const th = {
+  meta: {
+    title: "Sovereign Legacy — ห้องนิรภัย",
+    description: "Sovereign Legacy — ห้องนิรภัย ห้องนิรภัยของคุณ ถูกผนึกไว้จนกว่าจะไม่เป็นเช่นนั้น"
+  },
+  common: {
+    cancel: "ยกเลิก",
+    saveChanges: "บันทึกการเปลี่ยนแปลง",
+    edit: "แก้ไข",
+    remove: "นำออก",
+    name: "ชื่อ",
+    optional: "ไม่บังคับ",
+    addBeneficiary: "เพิ่มผู้รับผลประโยชน์",
+    allocationShare: "ส่วนแบ่งการจัดสรร (%)",
+    walletAddress: "ที่อยู่กระเป๋าเงิน",
+    checkInCadence: "ความถี่ในการเช็คอิน",
+    selectCadence: "เลือกความถี่",
+    armed: "พร้อมใช้งาน",
+    disarmed: "ปิดใช้งาน",
+    arming: "กำลังเตรียมใช้งาน…",
+    disarming: "กำลังปิดใช้งาน…",
+    saving: "กำลังบันทึก…",
+    removing: "กำลังนำออก…",
+    arm: "เตรียมใช้งาน",
+    disarm: "ปิดใช้งาน"
+  },
+  nav: {
+    dashboard: "แดชบอร์ด",
+    beneficiaries: "ผู้รับผลประโยชน์",
+    legacyAssets: "มรดกและสินทรัพย์",
+    theSwitch: "สวิตช์",
+    auditLogs: "บันทึกการตรวจสอบ",
+    settings: "การตั้งค่า"
+  },
+  header: {
+    home: "หน้าหลัก Sovereign Legacy",
+    networkBadge: "เครือข่าย · ตัวตน",
+    mobileMenu: "เปิดเมนูนำทาง",
+    mobilePrimary: "การนำทางหลักบนมือถือ"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — ห้องนิรภัย สงวนลิขสิทธิ์",
+    tagline: "ถูกผนึกไว้จนกว่าจะไม่เป็นเช่นนั้น"
+  },
+  loading: {
+    openingVault: "กำลังเปิดห้องนิรภัย…"
+  },
+  language: {
+    label: "ภาษา"
+  },
+  landing: {
+    eyebrow: "มรดกที่เป็นอธิปไตยในตนเอง",
+    headline1: "ห้องนิรภัยของคุณ",
+    headline2: "ถูกปิดผนึกไว้จนกว่าจะถึงเวลา",
+    login: "เข้าสู่ระบบด้วย Internet Identity",
+    subhead: "สวิตช์เดดแมนดิจิทัลสำหรับสินทรัพย์คริปโต สร้างขึ้นแบบเนทีฟบน Internet Computer — ไม่ต้องผ่านกระบวนการพินัยกรรม ไม่มีความล่าช้า ไม่มีใครจับตาดูนอกจากเชนเอง",
+    vaultDoorAlt: "ประตูห้องนิรภัยธนาคารที่ทำจากทองเหลืองและเหล็กสึกกร่อน ปิดอยู่ โดยมีสัญลักษณ์วงวนอนันต์ของ Internet Computer เรืองแสงจาง ๆ อยู่ตรงกลาง",
+    introduction: {
+      eyebrow: "บทนำ",
+      heading: "สวิตช์คนตาย — กำเนิดในยุคไอน้ำ",
+      p1: "ในทศวรรษสุดท้ายของศตวรรษที่สิบเก้า เครื่องจักรชนิดใหม่กำลังหล่อหลอมอารยธรรม รถรางไฟฟ้าเริ่มวิ่งผ่านเมืองที่แออัด และลิฟต์ยกผู้โดยสารขึ้นสู่ตึกสูงอย่างที่ไม่เคยมีมาก่อน พวกมันเป็นสิ่งมหัศจรรย์ — และเป็นอันตราย",
+      p2: "ปัญหานั้นเรียบง่ายและน่ากลัว: จะเกิดอะไรขึ้นเมื่อคนที่ควบคุมอยู่ไม่สามารถควบคุมได้อีกต่อไป? คนขับรถรางอาจหัวใจวายขณะบังคับรถ คนควบคุมลิฟต์อาจหมดสติกลางทาง และเครื่องจักรซึ่งไม่แยแสต่อชะตากรรมของผู้ควบคุม ก็จะเดินหน้าต่อไป — จนกว่าจะชนกับบางสิ่งที่หยุดมัน",
+      p3: "วิศวกรชาวอเมริกัน แฟรงก์ เจ. สเปรก คือผู้ที่ในปี 1888 ทำให้เส้นทางรถรางในริชมอนด์ รัฐเวอร์จิเนีย ใช้ไฟฟ้า — ระบบรถไฟไฟฟ้าในเมืองที่ประสบความสำเร็จเป็นครั้งแรกในสหรัฐอเมริกา นวัตกรรมของเขาไม่ได้หยุดอยู่ที่มอเตอร์ สเปรกเข้าใจว่า ยานพาหนะที่บรรทุกผู้โดยสารด้วยความเร็วจำเป็นต้องมีวิธีหยุดตัวเองหากผู้ควบคุมหมดความสามารถ",
+      p4: "พวกเขาเรียกมันว่าสวิตช์คนตาย จับที่จับไว้เพื่อเคลื่อนต่อไป ปล่อยมัน — ไม่ว่าจะเพราะความวอกแวก ความเจ็บป่วย หรือความตาย — เครื่องจักรก็จะหยุดเอง ชื่อนี้ไม่ได้ถูกเลือกเพื่อความดราม่า แต่ถูกเลือกเพื่อความแม่นยำ สวิตช์ถูกกระตุ้นด้วยการไม่มีมือที่มีชีวิต",
+      p5: "แนวคิดนี้แพร่กระจายอย่างรวดเร็ว รถไฟใต้ดินในนิวยอร์ก ลอนดอน และโตเกียวนำไปใช้ โรงไฟฟ้านิวเคลียร์สร้างมันไว้ในแท่งควบคุม เครื่องบินพาณิชย์ฝังมันไว้ในระบบนักบินอัตโนมัติ ทุกที่ที่เครื่องจักรบรรทุกชีวิต สวิตช์คนตายก็ตามไป — เงียบ อดทน รอคอย",
+      h3a: "แล้วสวิตช์คนตายทำงานอย่างไรในยุคนี้?",
+      p6: "คุณทำงานหนักมา คุณสะสมสินทรัพย์คริปโต — ICP, Bitcoin, Ethereum, สเตเบิลคอยน์ พวกมันอยู่ในกระเป๋าเงินและแคนิสเตอร์ ปกป้องด้วยคีย์ส่วนตัวที่มีเพียงคุณเท่านั้น และเช่นเดียวกับคนขับรถรางที่จับที่จับไว้ การปรากฏตัวที่มีชีวิตและกระตือรือร้นของคุณบนเครือข่ายเท่านั้นที่ทำให้วงจรปิดอยู่",
+      p7: "นี่คือวิธีที่ Sovereign Legacy ใช้หลักการเดียวกัน คุณฝากสินทรัพย์ลงในห้องนิรภัยแคนิสเตอร์ที่ปลอดภัยบนเชน คุณกำหนดผู้รับผลประโยชน์หนึ่งคนหรือมากกว่า และตั้งช่วงเวลาไม่มีการใช้งานบนเครือข่าย ตราบใดที่คุณเข้าสู่ระบบเป็นระยะ สวิตช์ก็ยังคงปิดอยู่ ช่วงเวลาที่กิจกรรมนั้นหยุดลง Sovereign Legacy จะส่งการแจ้งเตือนให้คุณ หากคุณไม่ตอบสนอง การโอนจะดำเนินการโดยอัตโนมัติ ย้ายสินทรัพย์ของคุณไปยังผู้รับผลประโยชน์ที่คุณเลือก โดยไม่มีทนายความ ศาล หรือความล่าช้า",
+      h3b: "ต้องการปรับแต่งความปรารถนาของคุณหรือไม่?",
+      p8: "หากคุณต้องการผู้รับมากกว่าหนึ่งคน — คู่สมรส ลูก เพื่อนที่ไว้ใจได้ องค์กรการกุศล — Sovereign Legacy ให้คุณแบ่งสินทรัพย์ตามเปอร์เซ็นต์ คุณกำหนดส่วนแบ่ง ผู้รับผลประโยชน์ของคุณจะได้รับสิ่งที่คุณตั้งใจไว้อย่างแน่นอน"
+    },
+    advantages: {
+      eyebrow: "ทำไมจึงได้ผล",
+      heading: "ข้อดีถูกสร้างไว้ในทุกขั้นตอน",
+      card1: {
+        title: "ไม่มีทนายความ ไม่มีพิธีการ ไม่มีความล่าช้า",
+        body: "แคนิสเตอร์ดำเนินการตามคำสั่งของคุณทันทีที่สวิตช์คนตายทำงาน ไม่มีสถาบันใดขวางกั้นระหว่างความปรารถนาของคุณกับคนที่คุณรัก"
+      },
+      card2: {
+        title: "คุณยังคงควบคุม",
+        body: "เปลี่ยนผู้รับผลประโยชน์ ปรับเปอร์เซ็นต์ หรืออัปเดตข้อความของคุณได้ทุกเมื่อ ทุกอย่างอัปเดตทันที บนเชน"
+      },
+      card3: {
+        title: "ทำงานในขณะที่คุณหลับ",
+        body: "หากชีวิตดำเนินต่อไป Sovereign Legacy ก็เงียบ หากไม่เป็นเช่นนั้น ทุกอย่างก็เดินหน้าตามที่คุณวางแผนไว้"
+      },
+      card4: {
+        title: "เข้าถึงทั่วโลก",
+        body: "ผู้รับผลประโยชน์สามารถอยู่ที่ใดก็ได้ในโลก Sovereign Legacy พูดได้หลายภาษาและจัดการคำอธิบายให้คุณไม่ต้องทำ"
+      },
+      card5: {
+        title: "ข้อมูลของคุณยังคงเป็นของคุณ",
+        body: "ห้องนิรภัยของคุณคือแคนิสเตอร์บน Internet Computer ปกป้องด้วย Internet Identity ของคุณ ไม่มีบุคคลที่สาม — รวมถึง Sovereign Legacy เอง — ที่เข้าถึงเนื้อหาได้"
+      }
+    },
+    faq: {
+      eyebrow: "คำถาม",
+      heading: "คำถามที่พบบ่อย",
+      q1: {
+        q: "Sovereign Legacy รองรับภาษาอะไรบ้าง?",
+        a: "แอปรองรับ 22 ภาษา รวมถึงภาษาที่เขียนจากขวาไปซ้าย เช่น อาหรับ เปอร์เซีย และอูรดู เพื่อให้ผู้รับผลประโยชน์ที่ใดก็ได้ในโลกเข้าใจประกาศการปล่อยในภาษาของตนเอง"
+      },
+      q2: {
+        q: "ห้องนิรภัยของฉันปลอดภัยแค่ไหน?",
+        a: "ห้องนิรภัยของคุณคือแคนิสเตอร์บน Internet Computer ปกป้องด้วย Internet Identity ของคุณ เฉพาะหลักของคุณที่ผ่านการยืนยันเท่านั้นที่สามารถดูหรือจัดการเนื้อหาได้"
+      },
+      q3: {
+        q: "ฉันจะสูญเสียห้องนิรภัยได้หรือไม่?",
+        a: "ตราบใดที่คุณยังเข้าถึง Internet Identity ได้ ห้องนิรภัยของคุณก็ยังอยู่ภายใต้การควบคุมของคุณ ความเสี่ยงหลักคือการสูญเสียข้อมูลประจำตัว Internet Identity ซึ่งเป็นเหตุผลว่าทำไมการเก็บสำรองวิธีการกู้คืนของคุณอย่างปลอดภัยจึงสำคัญ"
+      },
+      q4: {
+        q: "สินทรัพย์ถูกแบ่งระหว่างผู้รับผลประโยชน์อย่างไร?",
+        a: "คุณกำหนดส่วนแบ่งเปอร์เซ็นต์ให้ผู้รับผลประโยชน์แต่ละคน ส่วนแบ่งสามารถปรับได้ทุกเมื่อก่อนการปล่อย และยอดรวมที่จัดสรรให้ผู้รับผลประโยชน์ทั้งหมดต้องไม่เกิน 100%"
+      },
+      q5: {
+        q: "ฉันจะรีเซ็ตตัวจับเวลาไม่มีการใช้งานบนเครือข่ายได้อย่างไร?",
+        a: "เพียงเข้าสู่ระบบด้วย Internet Identity ของคุณ การเช็คอินที่ผ่านการยืนยันใด ๆ จะรีเซ็ตนาฬิกาไม่มีการใช้งานและทำให้สวิตช์คนตายยังคงพร้อมใช้งาน"
+      },
+      q6: {
+        q: "ฉันจะเพิ่มผู้รับผลประโยชน์ได้อย่างไร?",
+        a: "จากแดชบอร์ดของคุณ เปิดแผงผู้รับผลประโยชน์และเพิ่มชื่อ ข้อมูลติดต่อ และเปอร์เซ็นต์การจัดสรร"
+      },
+      q7: {
+        q: "ฉันสามารถเปลี่ยนผู้รับผลประโยชน์หลังการตั้งค่าได้หรือไม่?",
+        a: "ได้ ผู้รับผลประโยชน์ การจัดสรร และข้อความส่วนตัวสามารถอัปเดตได้ทุกเมื่อ — การเปลี่ยนแปลงมีผลทันที บนเชน"
+      },
+      q8: {
+        q: "ใครสามารถเห็นผู้รับผลประโยชน์ของฉันได้บ้าง?",
+        a: "มีเพียงคุณเท่านั้น ในขณะที่ยืนยันตัวตนในฐานะเจ้าของห้องนิรภัย"
+      }
+    },
+    terms: {
+      eyebrow: "ข้อกำหนด",
+      heading: "ข้อกำหนดและเงื่อนไข",
+      card1: {
+        title: "1. ภาพรวม",
+        body: "ICP Sovereign Legacy เป็นแพลตฟอร์มมรดกและสวิตช์คนตายแบบกระจายศูนย์ บนเชนทั้งหมด สร้างขึ้นบน Internet Computer Protocol (ICP) โดยการใช้บริการนี้ คุณยอมรับข้อกำหนดเหล่านี้"
+      },
+      card2: {
+        title: "2. ไม่มีความรับผิด",
+        body: "นักพัฒนาไม่รับผิดชอบต่อการสูญเสียสินทรัพย์ใด ๆ อันเกิดจากการกำหนดค่าที่ไม่ถูกต้อง ข้อมูลประจำตัว Internet Identity ที่สูญหาย สภาพเครือข่ายบล็อกเชน หรือสาเหตุอื่นใด ใช้บริการนี้ด้วยความเสี่ยงของคุณเอง"
+      },
+      card3: {
+        title: "3. การดำเนินการอัตโนมัติ",
+        body: "การกระจายสินทรัพย์ดำเนินการโดยอัตโนมัติโดยตรรกะสัญญาอัจฉริยะบนเชนเมื่อสวิตช์คนตายของคุณทำงาน ไม่จำเป็นและไม่สามารถแทรกแซงโดยมนุษย์ได้เมื่อทำงานแล้ว"
+      },
+      card4: {
+        title: "4. ความเป็นส่วนตัว",
+        body: "รายชื่อผู้รับผลประโยชน์ของคุณถูกเก็บบนเชนและเข้าถึงได้เฉพาะหลัก Internet Identity ที่ผ่านการยืนยันของคุณเท่านั้น ไม่มีบุคคลที่สามสามารถดูข้อมูลของคุณได้"
+      },
+      card5: {
+        title: "5. ค่าธรรมเนียม",
+        body: "บริการนี้ให้บริการตามที่อธิบายไว้ในแอป ค่าธรรมเนียมใด ๆ ที่ใช้กับการดำเนินการเฉพาะจะแสดงอย่างชัดเจนในแอปก่อนที่คุณจะยืนยันการดำเนินการนั้น — ไม่มีค่าธรรมเนียมแอบแฝงหรือเกิดขึ้นซ้ำ"
+      },
+      card6: {
+        title: "6. คุณสมบัติ",
+        body: "คุณต้องมีอายุอย่างน้อย 18 ปี (หรืออายุบรรลุนิติภาวะในเขตอำนาจของคุณ) และมีความสามารถทางกฎหมายในการเข้าทำข้อกำหนดเหล่านี้เพื่อใช้บริการนี้"
+      },
+      card7: {
+        title: "7. ไม่มีการรับประกัน",
+        body: 'บริการนี้ให้บริการ "ตามสภาพ" และ "ตามที่มี" โดยไม่มีการรับประกันใด ๆ ไม่ว่าโดยชัดแจ้งหรือโดยนัย รวมถึงการรับประกันการทำงานที่ไม่หยุดชะงักหรือปราศจากข้อผิดพลาด'
+      },
+      card8: {
+        title: "8. การยอมรับความเสี่ยง",
+        body: "คริปโตเคอร์เรนซีและเทคโนโลยีบล็อกเชนมีความเสี่ยงโดยธรรมชาติ รวมถึงความผันผวนของราคา ความแออัดของเครือข่าย ช่องโหว่ของสัญญาอัจฉริยะ และการเปลี่ยนแปลงของโปรโตคอลพื้นฐาน โดยการใช้บริการนี้ คุณยอมรับความเสี่ยงเหล่านี้"
+      },
+      card9: {
+        title: "9. การยุติ",
+        body: "การเข้าถึงบริการนี้อาจถูกระงับหรือยุติเนื่องจากการละเมิดข้อกำหนดเหล่านี้ หรือพฤติกรรมที่ Sovereign Legacy พิจารณาตามดุลยพินิจว่าเป็นอันตรายต่อผู้ใช้รายอื่นหรือต่อบริการเอง"
+      },
+      card10: {
+        title: "10. การแก้ไขข้อกำหนดเหล่านี้",
+        body: "ข้อกำหนดเหล่านี้อาจได้รับการอัปเดตเป็นครั้งคราว การเปลี่ยนแปลงที่สำคัญจะแสดงภายในแอป และการใช้บริการอย่างต่อเนื่องหลังการเปลี่ยนแปลงดังกล่าวถือเป็นการยอมรับข้อกำหนดที่อัปเดต"
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "แดชบอร์ด",
+    title: "ห้องนิรภัย",
+    balance: "ยอดคงเหลือในห้องนิรภัย",
+    assetsHeld: "ถือครอง {count} สินทรัพย์",
+    noAssets: "ยังไม่มีสินทรัพย์ที่ถือครอง",
+    beneficiaries: "ผู้รับผลประโยชน์",
+    named: "ระบุชื่อ",
+    sealed: "ผนึก {count} ผู้รับผลประโยชน์",
+    none: "ยังไม่มีผู้รับผลประโยชน์",
+    allocation: "การจัดสรรผู้รับผลประโยชน์",
+    allocationNone: "ยังไม่มีการจัดสรร เพิ่มผู้รับผลประโยชน์เพื่อเริ่มต้น",
+    allocationAria: "ส่วนแบ่งการจัดสรรผู้รับผลประโยชน์",
+    switch: "สวิตช์",
+    lastVerified: "ยืนยันล่าสุด · {time}",
+    notVerified: "ยังไม่ได้รับการยืนยัน"
+  },
+  beneficiaries: {
+    eyebrow: "ผู้รับผลประโยชน์",
+    title: "ผู้รับผลประโยชน์",
+    subtitle: "บุคคลและสาเหตุที่มรดกของคุณถูกผนึกไว้ การจัดสรร ลำดับ และเงื่อนไขอยู่ที่นี่",
+    allocation: "การจัดสรร",
+    count: "{count} ผู้รับผลประโยชน์",
+    noAllocations: "ยังไม่มีการจัดสรร เพิ่มผู้รับผลประโยชน์เพื่อเริ่มต้น",
+    allocationAria: "ส่วนแบ่งการจัดสรรผู้รับผลประโยชน์",
+    manage: "จัดการ",
+    manageBody: "เพิ่มผู้รับผลประโยชน์และกำหนดส่วนแบ่งของห้องนิรภัย ส่วนแบ่งสามารถแก้ไขหรือเพิกถอนได้ทุกเมื่อ",
+    loadError: "ไม่สามารถโหลดผู้รับผลประโยชน์ได้ กรุณาลองอีกครั้ง",
+    emptyTitle: "ยังไม่มีผู้รับผลประโยชน์",
+    emptyBody: "มรดกของคุณยังไม่ถูกกำหนด เพิ่มผู้รับผลประโยชน์คนแรกของคุณเพื่อผนึกห้องนิรภัยให้ใครสักคน",
+    noWallet: "ไม่มีที่อยู่กระเป๋าเงิน",
+    editAria: "แก้ไข {name}",
+    removeAria: "นำออก {name}",
+    modal: {
+      editTitle: "แก้ไขผู้รับผลประโยชน์",
+      addTitle: "เพิ่มผู้รับผลประโยชน์",
+      editDesc: "อัปเดตชื่อ ส่วนแบ่ง หรือที่อยู่กระเป๋าเงินของผู้รับผลประโยชน์นี้",
+      addDesc: "กำหนดชื่อและส่วนแบ่งการจัดสรรให้ผู้รับผลประโยชน์ใหม่"
+    },
+    namePlaceholder: "เช่น Elena Marchetti",
+    sharePlaceholder: "เช่น 40",
+    errors: {
+      nameRequired: "ป้อนชื่อสำหรับผู้รับผลประโยชน์นี้",
+      sharePositive: "ส่วนแบ่งการจัดสรรต้องมากกว่าศูนย์",
+      invalidChecksum: "ตัวระบุบัญชี ICP นี้มีเช็คซัมไม่ถูกต้อง ตรวจสอบที่อยู่อีกครั้ง",
+      invalidWallet: "ป้อนที่อยู่กระเป๋าเงิน ICP ที่ถูกต้อง — ตัวระบุบัญชี 64 ตัวอักษรหรือหลัก ICP",
+      totalExceedsEdit: "สิ่งนี้จะทำให้การจัดสรรทั้งหมดเป็น {total}% เกินขีดจำกัด 100%",
+      totalExceedsAdd: "การจัดสรรทั้งหมดจะเป็น {total}% เกินขีดจำกัด 100%",
+      saveFailed: "ไม่สามารถบันทึกการเปลี่ยนแปลงได้ กรุณาลองอีกครั้ง",
+      addFailed: "ไม่สามารถเพิ่มผู้รับผลประโยชน์ได้ กรุณาลองอีกครั้ง"
+    }
+  },
+  assets: {
+    eyebrow: "มรดกและสินทรัพย์",
+    title: "สินทรัพย์ที่ถือครอง",
+    subtitle: "ทุกสิ่งที่ถือครองในห้องนิรภัย — ยอดคงเหลือ สินทรัพย์ และคำสั่งที่ควบคุมสิ่งเหล่านั้น",
+    assetsHeld: "สินทรัพย์ที่ถือครอง",
+    beneficiaries: "ผู้รับผลประโยชน์",
+    allocationStatus: "สถานะการจัดสรร",
+    sealed: "ถูกผนึก",
+    unallocated: "ไม่ได้รับการจัดสรร",
+    beneficiaryFallback: "ผู้รับผลประโยชน์ #{id}",
+    errorEyebrow: "ห้องนิรภัยไม่สามารถเข้าถึงได้",
+    errorBody: "เราไม่สามารถอ่านสินทรัพย์ที่ถือครองได้ กรุณาลองอีกครั้ง",
+    emptyEyebrow: "ไม่มีสินทรัพย์ที่ถือครอง",
+    emptyBody: "ห้องนิรภัยปัจจุบันไม่มีสินทรัพย์คริปโต เมื่อเพิ่มสินทรัพย์แล้ว ยอดคงเหลือและการจัดสรรผู้รับผลประโยชน์จะปรากฏที่นี่",
+    allocationLabel: "การจัดสรรผู้รับผลประโยชน์"
+  },
+  switch: {
+    eyebrow: "สวิตช์",
+    title: "สวิตช์",
+    subtitle: "การควบคุมเดียวที่ส่งมอบห้องนิรภัย พร้อมใช้งาน ยืนยันแล้ว และรอบคอบ",
+    active: "ใช้งาน · สวิตช์คนตาย",
+    standingDown: "หยุดพัก",
+    armed: "พร้อมใช้งาน",
+    disarmed: "ปิดใช้งาน",
+    checkIn: "ฉันยังอยู่ที่นี่",
+    arm: "เตรียมใช้งานสวิตช์",
+    disarm: "ปิดใช้งาน",
+    cadence: "ความถี่ · {duration}",
+    releaseIn: "ปล่อยใน {duration}",
+    timelineAriaArmed: "ไทม์ไลน์สวิตช์คนตาย ผ่านไป {percent}% ของความถี่",
+    timelineAriaDisarmed: "ไทม์ไลน์สวิตช์คนตาย ปิดใช้งาน",
+    lastCheckIn: "เช็คอินล่าสุด",
+    armedAt: "เตรียมใช้งานเมื่อ",
+    cadenceLabel: "ความถี่",
+    standingDownTitle: "หยุดพัก",
+    standingDownBody: "การปิดใช้งานจะหยุดสวิตช์คนตาย ห้องนิรภัยยังคงถูกผนึก แต่จะไม่ปล่อยให้ผู้รับผลประโยชน์ของคุณอีกต่อไปเมื่อพลาดการเช็คอิน",
+    disarmTheSwitch: "ปิดใช้งานสวิตช์",
+    armTitle: "เตรียมใช้งานสวิตช์",
+    armBody: "เลือกว่าห้องนิรภัยจะรอการเช็คอินครั้งถัดไปของคุณนานเท่าใด หากคุณพลาด ห้องนิรภัยจะปล่อยให้ผู้รับผลประโยชน์ของคุณ",
+    cadenceError: "เลือกความถี่การเช็คอินที่มากกว่าศูนย์ก่อนเตรียมใช้งานสวิตช์",
+    errorEyebrow: "สวิตช์ไม่สามารถเข้าถึงได้",
+    errorBody: "เราไม่สามารถอ่านสถานะสวิตช์ได้ กรุณาลองอีกครั้ง",
+    cadence24h: "24 ชั่วโมง",
+    cadence7d: "7 วัน",
+    cadence30d: "30 วัน"
+  },
+  audit: {
+    eyebrow: "บันทึกการตรวจสอบ",
+    title: "บันทึกการตรวจสอบ",
+    ledger: "สมุดบันทึกเหตุการณ์",
+    count: "ผนึก {count} เหตุการณ์",
+    timestamp: "ประทับเวลา",
+    event: "เหตุการณ์",
+    description: "คำอธิบาย",
+    tableAria: "บันทึกการตรวจสอบห้องนิรภัย",
+    errorEyebrow: "สมุดบันทึกไม่สามารถเข้าถึงได้",
+    errorBody: "เราไม่สามารถอ่านบันทึกการตรวจสอบได้ กรุณาลองอีกครั้ง",
+    emptyTitle: "ยังไม่มีเหตุการณ์",
+    emptyBody: "ทุกการดำเนินการต่อห้องนิรภัยจะถูกผนึกที่นี่ ตามลำดับ ทันทีที่เกิดขึ้น",
+    footer: "ทุกบันทึกถูกผนึกในสมุดบันทึก บันทึกไม่สามารถแก้ไขหรือนำออกได้"
+  },
+  settings: {
+    eyebrow: "การตั้งค่า",
+    title: "การกำหนดค่าห้องนิรภัย",
+    subtitle: "รักษาการกำหนดค่าที่ควบคุมมรดกของคุณ — สถานะเตรียมใช้งาน/ปิดใช้งานของสวิตช์ ความถี่การเช็คอิน และผู้รับผลประโยชน์ที่ถูกผนึกไว้",
+    switchTitle: "สวิตช์",
+    switchDesc: "เตรียมใช้งานหรือปิดใช้งานห้องนิรภัยและกำหนดความถี่ในการยืนยัน",
+    beneficiariesTitle: "ผู้รับผลประโยชน์",
+    beneficiariesDesc: "แก้ไขบุคคลและสาเหตุที่มรดกของคุณถูกผนึกไว้",
+    cadence: "ความถี่ · {value}",
+    daily: "รายวัน",
+    weekly: "รายสัปดาห์",
+    monthly: "รายเดือน",
+    yearly: "รายปี",
+    h24: "24 ชั่วโมง",
+    h7d: "7 วัน",
+    h30d: "30 วัน",
+    h365d: "365 วัน",
+    emptyBeneficiaries: "ยังไม่ได้กำหนดค่าผู้รับผลประโยชน์",
+    editBeneficiary: "แก้ไขผู้รับผลประโยชน์",
+    editBeneficiaryDesc: "อัปเดตชื่อ ส่วนแบ่งการจัดสรร และที่อยู่กระเป๋าเงินของผู้รับผลประโยชน์นี้",
+    removeBeneficiary: "นำออกผู้รับผลประโยชน์",
+    removeBeneficiaryDesc: "นำ {name} ออกจากห้องนิรภัย? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
+    toast: {
+      armed: "สวิตช์พร้อมใช้งานแล้ว",
+      armedDesc: "ตั้งค่าความถี่การเช็คอินเป็น {cadence}",
+      armError: "ไม่สามารถเตรียมใช้งานสวิตช์ได้",
+      armErrorDesc: "ไม่สามารถเตรียมใช้งานห้องนิรภัยได้ กรุณาลองอีกครั้ง",
+      disarmed: "สวิตช์ปิดใช้งานแล้ว",
+      disarmedDesc: "ห้องนิรภัยไม่พร้อมใช้งานอีกต่อไป",
+      disarmError: "ไม่สามารถปิดใช้งานสวิตช์ได้",
+      disarmErrorDesc: "ไม่สามารถปิดใช้งานห้องนิรภัยได้ กรุณาลองอีกครั้ง",
+      beneficiaryUpdated: "อัปเดตผู้รับผลประโยชน์แล้ว",
+      beneficiaryUpdatedDesc: "บันทึกการกำหนดค่าผู้รับผลประโยชน์แล้ว",
+      updateError: "ไม่สามารถอัปเดตผู้รับผลประโยชน์ได้",
+      updateErrorDesc: "การเปลี่ยนแปลงไม่ถูกบันทึก กรุณาลองอีกครั้ง",
+      beneficiaryRemoved: "นำออกผู้รับผลประโยชน์แล้ว",
+      beneficiaryRemovedDesc: "นำผู้รับผลประโยชน์ออกจากห้องนิรภัยแล้ว",
+      removeError: "ไม่สามารถนำออกผู้รับผลประโยชน์ได้",
+      removeErrorDesc: "ไม่สามารถนำออกผู้รับผลประโยชน์ได้ กรุณาลองอีกครั้ง"
+    }
+  }
+};
+const tr = {
+  meta: {
+    title: "Sovereign Legacy — Kasa",
+    description: "Sovereign Legacy — Kasa. Sizin kasanız. Artık mühürlü olmayana kadar mühürlü."
+  },
+  common: {
+    cancel: "İptal",
+    saveChanges: "Değişiklikleri kaydet",
+    edit: "Düzenle",
+    remove: "Kaldır",
+    name: "Ad",
+    optional: "İsteğe bağlı",
+    addBeneficiary: "Yararlanıcı ekle",
+    allocationShare: "Tahsis payı (%)",
+    walletAddress: "Cüzdan adresi",
+    checkInCadence: "Kontrol aralığı",
+    selectCadence: "Aralık seç",
+    armed: "Etkin",
+    disarmed: "Devre dışı",
+    arming: "Etkinleştiriliyor…",
+    disarming: "Devre dışı bırakılıyor…",
+    saving: "Kaydediliyor…",
+    removing: "Kaldırılıyor…",
+    arm: "Etkinleştir",
+    disarm: "Devre dışı bırak"
+  },
+  nav: {
+    dashboard: "Panel",
+    beneficiaries: "Yararlanıcılar",
+    legacyAssets: "Miras ve Varlıklar",
+    theSwitch: "Anahtar",
+    auditLogs: "Denetim Günlükleri",
+    settings: "Ayarlar"
+  },
+  header: {
+    home: "Sovereign Legacy ana sayfası",
+    networkBadge: "Ağ · Kimlik",
+    mobileMenu: "Gezinme menüsünü aç",
+    mobilePrimary: "Mobil ana gezinme"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Kasa. Tüm hakları saklıdır.",
+    tagline: "Artık mühürlü olmayana kadar mühürlü"
+  },
+  loading: {
+    openingVault: "Kasa açılıyor…"
+  },
+  language: {
+    label: "Dil"
+  },
+  landing: {
+    eyebrow: "Kendi kendine egemen miras",
+    headline1: "Kasanız.",
+    headline2: "Açılana kadar mühürlü.",
+    login: "Internet Identity ile giriş yapın",
+    subhead: "Internet Computer üzerinde yerel olarak inşa edilmiş, kripto varlıklar için dijital bir ölü adam anahtarı — vasiyetnamesiz, gecikmesiz, zincirin kendisinden başka kimsenin izlemediği.",
+    vaultDoorAlt: "Yıpranmış pirinç ve çelikten bir banka kasa kapısı, kapalı, ortasında Internet Computer'ın sonsuzluk döngüsü amblemi hafifçe parlıyor.",
+    introduction: {
+      eyebrow: "Giriş",
+      heading: "Ölü Adam Anahtarı — Buhar Çağında Doğdu",
+      p1: "On dokuzuncu yüzyılın son on yıllarında, yeni bir makine türü uygarlığı yeniden şekillendiriyordu. Elektrikli tramvaylar artık kalabalık şehirlerde yol alıyor, asansörler yolcuları eşi görülmemiş yükseklikteki binalara taşıyordu. Bunlar harikaydı — ve tehlikeliydiler.",
+      p2: "Sorun basit ve ürkütücüydü: Kontrolü elinde tutan kişi artık kontrolü elinde tutamadığında ne olur? Bir tramvay sürücüsü direksiyonda kalp krizi geçirebilirdi. Bir asansör operatörü yolculuğun ortasında bilincini kaybedebilirdi. Ve makine, operatörünün kaderine kayıtsız, sadece devam ederdi — onu durduran bir şeye çarpana kadar.",
+      p3: "1888'de Amerikalı mühendis Frank J. Sprague, Virginia'daki Richmond tramvay hatlarını elektriklendirdi — Amerika Birleşik Devletleri'ndeki ilk başarılı elektrikli kentsel demiryolu. Yeniliği motorla sınırlı kalmadı. Sprague, yüksek hızda yolcu taşıyan bir aracın, operatörün aciz kalması durumunda kendini durdurabilmesi gerektiğini anladı.",
+      p4: "Ona ölü adam anahtarı dediler. Hareket etmeye devam etmek için kolu tutun. Bırakın — ister dikkat dağınıklığından, ister hastalıktan, ister ölümden — ve makine kendini durdurur. Bu isim dram için seçilmedi. Hassasiyet için seçildi. Anahtar, yaşayan elin yokluğuyla etkinleşiyordu.",
+      p5: "Fikir hızla yayıldı. New York, Londra ve Tokyo'daki metrolar bunu benimsedi. Nükleer santraller bunu kontrol çubuklarına yerleştirdi. Ticari uçaklar bunu otopilotlarına gömdü. Bir makinenin hayat taşıdığı her yerde, ölü adam anahtarı onu takip etti — sessiz, sabırlı, bekleyen.",
+      h3a: "Ölü Adam Anahtarı Günümüzde Nasıl Çalışır?",
+      p6: "Çok çalıştınız. Kripto varlıklar biriktirdiniz — ICP, Bitcoin, Ethereum, stablecoin. Bunlar cüzdanlarda ve canister'larda, yalnızca sizin sahip olduğunuz özel anahtarlarla korunuyor. Ve kolu kavrayan tramvay sürücüsü gibi, ağdaki yalnızca sizin canlı, aktif varlığınız devreyi kapalı tutar.",
+      p7: "Sovereign Legacy aynı ilkeyi şöyle uygular. Varlıklarınızı güvenli bir on-chain canister kasasına yatırırsınız. Bir veya daha fazla yararlanıcı belirlersiniz ve bir ağ etkinliksizlik süresi ayarlarsınız. Periyodik olarak giriş yaptığınız sürece anahtar kapalı kalır. Bu etkinlik durduğu anda Sovereign Legacy size uyarılar gönderir. Yanıt vermezseniz, avukatlar, mahkemeler veya gecikmeler olmadan varlıklarınız seçtiğiniz yararlanıcılara otomatik olarak aktarılır.",
+      h3b: "İsteklerinizi Kişiselleştirmek İster misiniz?",
+      p8: "Birden fazla alıcı istiyorsanız — bir eş, çocuklar, güvenilir bir arkadaş, hayırsever bir amaç — Sovereign Legacy varlıklarınızı yüzdeye göre bölmenize olanak tanır. Payları siz belirlersiniz. Yararlanıcılarınız tam olarak niyet ettiğinizi alır."
+    },
+    advantages: {
+      eyebrow: "Neden işe yarıyor",
+      heading: "Avantajlar Her Adıma Yerleşiktir",
+      card1: {
+        title: "Avukat yok. Veraset yok. Gecikme yok.",
+        body: "Ölü adam anahtarı tetiklendiği anda canister talimatlarınızı uygular. İstekleriniz ile sevdikleriniz arasında hiçbir kurum durmaz."
+      },
+      card2: {
+        title: "Kontrol sizde kalır.",
+        body: "Yararlanıcıları değiştirin, yüzdeleri ayarlayın veya mesajınızı istediğiniz zaman güncelleyin. Her şey anında, on-chain güncellenir."
+      },
+      card3: {
+        title: "Siz uyurken çalışır.",
+        body: "Hayat devam ederse Sovereign Legacy sessiz kalır. Devam etmezse, her şey tam olarak planladığınız gibi ilerler."
+      },
+      card4: {
+        title: "Küresel erişim.",
+        body: "Yararlanıcılar dünyanın herhangi bir yerinde olabilir. Sovereign Legacy birden çok dil konuşur ve açıklamayı halleder, böylece sizin yapmanız gerekmez."
+      },
+      card5: {
+        title: "Verileriniz sizin kalır.",
+        body: "Kasanız Internet Computer üzerinde bir canister'dır ve Internet Identity'nizle korunur. Sovereign Legacy'nin kendisi dahil hiçbir üçüncü taraf içeriğine erişemez."
+      }
+    },
+    faq: {
+      eyebrow: "Sorular",
+      heading: "Sık Sorulan Sorular",
+      q1: {
+        q: "Sovereign Legacy hangi dilleri destekliyor?",
+        a: "Uygulama, Arapça, Farsça ve Urduca gibi sağdan sola diller dahil 22 dili destekler; böylece dünyanın her yerindeki yararlanıcılar bir serbest bırakma bildirimini kendi dillerinde anlayabilir."
+      },
+      q2: {
+        q: "Kasam ne kadar güvenli?",
+        a: "Kasanız Internet Computer üzerinde bir canister'dır ve Internet Identity'nizle korunur. İçeriğini yalnızca kimliği doğrulanmış principal'ınız görüntüleyebilir veya yönetebilir."
+      },
+      q3: {
+        q: "Kasamı kaybedebilir miyim?",
+        a: "Internet Identity'nize erişimi koruduğunuz sürece kasanız kontrolünüz altında kalır. Ana risk, Internet Identity kimlik bilgilerinizi kaybetmektir; bu yüzden kurtarma yönteminizin güvenli bir yedeğini tutmak önemlidir."
+      },
+      q4: {
+        q: "Varlıklar yararlanıcılar arasında nasıl bölünür?",
+        a: "Her yararlanıcıya bir yüzde payı atarsınız. Paylar serbest bırakmadan önce her zaman ayarlanabilir ve tüm yararlanıcılara tahsis edilen toplam asla %100'ü aşmamalıdır."
+      },
+      q5: {
+        q: "Ağ etkinliksizlik zamanlayıcısını nasıl sıfırlarım?",
+        a: "Internet Identity'nizle giriş yapmanız yeterlidir. Kimliği doğrulanmış herhangi bir kontrol, etkinliksizlik saatini sıfırlar ve ölü adam anahtarını etkin tutar."
+      },
+      q6: {
+        q: "Yararlanıcıyı nasıl eklerim?",
+        a: "Panelinizden Yararlanıcılar panelini açın ve bir ad, iletişim bilgisi ve tahsis yüzdesi ekleyin."
+      },
+      q7: {
+        q: "Kurulumdan sonra yararlanıcılarımı değiştirebilir miyim?",
+        a: "Evet. Yararlanıcılar, tahsisler ve kişisel mesajlar her zaman güncellenebilir — değişiklikler anında, on-chain geçerli olur."
+      },
+      q8: {
+        q: "Yararlanıcılarımı kim görebilir?",
+        a: "Kasanın sahibi olarak kimliğiniz doğrulandığı sürece yalnızca siz."
+      }
+    },
+    terms: {
+      eyebrow: "Koşullar",
+      heading: "Şartlar ve Koşullar",
+      card1: {
+        title: "1. Genel Bakış",
+        body: "ICP Sovereign Legacy, Internet Computer Protokolü (ICP) üzerine inşa edilmiş, merkeziyetsiz, tamamen on-chain bir miras ve ölü adam anahtarı platformudur. Bu hizmeti kullanarak bu şartları kabul etmiş olursunuz."
+      },
+      card2: {
+        title: "2. Sorumluluk Yok",
+        body: "Geliştiriciler, hatalı yapılandırma, kaybolan Internet Identity kimlik bilgileri, blockchain ağ koşulları veya başka herhangi bir nedenden kaynaklanan varlık kaybından sorumlu değildir. Bu hizmeti kendi sorumluluğunuzda kullanın."
+      },
+      card3: {
+        title: "3. Otonom Yürütme",
+        body: "Varlık dağıtımı, ölü adam anahtarınız tetiklendiğinde on-chain akıllı sözleşme mantığı tarafından otomatik olarak yürütülür. Tetiklendikten sonra insan müdahalesi gerekmez ve mümkün değildir."
+      },
+      card4: {
+        title: "4. Gizlilik",
+        body: "Yararlanıcı listeniz on-chain olarak saklanır ve yalnızca kimliği doğrulanmış Internet Identity principal'ınız tarafından erişilebilir. Hiçbir üçüncü taraf verilerinizi göremez."
+      },
+      card5: {
+        title: "5. Ücretler",
+        body: "Bu hizmet, uygulama içinde açıklandığı şekilde sağlanır. Belirli bir işleme uygulanan ücretler, o işlemi onaylamadan önce uygulamada açıkça gösterilir — gizli veya yinelenen ücret yoktur."
+      },
+      card6: {
+        title: "6. Uygunluk",
+        body: "Bu hizmeti kullanmak için en az 18 yaşında (veya yargı bölgenizdeki reşit olma yaşı) olmalı ve bu şartlara girmek için yasal ehliyete sahip olmalısınız."
+      },
+      card7: {
+        title: "7. Garanti Yok",
+        body: "Bu hizmet, açık veya zımni her türlü garanti olmaksızın «olduğu gibi» ve «mevcut olduğu gibi» sağlanır; kesintisiz veya hatasız çalışma garantisi dahildir."
+      },
+      card8: {
+        title: "8. Riskin Üstlenilmesi",
+        body: "Kripto para ve blockchain teknolojisi; fiyat oynaklığı, ağ tıkanıklığı, akıllı sözleşme güvenlik açıkları ve temel protokollerdeki değişiklikler dahil olmak üzere doğal riskler taşır. Bu hizmeti kullanarak bu riskleri kabul edersiniz."
+      },
+      card9: {
+        title: "9. Fesih",
+        body: "Bu şartların ihlali veya Sovereign Legacy'nin kendi takdirine göre diğer kullanıcılara ya da hizmetin kendisine zararlı olduğunu belirlediği davranışlar nedeniyle bu hizmete erişim askıya alınabilir veya sonlandırılabilir."
+      },
+      card10: {
+        title: "10. Bu Şartlarda Yapılan Değişiklikler",
+        body: "Bu şartlar zaman zaman güncellenebilir. Önemli değişiklikler uygulama içinde sunulacaktır ve bu tür değişikliklerden sonra hizmeti kullanmaya devam etmek, güncellenmiş şartların kabulü anlamına gelir."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Panel",
+    title: "Kasa",
+    balance: "Kasa Bakiyesi",
+    assetsHeld: "{count} varlık tutuluyor",
+    noAssets: "Henüz tutulan varlık yok",
+    beneficiaries: "Yararlanıcılar",
+    named: "adlandırıldı",
+    sealed: "{count} yararlanıcı mühürlendi",
+    none: "Henüz yararlanıcı yok",
+    allocation: "Yararlanıcı Tahsisi",
+    allocationNone: "Henüz tahsis yok. Başlamak için bir yararlanıcı ekleyin.",
+    allocationAria: "Yararlanıcı tahsis payları",
+    switch: "Anahtar",
+    lastVerified: "Son doğrulama · {time}",
+    notVerified: "Henüz doğrulanmadı"
+  },
+  beneficiaries: {
+    eyebrow: "Yararlanıcılar",
+    title: "Yararlanıcılar",
+    subtitle: "Miranızın mühürlendiği kişiler ve amaçlar. Tahsis, sıra ve koşullar burada yaşar.",
+    allocation: "Tahsis",
+    count: "{count} yararlanıcı",
+    noAllocations: "Henüz tahsis yok. Başlamak için bir yararlanıcı ekleyin.",
+    allocationAria: "Yararlanıcı tahsis payları",
+    manage: "Yönet",
+    manageBody: "Bir yararlanıcı ekleyin ve kasadan payını atayın. Paylar her zaman düzenlenebilir veya iptal edilebilir.",
+    loadError: "Yararlanıcılar yüklenemedi. Lütfen tekrar deneyin.",
+    emptyTitle: "Henüz yararlanıcı yok",
+    emptyBody: "Miranız atanmamış. Birisi için kasayı mühürlemek üzere ilk yararlanıcınızı ekleyin.",
+    noWallet: "Cüzdan adresi yok",
+    editAria: "{name} düzenle",
+    removeAria: "{name} kaldır",
+    modal: {
+      editTitle: "Yararlanıcıyı düzenle",
+      addTitle: "Yararlanıcı ekle",
+      editDesc: "Bu yararlanıcının adını, payını veya cüzdan adresini güncelleyin.",
+      addDesc: "Yeni bir yararlanıcıya ad ve tahsis payı atayın."
+    },
+    namePlaceholder: "örn. Elena Marchetti",
+    sharePlaceholder: "örn. 40",
+    errors: {
+      nameRequired: "Bu yararlanıcı için bir ad girin.",
+      sharePositive: "Tahsis payı sıfırdan büyük olmalıdır.",
+      invalidChecksum: "Bu ICP hesap tanımlayıcısının sağlama toplamı geçersiz. Adresi tekrar kontrol edin.",
+      invalidWallet: "Geçerli bir ICP cüzdan adresi girin — 64 karakterli bir hesap tanımlayıcısı veya bir ICP principal.",
+      totalExceedsEdit: "Bu, toplam tahsisi %{total}'a getirerek %100 sınırını aşar.",
+      totalExceedsAdd: "Toplam tahsis %{total} olur ve %100 sınırını aşar.",
+      saveFailed: "Değişiklikler kaydedilemedi. Lütfen tekrar deneyin.",
+      addFailed: "Yararlanıcı eklenemedi. Lütfen tekrar deneyin."
+    }
+  },
+  assets: {
+    eyebrow: "Miras ve Varlıklar",
+    title: "Tutulan Varlıklar",
+    subtitle: "Kasada tutulan her şey — bakiyeler, varlıklar ve onları yöneten talimatlar.",
+    assetsHeld: "Tutulan Varlıklar",
+    beneficiaries: "Yararlanıcılar",
+    allocationStatus: "Tahsis Durumu",
+    sealed: "Mühürlü",
+    unallocated: "Tahsis edilmemiş",
+    beneficiaryFallback: "Yararlanıcı #{id}",
+    errorEyebrow: "Kasaya erişilemiyor",
+    errorBody: "Tutulan varlıklar okunamadı. Lütfen tekrar deneyin.",
+    emptyEyebrow: "Tutulan varlık yok",
+    emptyBody: "Kasa şu anda kripto varlık tutmuyor. Varlıklar eklendiğinde bakiyeleri ve yararlanıcı tahsisleri burada görünecek.",
+    allocationLabel: "Yararlanıcı Tahsisi"
+  },
+  switch: {
+    eyebrow: "Anahtar",
+    title: "Anahtar",
+    subtitle: "Kasayı teslim eden tek kontrol. Etkin, doğrulanmış ve bilinçli.",
+    active: "Etkin · Ölü adam anahtarı",
+    standingDown: "Beklemede",
+    armed: "ETKİN",
+    disarmed: "DEVRE DIŞI",
+    checkIn: "Hâlâ buradayım",
+    arm: "Anahtarı etkinleştir",
+    disarm: "Devre dışı bırak",
+    cadence: "Aralık · {duration}",
+    releaseIn: "{duration} içinde serbest bırakılacak",
+    timelineAriaArmed: "Ölü adam anahtarı zaman çizelgesi, aralığın %{percent}'i geçti",
+    timelineAriaDisarmed: "Ölü adam anahtarı zaman çizelgesi, devre dışı",
+    lastCheckIn: "Son kontrol",
+    armedAt: "Etkinleştirilme",
+    cadenceLabel: "Aralık",
+    standingDownTitle: "Beklemede",
+    standingDownBody: "Devre dışı bırakmak ölü adam anahtarını durdurur. Kasa mühürlü kalır, ancak kaçırılan bir kontrolde artık yararlanıcılarınıza serbest bırakılmaz.",
+    disarmTheSwitch: "Anahtarı devre dışı bırak",
+    armTitle: "Anahtarı etkinleştir",
+    armBody: "Kasanın bir sonraki kontrolünüzü ne kadar bekleyeceğini seçin. Kaçırırsanız, kasa yararlanıcılarınıza serbest bırakılır.",
+    cadenceError: "Anahtarı etkinleştirmeden önce sıfırdan büyük bir kontrol aralığı seçin.",
+    errorEyebrow: "Anahtara erişilemiyor",
+    errorBody: "Anahtar durumu okunamadı. Lütfen tekrar deneyin.",
+    cadence24h: "24 saat",
+    cadence7d: "7 gün",
+    cadence30d: "30 gün"
+  },
+  audit: {
+    eyebrow: "Denetim Günlükleri",
+    title: "Denetim Günlükleri",
+    ledger: "Olay Defteri",
+    count: "{count} olay mühürlendi",
+    timestamp: "Zaman damgası",
+    event: "Olay",
+    description: "Açıklama",
+    tableAria: "Kasa denetim günlüğü",
+    errorEyebrow: "Deftere erişilemiyor",
+    errorBody: "Denetim defteri okunamadı. Lütfen tekrar deneyin.",
+    emptyTitle: "Henüz olay yok",
+    emptyBody: "Kasaya karşı yapılan her işlem, gerçekleştikçe sırayla burada mühürlenecek.",
+    footer: "Her kayıt defterde mühürlüdür. Kayıtlar düzenlenemez veya kaldırılamaz."
+  },
+  settings: {
+    eyebrow: "Ayarlar",
+    title: "Kasa Yapılandırması",
+    subtitle: "Miranızı yöneten yapılandırmayı koruyun — Anahtarın etkin/devre dışı durumu, kontrol aralığı ve mühürlendiği yararlanıcılar.",
+    switchTitle: "Anahtar",
+    switchDesc: "Kasayı etkinleştirin veya devre dışı bırakın ve ne sıklıkta doğrulanması gerektiğini ayarlayın.",
+    beneficiariesTitle: "Yararlanıcılar",
+    beneficiariesDesc: "Miranızın mühürlendiği kişileri ve amaçları düzenleyin.",
+    cadence: "Aralık · {value}",
+    daily: "Günlük",
+    weekly: "Haftalık",
+    monthly: "Aylık",
+    yearly: "Yıllık",
+    h24: "24 saat",
+    h7d: "7 gün",
+    h30d: "30 gün",
+    h365d: "365 gün",
+    emptyBeneficiaries: "Henüz yapılandırılmış yararlanıcı yok",
+    editBeneficiary: "Yararlanıcıyı düzenle",
+    editBeneficiaryDesc: "Bu yararlanıcının adını, tahsis payını ve cüzdan adresini güncelleyin.",
+    removeBeneficiary: "Yararlanıcıyı kaldır",
+    removeBeneficiaryDesc: "{name} kasadan kaldırılsın mı? Bu işlem geri alınamaz.",
+    toast: {
+      armed: "Anahtar etkinleştirildi",
+      armedDesc: "Kontrol aralığı {cadence} olarak ayarlandı.",
+      armError: "Anahtar etkinleştirilemedi",
+      armErrorDesc: "Kasa etkinleştirilemedi. Lütfen tekrar deneyin.",
+      disarmed: "Anahtar devre dışı bırakıldı",
+      disarmedDesc: "Kasa artık etkin değil.",
+      disarmError: "Anahtar devre dışı bırakılamadı",
+      disarmErrorDesc: "Kasa devre dışı bırakılamadı. Lütfen tekrar deneyin.",
+      beneficiaryUpdated: "Yararlanıcı güncellendi",
+      beneficiaryUpdatedDesc: "Yararlanıcı yapılandırması kaydedildi.",
+      updateError: "Yararlanıcı güncellenemedi",
+      updateErrorDesc: "Değişiklikler kaydedilmedi. Lütfen tekrar deneyin.",
+      beneficiaryRemoved: "Yararlanıcı kaldırıldı",
+      beneficiaryRemovedDesc: "Yararlanıcı kasadan kaldırıldı.",
+      removeError: "Yararlanıcı kaldırılamadı",
+      removeErrorDesc: "Yararlanıcı kaldırılamadı. Lütfen tekrar deneyin."
+    }
+  }
+};
+const uk = {
+  meta: {
+    title: "Sovereign Legacy — Сховище",
+    description: "Sovereign Legacy — Сховище. Ваше сховище. Запечатане, доки не перестане бути таким."
+  },
+  common: {
+    cancel: "Скасувати",
+    saveChanges: "Зберегти зміни",
+    edit: "Редагувати",
+    remove: "Видалити",
+    name: "Ім'я",
+    optional: "Необов'язково",
+    addBeneficiary: "Додати бенефіціара",
+    allocationShare: "Частка розподілу (%)",
+    walletAddress: "Адреса гаманця",
+    checkInCadence: "Періодичність перевірки",
+    selectCadence: "Вибрати періодичність",
+    armed: "Активовано",
+    disarmed: "Деактивовано",
+    arming: "Активація…",
+    disarming: "Деактивація…",
+    saving: "Збереження…",
+    removing: "Видалення…",
+    arm: "Активувати",
+    disarm: "Деактивувати"
+  },
+  nav: {
+    dashboard: "Панель",
+    beneficiaries: "Бенефіціари",
+    legacyAssets: "Спадщина та активи",
+    theSwitch: "Перемикач",
+    auditLogs: "Журнали аудиту",
+    settings: "Налаштування"
+  },
+  header: {
+    home: "Головна Sovereign Legacy",
+    networkBadge: "Мережа · Ідентичність",
+    mobileMenu: "Відкрити меню навігації",
+    mobilePrimary: "Основна мобільна навігація"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Сховище. Усі права захищено.",
+    tagline: "Запечатане, доки не перестане бути таким"
+  },
+  loading: {
+    openingVault: "Відкриття сховища…"
+  },
+  language: {
+    label: "Мова"
+  },
+  landing: {
+    eyebrow: "Самостійно суверенна спадщина",
+    headline1: "Ваше сховище.",
+    headline2: "Запечатане, поки не настане час.",
+    login: "Увійти через Internet Identity",
+    subhead: "Цифровий вимикач мертвої людини для криптовалюти, створений безпосередньо на Internet Computer — без спадкових справ, без затримок, без нагляду, окрім самого ланцюга.",
+    vaultDoorAlt: "Потерті латунні та сталеві двері банківського сховища, зачинені, з емблемою нескінченної петлі Internet Computer, що тьмяно світиться в центрі.",
+    introduction: {
+      eyebrow: "Вступ",
+      heading: "Перемикач Мерця — Народжений в Епоху Пари",
+      p1: "В останні десятиліття дев'ятнадцятого століття новий вид машини перетворював цивілізацію. Електричні трамваї тепер прокладали шлях крізь переповнені міста, а ліфти піднімали пасажирів у будівлі безпрецедентної висоти. Вони були дивом — і вони були небезпечні.",
+      p2: "Проблема була простою й жахливою: що станеться, коли людина при владі більше не при владі? Машиніст міг зазнати серцевого нападу за кермом. Оператор ліфта міг знепритомніти посеред поїздки. А машина, байдужа до долі свого оператора, просто продовжувала рух — доки не натрапляла на щось, що її зупиняло.",
+      p3: "Саме американський інженер Френк Дж. Спрег у 1888 році електрифікував трамвайні лінії Річмонда, штат Вірджинія, — першу успішну електричну міську залізницю в Сполучених Штатах. Його інновація не зупинилася на двигуні. Спрег зрозумів, що транспортний засіб, який перевозить пасажирів на великій швидкості, потребує способу зупинитися, якщо оператор стане недієздатним.",
+      p4: "Вони назвали це перемикачем мерця. Тримайте ручку, щоб продовжувати рух. Відпустіть її — через неуважність, хворобу чи смерть — і машина зупиниться сама. Назву обрали не заради драми. Її обрали заради точності. Перемикач активувався відсутністю живої руки.",
+      p5: "Ідея швидко поширилася. Метро Нью-Йорка, Лондона та Токіо прийняло її. Атомні електростанції вбудували її у свої стрижні керування. Комерційні літаки вбудували її в автопілоти. Скрізь, де машина несла життя, перемикач мерця слідував за нею — мовчазний, терплячий, очікуючий.",
+      h3a: "Як Перемикач Мерця Працює в Наші Часи?",
+      p6: "Ви багато працювали. Ви накопичили криптоактиви — ICP, Bitcoin, Ethereum, стейблкоїни. Вони лежать у гаманцях і каністрах, захищені приватними ключами, які є лише у вас. І, як машиніст, що стискає ручку, лише ваша жива, активна присутність у мережі тримає коло замкненим.",
+      p7: "Ось як Sovereign Legacy застосовує той самий принцип. Ви вносите активи в безпечне ончейн-сховище-каністру. Ви призначаєте одного або кількох бенефіціарів і встановлюєте період бездіяльності в мережі. Поки ви періодично входите, перемикач залишається замкненим. Щойно ця активність припиняється, Sovereign Legacy надсилає вам попередження. Якщо ви не відповідаєте, переказ виконується автоматично, переміщуючи ваші активи обраним бенефіціарам без адвокатів, судів чи затримок.",
+      h3b: "Хочете Персоналізувати Свої Побажання?",
+      p8: "Якщо ви бажаєте більше ніж одного отримувача — дружину/чоловіка, дітей, довіреного друга, благодійну справу — Sovereign Legacy дозволяє вам розділити активи за відсотками. Ви встановлюєте частки. Ваші бенефіціари отримують саме те, що ви мали на увазі."
+    },
+    advantages: {
+      eyebrow: "Чому це працює",
+      heading: "Переваги Вбудовані в Кожен Крок",
+      card1: {
+        title: "Без адвокатів. Без заповітного провадження. Без затримок.",
+        body: "Каністра виконує ваші інструкції в момент спрацювання перемикача мерця. Жодна установа не стоїть між вашими побажаннями та людьми, яких ви любите."
+      },
+      card2: {
+        title: "Ви зберігаєте контроль.",
+        body: "Змінюйте бенефіціарів, коригуйте відсотки або оновлюйте своє повідомлення будь-коли. Усе оновлюється миттєво, ончейн."
+      },
+      card3: {
+        title: "Працює, поки ви спите.",
+        body: "Якщо життя триває, Sovereign Legacy мовчить. Якщо ні — усе рухається вперед саме так, як ви планували."
+      },
+      card4: {
+        title: "Глобальне охоплення.",
+        body: "Бенефіціари можуть бути будь-де у світі. Sovereign Legacy розмовляє багатьма мовами та бере на себе пояснення, щоб вам не доводилося цього робити."
+      },
+      card5: {
+        title: "Ваші дані залишаються вашими.",
+        body: "Ваше сховище — це каністра на Internet Computer, захищена вашою Internet Identity. Жодна третя сторона — включно із самим Sovereign Legacy — не має доступу до його вмісту."
+      }
+    },
+    faq: {
+      eyebrow: "Питання",
+      heading: "Поширені Запитання",
+      q1: {
+        q: "Які мови підтримує Sovereign Legacy?",
+        a: "Застосунок підтримує 22 мови, зокрема мови з письмом справа наліво, як-от арабська, перська та урду, щоб бенефіціари будь-де у світі могли зрозуміти повідомлення про вивільнення рідною мовою."
+      },
+      q2: {
+        q: "Наскільки безпечне моє сховище?",
+        a: "Ваше сховище — це каністра на Internet Computer, захищена вашою Internet Identity. Лише ваш автентифікований принципал може переглядати або керувати його вмістом."
+      },
+      q3: {
+        q: "Чи можу я колись втратити своє сховище?",
+        a: "Поки ви зберігаєте доступ до своєї Internet Identity, ваше сховище залишається під вашим контролем. Головний ризик — втрата облікових даних Internet Identity, тому важливо зберігати безпечну резервну копію вашого методу відновлення."
+      },
+      q4: {
+        q: "Як активи розподіляються між бенефіціарами?",
+        a: "Ви призначаєте кожному бенефіціару відсоткову частку. Частки можна коригувати будь-коли до вивільнення, а загальна сума, розподілена між усіма бенефіціарами, ніколи не повинна перевищувати 100%."
+      },
+      q5: {
+        q: "Як скинути таймер бездіяльності в мережі?",
+        a: "Просто увійдіть через свою Internet Identity. Будь-яка автентифікована перевірка скидає годинник бездіяльності та тримає перемикач мерця активованим."
+      },
+      q6: {
+        q: "Як додати бенефіціара?",
+        a: "Зі своєї панелі відкрийте панель «Бенефіціари» та додайте ім'я, контактну інформацію та відсоток розподілу."
+      },
+      q7: {
+        q: "Чи можу я змінити бенефіціарів після налаштування?",
+        a: "Так. Бенефіціарів, розподіли та особисті повідомлення можна оновлювати будь-коли — зміни набувають чинності негайно, ончейн."
+      },
+      q8: {
+        q: "Хто може бачити моїх бенефіціарів?",
+        a: "Лише ви, поки автентифіковані як власник сховища."
+      }
+    },
+    terms: {
+      eyebrow: "Умови",
+      heading: "Умови та Положення",
+      card1: {
+        title: "1. Огляд",
+        body: "ICP Sovereign Legacy — це децентралізована, повністю ончейн-платформа спадкування та перемикача мерця, побудована на протоколі Internet Computer (ICP). Використовуючи цю послугу, ви погоджуєтеся з цими умовами."
+      },
+      card2: {
+        title: "2. Відсутність Відповідальності",
+        body: "Розробники не несуть відповідальності за будь-яку втрату активів унаслідок неправильної конфігурації, втрачених облікових даних Internet Identity, стану блокчейн-мережі чи будь-якої іншої причини. Використовуйте цю послугу на власний ризик."
+      },
+      card3: {
+        title: "3. Автономне Виконання",
+        body: "Розподіл активів виконується автоматично логікою ончейн-смарт-контракту, коли спрацьовує ваш перемикач мерця. Після спрацювання втручання людини не потрібне та неможливе."
+      },
+      card4: {
+        title: "4. Конфіденційність",
+        body: "Ваш список бенефіціарів зберігається ончейн і доступний лише вашому автентифікованому принципалу Internet Identity. Жодна третя сторона не може бачити ваші дані."
+      },
+      card5: {
+        title: "5. Комісії",
+        body: "Ця послуга надається так, як описано в застосунку. Будь-які комісії, що застосовуються до конкретної дії, чітко показані в застосунку перед підтвердженням цієї дії — без прихованих або регулярних платежів."
+      },
+      card6: {
+        title: "6. Право на Участь",
+        body: "Вам має бути щонайменше 18 років (або вік повноліття у вашій юрисдикції) і ви повинні мати правоздатність укласти ці умови, щоб користуватися цією послугою."
+      },
+      card7: {
+        title: "7. Відсутність Гарантій",
+        body: "Ця послуга надається «як є» та «як доступно», без будь-яких гарантій, явних чи неявних, включно з будь-якою гарантією безперебійної або безпомилкової роботи."
+      },
+      card8: {
+        title: "8. Прийняття Ризику",
+        body: "Криптовалюта та технологія блокчейн несуть властиві ризики, зокрема волатильність цін, перевантаження мережі, вразливості смарт-контрактів та зміни базових протоколів. Використовуючи цю послугу, ви приймаєте ці ризики."
+      },
+      card9: {
+        title: "9. Припинення",
+        body: "Доступ до цієї послуги може бути призупинено або припинено за порушення цих умов або за поведінку, яку Sovereign Legacy на власний розсуд визнає шкідливою для інших користувачів чи самої послуги."
+      },
+      card10: {
+        title: "10. Зміни до Цих Умов",
+        body: "Ці умови можуть час від часу оновлюватися. Суттєві зміни будуть представлені в застосунку, а подальше використання послуги після таких змін означає прийняття оновлених умов."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Панель",
+    title: "Сховище",
+    balance: "Баланс Сховища",
+    assetsHeld: "Зберігається {count} актив(ів)",
+    noAssets: "Ще немає активів",
+    beneficiaries: "Бенефіціари",
+    named: "призначено",
+    sealed: "Запечатано {count} бенефіціар(ів)",
+    none: "Ще немає бенефіціарів",
+    allocation: "Розподіл Бенефіціарів",
+    allocationNone: "Ще немає розподілів. Додайте бенефіціара, щоб почати.",
+    allocationAria: "Частки розподілу бенефіціарів",
+    switch: "Перемикач",
+    lastVerified: "Остання перевірка · {time}",
+    notVerified: "Ще не перевірено"
+  },
+  beneficiaries: {
+    eyebrow: "Бенефіціари",
+    title: "Бенефіціари",
+    subtitle: "Люди та справи, для яких запечатана ваша спадщина. Розподіл, порядок і умови живуть тут.",
+    allocation: "Розподіл",
+    count: "{count} бенефіціар(ів)",
+    noAllocations: "Ще немає розподілів. Додайте бенефіціара, щоб почати.",
+    allocationAria: "Частки розподілу бенефіціарів",
+    manage: "Керувати",
+    manageBody: "Додайте бенефіціара та призначте йому частку сховища. Частки можна редагувати або скасовувати будь-коли.",
+    loadError: "Не вдалося завантажити бенефіціарів. Спробуйте ще раз.",
+    emptyTitle: "Ще немає бенефіціарів",
+    emptyBody: "Ваша спадщина не призначена. Додайте першого бенефіціара, щоб запечатати сховище для когось.",
+    noWallet: "Немає адреси гаманця",
+    editAria: "Редагувати {name}",
+    removeAria: "Видалити {name}",
+    modal: {
+      editTitle: "Редагувати бенефіціара",
+      addTitle: "Додати бенефіціара",
+      editDesc: "Оновіть ім'я, частку або адресу гаманця цього бенефіціара.",
+      addDesc: "Призначте новому бенефіціару ім'я та частку розподілу."
+    },
+    namePlaceholder: "напр. Elena Marchetti",
+    sharePlaceholder: "напр. 40",
+    errors: {
+      nameRequired: "Введіть ім'я для цього бенефіціара.",
+      sharePositive: "Частка розподілу має бути більшою за нуль.",
+      invalidChecksum: "Цей ідентифікатор облікового запису ICP має недійсну контрольну суму. Перевірте адресу.",
+      invalidWallet: "Введіть дійсну адресу гаманця ICP — ідентифікатор облікового запису з 64 символів або принципал ICP.",
+      totalExceedsEdit: "Це доведе загальний розподіл до {total}%, перевищивши ліміт 100%.",
+      totalExceedsAdd: "Загальний розподіл становитиме {total}%, перевищивши ліміт 100%.",
+      saveFailed: "Не вдалося зберегти зміни. Спробуйте ще раз.",
+      addFailed: "Не вдалося додати бенефіціара. Спробуйте ще раз."
+    }
+  },
+  assets: {
+    eyebrow: "Спадщина та активи",
+    title: "Активи, що Зберігаються",
+    subtitle: "Усе, що зберігається у сховищі, — баланси, активи та інструкції, що ними керують.",
+    assetsHeld: "Активи, що Зберігаються",
+    beneficiaries: "Бенефіціари",
+    allocationStatus: "Статус Розподілу",
+    sealed: "Запечатано",
+    unallocated: "Не розподілено",
+    beneficiaryFallback: "Бенефіціар #{id}",
+    errorEyebrow: "Сховище недоступне",
+    errorBody: "Не вдалося прочитати активи, що зберігаються. Спробуйте ще раз.",
+    emptyEyebrow: "Немає активів",
+    emptyBody: "Сховище наразі не містить криптоактивів. Після додавання активів їхні баланси та розподіли між бенефіціарами з'являться тут.",
+    allocationLabel: "Розподіл Бенефіціарів"
+  },
+  switch: {
+    eyebrow: "Перемикач",
+    title: "Перемикач",
+    subtitle: "Єдиний контроль, що передає сховище. Активований, перевірений і обдуманий.",
+    active: "Активний · Перемикач мерця",
+    standingDown: "У режимі очікування",
+    armed: "АКТИВОВАНО",
+    disarmed: "ДЕАКТИВОВАНО",
+    checkIn: "Я все ще тут",
+    arm: "Активувати перемикач",
+    disarm: "Деактивувати",
+    cadence: "Періодичність · {duration}",
+    releaseIn: "Вивільнення через {duration}",
+    timelineAriaArmed: "Хронологія перемикача мерця, минуло {percent}% періодичності",
+    timelineAriaDisarmed: "Хронологія перемикача мерця, деактивовано",
+    lastCheckIn: "Остання перевірка",
+    armedAt: "Активовано о",
+    cadenceLabel: "Періодичність",
+    standingDownTitle: "У режимі очікування",
+    standingDownBody: "Деактивація зупиняє перемикач мерця. Сховище залишається запечатаним, але більше не вивільнятиметься вашим бенефіціарам у разі пропущеної перевірки.",
+    disarmTheSwitch: "Деактивувати перемикач",
+    armTitle: "Активувати перемикач",
+    armBody: "Виберіть, скільки часу сховище чекатиме на вашу наступну перевірку. Якщо ви її пропустите, сховище вивільниться вашим бенефіціарам.",
+    cadenceError: "Виберіть періодичність перевірки більшу за нуль перед активацією перемикача.",
+    errorEyebrow: "Перемикач недоступний",
+    errorBody: "Не вдалося прочитати стан перемикача. Спробуйте ще раз.",
+    cadence24h: "24 години",
+    cadence7d: "7 днів",
+    cadence30d: "30 днів"
+  },
+  audit: {
+    eyebrow: "Журнали аудиту",
+    title: "Журнали аудиту",
+    ledger: "Реєстр Подій",
+    count: "Запечатано {count} подій",
+    timestamp: "Часова мітка",
+    event: "Подія",
+    description: "Опис",
+    tableAria: "Журнал аудиту сховища",
+    errorEyebrow: "Реєстр недоступний",
+    errorBody: "Не вдалося прочитати реєстр аудиту. Спробуйте ще раз.",
+    emptyTitle: "Ще немає подій",
+    emptyBody: "Кожна дія, виконана щодо сховища, буде запечатана тут, по порядку, у міру її здійснення.",
+    footer: "Кожен запис запечатаний у реєстрі. Записи не можна редагувати або видаляти."
+  },
+  settings: {
+    eyebrow: "Налаштування",
+    title: "Конфігурація Сховища",
+    subtitle: "Збережіть конфігурацію, що керує вашою спадщиною, — стан активації/деактивації перемикача, його періодичність перевірки та бенефіціарів, для яких він запечатаний.",
+    switchTitle: "Перемикач",
+    switchDesc: "Активуйте або деактивуйте сховище та встановіть, як часто його слід перевіряти.",
+    beneficiariesTitle: "Бенефіціари",
+    beneficiariesDesc: "Редагуйте людей і справи, для яких запечатана ваша спадщина.",
+    cadence: "Періодичність · {value}",
+    daily: "Щодня",
+    weekly: "Щотижня",
+    monthly: "Щомісяця",
+    yearly: "Щороку",
+    h24: "24 години",
+    h7d: "7 днів",
+    h30d: "30 днів",
+    h365d: "365 днів",
+    emptyBeneficiaries: "Ще немає налаштованих бенефіціарів",
+    editBeneficiary: "Редагувати бенефіціара",
+    editBeneficiaryDesc: "Оновіть ім'я, частку розподілу та адресу гаманця цього бенефіціара.",
+    removeBeneficiary: "Видалити бенефіціара",
+    removeBeneficiaryDesc: "Видалити {name} зі сховища? Цю дію не можна скасувати.",
+    toast: {
+      armed: "Перемикач активовано",
+      armedDesc: "Періодичність перевірки встановлено на {cadence}.",
+      armError: "Не вдалося активувати перемикач",
+      armErrorDesc: "Сховище не вдалося активувати. Спробуйте ще раз.",
+      disarmed: "Перемикач деактивовано",
+      disarmedDesc: "Сховище більше не активоване.",
+      disarmError: "Не вдалося деактивувати перемикач",
+      disarmErrorDesc: "Сховище не вдалося деактивувати. Спробуйте ще раз.",
+      beneficiaryUpdated: "Бенефіціара оновлено",
+      beneficiaryUpdatedDesc: "Конфігурацію бенефіціара збережено.",
+      updateError: "Не вдалося оновити бенефіціара",
+      updateErrorDesc: "Зміни не збережено. Спробуйте ще раз.",
+      beneficiaryRemoved: "Бенефіціара видалено",
+      beneficiaryRemovedDesc: "Бенефіціара видалено зі сховища.",
+      removeError: "Не вдалося видалити бенефіціара",
+      removeErrorDesc: "Бенефіціара не вдалося видалити. Спробуйте ще раз."
+    }
+  }
+};
+const ur = {
+  meta: {
+    title: "Sovereign Legacy — والٹ",
+    description: "Sovereign Legacy — والٹ۔ آپ کا والٹ۔ مہر بند جب تک کہ ایسا نہ ہو۔"
+  },
+  common: {
+    cancel: "منسوخ",
+    saveChanges: "تبدیلیاں محفوظ کریں",
+    edit: "ترمیم",
+    remove: "ہٹائیں",
+    name: "نام",
+    optional: "اختیاری",
+    addBeneficiary: "مستفید شامل کریں",
+    allocationShare: "تخصیص کا حصہ (%)",
+    walletAddress: "والٹ کا پتہ",
+    checkInCadence: "چیک ان کی مدت",
+    selectCadence: "مدت منتخب کریں",
+    armed: "فعال",
+    disarmed: "غیر فعال",
+    arming: "فعال ہو رہا ہے…",
+    disarming: "غیر فعال ہو رہا ہے…",
+    saving: "محفوظ ہو رہا ہے…",
+    removing: "ہٹایا جا رہا ہے…",
+    arm: "فعال کریں",
+    disarm: "غیر فعال کریں"
+  },
+  nav: {
+    dashboard: "ڈیش بورڈ",
+    beneficiaries: "مستفیدین",
+    legacyAssets: "وراثت اور اثاثے",
+    theSwitch: "سوئچ",
+    auditLogs: "آڈٹ لاگز",
+    settings: "ترتیبات"
+  },
+  header: {
+    home: "Sovereign Legacy ہوم",
+    networkBadge: "نیٹ ورک · شناخت",
+    mobileMenu: "نیویگیشن مینو کھولیں",
+    mobilePrimary: "موبائل پرائمری"
+  },
+  footer: {
+    copyright: "© {year}۔ Sovereign Legacy — والٹ۔ جملہ حقوق محفوظ ہیں۔",
+    tagline: "مہر بند جب تک کہ ایسا نہ ہو"
+  },
+  loading: {
+    openingVault: "والٹ کھل رہا ہے…"
+  },
+  language: {
+    label: "زبان"
+  },
+  landing: {
+    eyebrow: "خود مختار وراثت",
+    headline1: "آپ کا خزانہ۔",
+    headline2: "اُس وقت تک مہر بند جب تک وقت نہ آئے۔",
+    login: "Internet Identity کے ذریعے لاگ ان کریں",
+    subhead: "کرپٹو کے لیے ایک ڈیجیٹل ڈیڈ مین سوئچ، جو براہِ راست Internet Computer پر تعمیر کیا گیا ہے — نہ وراثتی عدالتی کارروائی، نہ تاخیر، اور زنجیر کے سوا کوئی نگرانی کرنے والا نہیں۔",
+    vaultDoorAlt: "ایک پرانا پیتل اور فولاد کا بینک والٹ کا دروازہ، بند، جس کے مرکز میں Internet Computer کا لامحدود لوپ نشان ہلکی سی چمک کے ساتھ روشن ہے۔",
+    introduction: {
+      eyebrow: "تعارف",
+      heading: "ڈیڈ مین سوئچ — بھاپ کے دور میں پیدا ہوا",
+      p1: "انیسویں صدی کی آخری دہائیوں میں، ایک نئی قسم کی مشین تہذیب کو نئی شکل دے رہی تھی۔ برقی ٹرام اب بھیڑ بھرے شہروں سے گزرتی تھیں، اور لفٹیں مسافروں کو بے مثال بلندی کی عمارتوں تک لے جاتی تھیں۔ وہ معجزے تھیں — اور خطرناک تھیں۔",
+      p2: "مسئلہ سادہ اور خوفناک تھا: جب کنٹرول میں موجود شخص کنٹرول میں نہ رہے تو کیا ہوتا ہے؟ ایک ٹرام ڈرائیور پہیے پر دل کا دورہ پڑنے سے متاثر ہو سکتا تھا۔ ایک لفٹ آپریٹر سفر کے دوران ہوش کھو سکتا تھا۔ اور مشین، اپنے آپریٹر کی قسمت سے بے پروا، بس چلتی رہتی — جب تک کہ کسی ایسی چیز سے ٹکرا نہ جائے جو اسے روک دے۔",
+      p3: "امریکی انجینئر فرینک جے سپراگ ہی وہ شخص تھے جنہوں نے 1888 میں رچمنڈ، ورجینیا کی ٹرام لائنوں کو برقی بنایا — ریاستہائے متحدہ میں پہلی کامیاب شہری برقی ریلوے۔ ان کی ایجاد موٹر پر ختم نہیں ہوئی۔ سپراگ نے سمجھا کہ تیز رفتاری سے مسافروں کو لے جانے والی گاڑی کو خود کو روکنے کا ایک طریقہ درکار ہے اگر آپریٹر نااہل ہو جائے۔",
+      p4: "انہوں نے اسے ڈیڈ مین سوئچ کہا۔ آگے بڑھنے کے لیے ہینڈل پکڑے رکھیں۔ اسے چھوڑ دیں — چاہے غفلت، بیماری یا موت کی وجہ سے — اور مشین خود روک جاتی ہے۔ یہ نام ڈرامے کے لیے نہیں چنا گیا تھا۔ یہ درستگی کے لیے چنا گیا تھا۔ سوئچ زندہ ہاتھ کی غیر موجودگی سے فعال ہوتا تھا۔",
+      p5: "یہ خیال تیزی سے پھیل گیا۔ نیویارک، لندن اور ٹوکیو کی سب ویز نے اسے اپنایا۔ جوہری پاور اسٹیشنوں نے اسے اپنی کنٹرول راڈز میں بنایا۔ تجارتی ہوائی جہازوں نے اسے اپنے آٹو پائلٹ میں شامل کیا۔ جہاں بھی کوئی مشین جانیں لے جاتی تھی، ڈیڈ مین سوئچ اس کا پیچھا کرتا تھا — خاموش، صابر، منتظر۔",
+      h3a: "تو ان زمانوں میں ڈیڈ مین سوئچ کیسے کام کرتا ہے؟",
+      p6: "آپ نے سخت محنت کی ہے۔ آپ نے کرپٹو اثاثے جمع کیے ہیں — ICP، Bitcoin، Ethereum، stablecoins۔ وہ والٹس اور کینسٹرز میں ہیں، نجی کلیدوں سے محفوظ جو صرف آپ کے پاس ہیں۔ اور ٹرام ڈرائیور کی طرح جو ہینڈل پکڑے ہوئے ہے، نیٹ ورک پر آپ کی زندہ اور فعال موجودگی ہی سرکٹ کو بند رکھتی ہے۔",
+      p7: "یہ ہے کہ Sovereign Legacy اسی اصول کو کیسے لاگو کرتا ہے۔ آپ اثاثے ایک محفوظ آن چین کینسٹر والٹ میں جمع کرتے ہیں۔ آپ ایک یا زیادہ مستفیدین مقرر کرتے ہیں اور نیٹ ورک کی غیر فعالیت کی مدت طے کرتے ہیں۔ جب تک آپ وقتاً فوقتاً لاگ ان کرتے رہتے ہیں، سوئچ بند رہتا ہے۔ جس لمحے یہ سرگرمی رک جاتی ہے، Sovereign Legacy آپ کو الرٹ بھیجتا ہے۔ اگر آپ جواب نہیں دیتے، تو منتقلی خود بخود عمل میں آتی ہے، آپ کے اثاثے آپ کے منتخب مستفیدین تک بغیر وکلاء، عدالتوں یا تاخیر کے منتقل کر دیتی ہے۔",
+      h3b: "اپنی خواہشات کو ذاتی بنانا چاہتے ہیں؟",
+      p8: "اگر آپ ایک سے زیادہ وصول کنندہ چاہتے ہیں — شریک حیات، بچے، ایک قابل اعتماد دوست، ایک خیراتی مقصد — تو Sovereign Legacy آپ کو اپنے اثاثے فیصد کے لحاظ سے تقسیم کرنے دیتا ہے۔ آپ حصے طے کرتے ہیں۔ آپ کے مستفیدین بالکل وہی حاصل کرتے ہیں جو آپ نے ارادہ کیا تھا۔"
+    },
+    advantages: {
+      eyebrow: "یہ کیوں کام کرتا ہے",
+      heading: "فوائد ہر قدم میں شامل ہیں",
+      card1: {
+        title: "کوئی وکیل نہیں۔ کوئی پروبیٹ نہیں۔ کوئی تاخیر نہیں۔",
+        body: "کینسٹر آپ کی ہدایات اسی لمحے عمل میں لاتا ہے جب ڈیڈ مین سوئچ فعال ہوتا ہے۔ آپ کی خواہشات اور آپ کے پیاروں کے درمیان کوئی ادارہ نہیں کھڑا ہوتا۔"
+      },
+      card2: {
+        title: "آپ کنٹرول میں رہتے ہیں۔",
+        body: "کسی بھی وقت مستفیدین تبدیل کریں، فیصد ایڈجسٹ کریں یا اپنا پیغام اپ ڈیٹ کریں۔ سب کچھ فوری طور پر، آن چین اپ ڈیٹ ہوتا ہے۔"
+      },
+      card3: {
+        title: "آپ کے سوتے ہوئے کام کرتا ہے۔",
+        body: "اگر زندگی جاری رہتی ہے، Sovereign Legacy خاموش رہتا ہے۔ اگر نہیں، تو سب کچھ بالکل ویسے آگے بڑھتا ہے جیسے آپ نے منصوبہ بنایا تھا۔"
+      },
+      card4: {
+        title: "عالمی رسائی۔",
+        body: "مستفیدین دنیا میں کہیں بھی ہو سکتے ہیں۔ Sovereign Legacy متعدد زبانیں بولتا ہے اور وضاحت کا خیال رکھتا ہے تاکہ آپ کو نہ کرنا پڑے۔"
+      },
+      card5: {
+        title: "آپ کا ڈیٹا آپ کا رہتا ہے۔",
+        body: "آپ کا والٹ Internet Computer پر ایک کینسٹر ہے، جو آپ کی Internet Identity سے محفوظ ہے۔ کوئی تیسرا فریق — بشمول خود Sovereign Legacy — اس کے مواد تک رسائی نہیں رکھتا۔"
+      }
+    },
+    faq: {
+      eyebrow: "سوالات",
+      heading: "اکثر پوچھے گئے سوالات",
+      q1: {
+        q: "Sovereign Legacy کن زبانوں کو سپورٹ کرتا ہے؟",
+        a: "ایپ 22 زبانوں کو سپورٹ کرتی ہے، بشمول دائیں سے بائیں زبانیں جیسے عربی، فارسی اور اردو، تاکہ دنیا میں کہیں بھی مستفیدین اپنی زبان میں ریلیز نوٹس سمجھ سکیں۔"
+      },
+      q2: {
+        q: "میرا والٹ کتنا محفوظ ہے؟",
+        a: "آپ کا والٹ Internet Computer پر ایک کینسٹر ہے، جو آپ کی Internet Identity سے محفوظ ہے۔ صرف آپ کا تصدیق شدہ پرنسپل اس کے مواد کو دیکھ یا منظم کر سکتا ہے۔"
+      },
+      q3: {
+        q: "کیا میں کبھی اپنا والٹ کھو سکتا ہوں؟",
+        a: "جب تک آپ اپنی Internet Identity تک رسائی رکھتے ہیں، آپ کا والٹ آپ کے کنٹرول میں رہتا ہے۔ اہم خطرہ آپ کی Internet Identity اسناد کھونا ہے، اسی لیے اپنے بازیابی طریقہ کا محفوظ بیک اپ رکھنا اہم ہے۔"
+      },
+      q4: {
+        q: "اثاثے مستفیدین میں کیسے تقسیم ہوتے ہیں؟",
+        a: "آپ ہر مستفید کو فیصد حصہ تفویض کرتے ہیں۔ حصے ریلیز سے پہلے کسی بھی وقت ایڈجسٹ کیے جا سکتے ہیں، اور تمام مستفیدین میں تقسیم شدہ کل کبھی بھی 100% سے تجاوز نہیں کرنا چاہیے۔"
+      },
+      q5: {
+        q: "میں نیٹ ورک غیر فعالیت ٹائمر کیسے ری سیٹ کروں؟",
+        a: "بس اپنی Internet Identity سے لاگ ان کریں۔ کوئی بھی تصدیق شدہ چیک ان غیر فعالیت کی گھڑی ری سیٹ کرتا ہے اور ڈیڈ مین سوئچ کو فعال رکھتا ہے۔"
+      },
+      q6: {
+        q: "میں مستفید کیسے شامل کروں؟",
+        a: "اپنے ڈیش بورڈ سے، مستفیدین پینل کھولیں اور نام، رابطہ معلومات اور تخصیص فیصد شامل کریں۔"
+      },
+      q7: {
+        q: "کیا میں سیٹ اپ کے بعد اپنے مستفیدین تبدیل کر سکتا ہوں؟",
+        a: "ہاں۔ مستفیدین، تخصیصات اور ذاتی پیغامات کسی بھی وقت اپ ڈیٹ کیے جا سکتے ہیں — تبدیلیاں فوری طور پر، آن چین اثر انداز ہوتی ہیں۔"
+      },
+      q8: {
+        q: "میرے مستفیدین کون دیکھ سکتا ہے؟",
+        a: "صرف آپ، جب تک آپ والٹ کے مالک کے طور پر تصدیق شدہ ہیں۔"
+      }
+    },
+    terms: {
+      eyebrow: "شرائط",
+      heading: "شرائط و ضوابط",
+      card1: {
+        title: "1. جائزہ",
+        body: "ICP Sovereign Legacy ایک وکندریقرت، مکمل طور پر آن چین وراثت اور ڈیڈ مین سوئچ پلیٹ فارم ہے جو Internet Computer Protocol (ICP) پر بنایا گیا ہے۔ اس سروس کے استعمال سے، آپ ان شرائط سے متفق ہوتے ہیں۔"
+      },
+      card2: {
+        title: "2. کوئی ذمہ داری نہیں",
+        body: "ڈویلپرز غلط ترتیب، کھوئی ہوئی Internet Identity اسناد، بلاک چین نیٹ ورک حالات یا کسی اور وجہ سے اثاثوں کے کسی نقصان کے ذمہ دار نہیں ہیں۔ اس سروس کو اپنے خطرے پر استعمال کریں۔"
+      },
+      card3: {
+        title: "3. خود مختار عملدرآمد",
+        body: "اثاثوں کی تقسیم آن چین سمارٹ کنٹریکٹ منطق کے ذریعے خود بخود عمل میں آتی ہے جب آپ کا ڈیڈ مین سوئچ فعال ہوتا ہے۔ فعال ہونے کے بعد کوئی انسانی مداخلت درکار یا ممکن نہیں۔"
+      },
+      card4: {
+        title: "4. رازداری",
+        body: "آپ کی مستفیدین کی فہرست آن چین محفوظ ہوتی ہے اور صرف آپ کے تصدیق شدہ Internet Identity پرنسپل کے لیے قابل رسائی ہوتی ہے۔ کوئی تیسرا فریق آپ کا ڈیٹا نہیں دیکھ سکتا۔"
+      },
+      card5: {
+        title: "5. فیس",
+        body: "یہ سروس ایپ میں بیان کردہ طریقے سے فراہم کی جاتی ہے۔ کسی مخصوص عمل پر لاگو ہونے والی کوئی بھی فیس اس عمل کی تصدیق سے پہلے ایپ میں واضح طور پر دکھائی جاتی ہے — کوئی پوشیدہ یا بار بار چارجز نہیں۔"
+      },
+      card6: {
+        title: "6. اہلیت",
+        body: "اس سروس کے استعمال کے لیے آپ کی عمر کم از کم 18 سال (یا آپ کے دائرہ اختیار میں بلوغت کی عمر) ہونی چاہیے اور ان شرائط میں داخل ہونے کی قانونی صلاحیت ہونی چاہیے۔"
+      },
+      card7: {
+        title: "7. کوئی وارنٹی نہیں",
+        body: 'یہ سروس "جیسا ہے" اور "جیسا دستیاب ہے" فراہم کی جاتی ہے، بغیر کسی قسم کی وارنٹی کے، خواہ وضاحتی ہو یا مضمر، بشمول بلاتعطل یا بے خطا آپریشن کی کوئی وارنٹی۔'
+      },
+      card8: {
+        title: "8. خطرے کا مفروضہ",
+        body: "کرپٹو کرنسی اور بلاک چین ٹیکنالوجی موروثی خطرات رکھتی ہیں، بشمول قیمت میں اتار چڑھاؤ، نیٹ ورک بھیڑ، سمارٹ کنٹریکٹ کمزوریاں اور بنیادی پروٹوکولز میں تبدیلیاں۔ اس سروس کے استعمال سے، آپ ان خطرات کو قبول کرتے ہیں۔"
+      },
+      card9: {
+        title: "9. خاتمہ",
+        body: "ان شرائط کی خلاف ورزی یا ایسے رویے کی وجہ سے اس سروس تک رسائی معطل یا ختم کی جا سکتی ہے جسے Sovereign Legacy اپنی صوابدید پر دوسرے صارفین یا خود سروس کے لیے نقصان دہ سمجھے۔"
+      },
+      card10: {
+        title: "10. ان شرائط میں ترمیم",
+        body: "یہ شرائط وقتاً فوقتاً اپ ڈیٹ ہو سکتی ہیں۔ مادی تبدیلیاں ایپ کے اندر پیش کی جائیں گی، اور ایسی تبدیلیوں کے بعد سروس کا مسلسل استعمال اپ ڈیٹ شدہ شرائط کی قبولیت کا باعث بنتا ہے۔"
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "ڈیش بورڈ",
+    title: "والٹ",
+    balance: "والٹ بیلنس",
+    assetsHeld: "{count} اثاثہ رکھا گیا",
+    noAssets: "ابھی کوئی اثاثہ نہیں رکھا گیا",
+    beneficiaries: "مستفیدین",
+    named: "نامزد",
+    sealed: "{count} مستفید مہر بند",
+    none: "ابھی کوئی مستفید نہیں",
+    allocation: "مستفیدین کی تخصیص",
+    allocationNone: "ابھی کوئی تخصیص نہیں۔ شروع کرنے کے لیے مستفید شامل کریں۔",
+    allocationAria: "مستفیدین کی تخصیص کے حصے",
+    switch: "سوئچ",
+    lastVerified: "آخری تصدیق · {time}",
+    notVerified: "ابھی تصدیق نہیں ہوئی"
+  },
+  beneficiaries: {
+    eyebrow: "مستفیدین",
+    title: "مستفیدین",
+    subtitle: "وہ لوگ اور مقاصد جن کے لیے آپ کی وراثت مہر بند ہے۔ تخصیص، ترتیب اور شرائط یہاں رہتی ہیں۔",
+    allocation: "تخصیص",
+    count: "{count} مستفید",
+    noAllocations: "ابھی کوئی تخصیص نہیں۔ شروع کرنے کے لیے مستفید شامل کریں۔",
+    allocationAria: "مستفیدین کی تخصیص کے حصے",
+    manage: "منظم کریں",
+    manageBody: "مستفید شامل کریں اور والٹ کا ان کا حصہ تفویض کریں۔ حصے کسی بھی وقت ترمیم یا منسوخ کیے جا سکتے ہیں۔",
+    loadError: "مستفیدین لوڈ نہیں ہو سکے۔ براہ کرم دوبارہ کوشش کریں۔",
+    emptyTitle: "ابھی کوئی مستفید نہیں",
+    emptyBody: "آپ کی وراثت غیر تفویض شدہ ہے۔ کسی کے لیے والٹ مہر بند کرنے کے لیے اپنا پہلا مستفید شامل کریں۔",
+    noWallet: "کوئی والٹ پتہ نہیں",
+    editAria: "{name} میں ترمیم کریں",
+    removeAria: "{name} کو ہٹائیں",
+    modal: {
+      editTitle: "مستفید میں ترمیم",
+      addTitle: "مستفید شامل کریں",
+      editDesc: "اس مستفید کا نام، حصہ یا والٹ پتہ اپ ڈیٹ کریں۔",
+      addDesc: "نئے مستفید کو نام اور تخصیص حصہ تفویض کریں۔"
+    },
+    namePlaceholder: "مثلاً Elena Marchetti",
+    sharePlaceholder: "مثلاً 40",
+    errors: {
+      nameRequired: "اس مستفید کے لیے نام درج کریں۔",
+      sharePositive: "تخصیص کا حصہ صفر سے زیادہ ہونا چاہیے۔",
+      invalidChecksum: "اس ICP اکاؤنٹ شناخت کنندہ کا چیک سم غلط ہے۔ پتہ دوبارہ چیک کریں۔",
+      invalidWallet: "ایک درست ICP والٹ پتہ درج کریں — 64 حروف کا اکاؤنٹ شناخت کنندہ یا ICP پرنسپل۔",
+      totalExceedsEdit: "اس سے کل تخصیص {total}% ہو جائے گی، جو 100% کی حد سے تجاوز کرے گی۔",
+      totalExceedsAdd: "کل تخصیص {total}% ہو گی، جو 100% کی حد سے تجاوز کرے گی۔",
+      saveFailed: "تبدیلیاں محفوظ نہیں ہو سکیں۔ براہ کرم دوبارہ کوشش کریں۔",
+      addFailed: "مستفید شامل نہیں ہو سکا۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  },
+  assets: {
+    eyebrow: "وراثت اور اثاثے",
+    title: "رکھے ہوئے اثاثے",
+    subtitle: "والٹ میں رکھی ہر چیز — بیلنس، ہولڈنگز اور وہ ہدایات جو انہیں چلاتی ہیں۔",
+    assetsHeld: "رکھے ہوئے اثاثے",
+    beneficiaries: "مستفیدین",
+    allocationStatus: "تخصیص کی حیثیت",
+    sealed: "مہر بند",
+    unallocated: "غیر تفویض شدہ",
+    beneficiaryFallback: "مستفید #{id}",
+    errorEyebrow: "والٹ ناقابل رسائی",
+    errorBody: "ہم رکھے ہوئے اثاثے نہیں پڑھ سکے۔ براہ کرم دوبارہ کوشش کریں۔",
+    emptyEyebrow: "کوئی رکھا ہوا اثاثہ نہیں",
+    emptyBody: "والٹ فی الحال کوئی کرپٹو اثاثہ نہیں رکھتا۔ اثاثے شامل ہونے کے بعد، ان کے بیلنس اور مستفیدین کی تخصیصات یہاں ظاہر ہوں گی۔",
+    allocationLabel: "مستفیدین کی تخصیص"
+  },
+  switch: {
+    eyebrow: "سوئچ",
+    title: "سوئچ",
+    subtitle: "واحد کنٹرول جو والٹ حوالے کرتا ہے۔ فعال، تصدیق شدہ اور جان بوجھ کر۔",
+    active: "فعال · ڈیڈ مین سوئچ",
+    standingDown: "اسٹینڈنگ ڈاؤن",
+    armed: "فعال",
+    disarmed: "غیر فعال",
+    checkIn: "میں ابھی بھی حاضر ہوں",
+    arm: "سوئچ فعال کریں",
+    disarm: "غیر فعال کریں",
+    cadence: "مدت · {duration}",
+    releaseIn: "{duration} میں ریلیز",
+    timelineAriaArmed: "ڈیڈ مین سوئچ ٹائم لائن، مدت کا {percent}% گزر گیا",
+    timelineAriaDisarmed: "ڈیڈ مین سوئچ ٹائم لائن، غیر فعال",
+    lastCheckIn: "آخری چیک ان",
+    armedAt: "فعال ہوا",
+    cadenceLabel: "مدت",
+    standingDownTitle: "اسٹینڈنگ ڈاؤن",
+    standingDownBody: "غیر فعال کرنے سے ڈیڈ مین سوئچ رک جاتا ہے۔ والٹ مہر بند رہتا ہے، لیکن چھوٹے ہوئے چیک ان پر یہ آپ کے مستفیدین کو مزید ریلیز نہیں ہوگا۔",
+    disarmTheSwitch: "سوئچ غیر فعال کریں",
+    armTitle: "سوئچ فعال کریں",
+    armBody: "منتخب کریں کہ والٹ آپ کے اگلے چیک ان کا کتنا انتظار کرے۔ اگر آپ اسے چھوڑ دیتے ہیں، والٹ آپ کے مستفیدین کو ریلیز ہو جاتا ہے۔",
+    cadenceError: "سوئچ فعال کرنے سے پہلے صفر سے زیادہ چیک ان مدت منتخب کریں۔",
+    errorEyebrow: "سوئچ ناقابل رسائی",
+    errorBody: "ہم سوئچ کی حالت نہیں پڑھ سکے۔ براہ کرم دوبارہ کوشش کریں۔",
+    cadence24h: "24 گھنٹے",
+    cadence7d: "7 دن",
+    cadence30d: "30 دن"
+  },
+  audit: {
+    eyebrow: "آڈٹ لاگز",
+    title: "آڈٹ لاگز",
+    ledger: "ایونٹ لیجر",
+    count: "{count} ایونٹ مہر بند",
+    timestamp: "ٹائم اسٹیمپ",
+    event: "ایونٹ",
+    description: "تفصیل",
+    tableAria: "والٹ آڈٹ لاگ",
+    errorEyebrow: "لیجر ناقابل رسائی",
+    errorBody: "ہم آڈٹ لیجر نہیں پڑھ سکے۔ براہ کرم دوبارہ کوشش کریں۔",
+    emptyTitle: "ابھی کوئی ایونٹ نہیں",
+    emptyBody: "والٹ کے خلاف کی جانے والی ہر کارروائی یہاں، ترتیب سے، وقوع پذیر ہوتے ہی مہر بند ہو جائے گی۔",
+    footer: "ہر اندراج لیجر پر مہر بند ہے۔ اندراجات میں ترمیم یا حذف نہیں کیا جا سکتا۔"
+  },
+  settings: {
+    eyebrow: "ترتیبات",
+    title: "والٹ کنفیگریشن",
+    subtitle: "وہ کنفیگریشن محفوظ رکھیں جو آپ کی وراثت چلاتی ہے — سوئچ کی فعال/غیر فعال حالت، اس کا چیک ان دورانیہ اور وہ مستفیدین جن کے لیے یہ مہر بند ہے۔",
+    switchTitle: "سوئچ",
+    switchDesc: "والٹ کو فعال یا غیر فعال کریں اور طے کریں کہ اسے کتنی بار تصدیق کرنی چاہیے۔",
+    beneficiariesTitle: "مستفیدین",
+    beneficiariesDesc: "ان لوگوں اور مقاصد میں ترمیم کریں جن کے لیے آپ کی وراثت مہر بند ہے۔",
+    cadence: "مدت · {value}",
+    daily: "روزانہ",
+    weekly: "ہفتہ وار",
+    monthly: "ماہانہ",
+    yearly: "سالانہ",
+    h24: "24 گھنٹے",
+    h7d: "7 دن",
+    h30d: "30 دن",
+    h365d: "365 دن",
+    emptyBeneficiaries: "ابھی کوئی مستفید کنفیگر نہیں",
+    editBeneficiary: "مستفید میں ترمیم",
+    editBeneficiaryDesc: "اس مستفید کا نام، تخصیص حصہ اور والٹ پتہ اپ ڈیٹ کریں۔",
+    removeBeneficiary: "مستفید ہٹائیں",
+    removeBeneficiaryDesc: "{name} کو والٹ سے ہٹائیں؟ یہ عمل واپس نہیں ہو سکتا۔",
+    toast: {
+      armed: "سوئچ فعال ہو گیا",
+      armedDesc: "چیک ان دورانیہ {cadence} پر سیٹ ہو گیا۔",
+      armError: "سوئچ فعال نہیں ہو سکا",
+      armErrorDesc: "والٹ فعال نہیں ہو سکا۔ براہ کرم دوبارہ کوشش کریں۔",
+      disarmed: "سوئچ غیر فعال ہو گیا",
+      disarmedDesc: "والٹ اب فعال نہیں ہے۔",
+      disarmError: "سوئچ غیر فعال نہیں ہو سکا",
+      disarmErrorDesc: "والٹ غیر فعال نہیں ہو سکا۔ براہ کرم دوبارہ کوشش کریں۔",
+      beneficiaryUpdated: "مستفید اپ ڈیٹ ہو گیا",
+      beneficiaryUpdatedDesc: "مستفید کی کنفیگریشن محفوظ ہو گئی۔",
+      updateError: "مستفید اپ ڈیٹ نہیں ہو سکا",
+      updateErrorDesc: "تبدیلیاں محفوظ نہیں ہوئیں۔ براہ کرم دوبارہ کوشش کریں۔",
+      beneficiaryRemoved: "مستفید ہٹا دیا گیا",
+      beneficiaryRemovedDesc: "مستفید والٹ سے ہٹا دیا گیا۔",
+      removeError: "مستفید نہیں ہٹایا جا سکا",
+      removeErrorDesc: "مستفید نہیں ہٹایا جا سکا۔ براہ کرم دوبارہ کوشش کریں۔"
+    }
+  }
+};
+const vi = {
+  meta: {
+    title: "Sovereign Legacy — Két Sắt",
+    description: "Sovereign Legacy — Két Sắt. Két sắt của bạn. Niêm phong cho đến khi không còn niêm phong."
+  },
+  common: {
+    cancel: "Hủy",
+    saveChanges: "Lưu thay đổi",
+    edit: "Chỉnh sửa",
+    remove: "Xóa",
+    name: "Tên",
+    optional: "Tùy chọn",
+    addBeneficiary: "Thêm người thụ hưởng",
+    allocationShare: "Tỷ lệ phân bổ (%)",
+    walletAddress: "Địa chỉ ví",
+    checkInCadence: "Chu kỳ điểm danh",
+    selectCadence: "Chọn chu kỳ",
+    armed: "Đã kích hoạt",
+    disarmed: "Đã hủy kích hoạt",
+    arming: "Đang kích hoạt…",
+    disarming: "Đang hủy kích hoạt…",
+    saving: "Đang lưu…",
+    removing: "Đang xóa…",
+    arm: "Kích hoạt",
+    disarm: "Hủy kích hoạt"
+  },
+  nav: {
+    dashboard: "Bảng điều khiển",
+    beneficiaries: "Người thụ hưởng",
+    legacyAssets: "Di sản & Tài sản",
+    theSwitch: "Công Tắc",
+    auditLogs: "Nhật ký Kiểm toán",
+    settings: "Cài đặt"
+  },
+  header: {
+    home: "Trang chủ Sovereign Legacy",
+    networkBadge: "Mạng · Danh tính",
+    mobileMenu: "Mở menu điều hướng",
+    mobilePrimary: "Điều hướng chính trên di động"
+  },
+  footer: {
+    copyright: "© {year}. Sovereign Legacy — Két Sắt. Bảo lưu mọi quyền.",
+    tagline: "Niêm phong cho đến khi không còn niêm phong"
+  },
+  loading: {
+    openingVault: "Đang mở két sắt…"
+  },
+  language: {
+    label: "Ngôn ngữ"
+  },
+  landing: {
+    eyebrow: "Thừa kế tự chủ",
+    headline1: "Kho lưu trữ của bạn.",
+    headline2: "Niêm phong cho đến khi không còn nữa.",
+    login: "Đăng nhập bằng Internet Identity",
+    subhead: "Một công tắc người chết kỹ thuật số dành cho tiền mã hóa, được xây dựng trực tiếp trên Internet Computer — không cần thủ tục thừa kế, không trì hoãn, không ai giám sát ngoài chính chuỗi khối.",
+    vaultDoorAlt: "Một cánh cửa kho tiền ngân hàng bằng đồng thau và thép đã phong hóa, đóng lại, với biểu tượng vòng lặp vô hạn của Internet Computer phát sáng mờ nhạt ở trung tâm.",
+    introduction: {
+      eyebrow: "Giới thiệu",
+      heading: "Công Tắc Tử Thần — Ra Đời Trong Kỷ Nguyên Hơi Nước",
+      p1: "Trong những thập niên cuối của thế kỷ mười chín, một loại máy móc mới đang định hình lại nền văn minh. Xe điện chạy len lỏi qua các thành phố đông đúc, và thang máy đưa hành khách lên những tòa nhà cao chưa từng thấy. Chúng là những kỳ quan — và chúng nguy hiểm.",
+      p2: "Vấn đề đơn giản và đáng sợ: điều gì xảy ra khi người điều khiển không còn điều khiển được nữa? Một tài xế xe điện có thể lên cơn đau tim khi đang lái. Một người vận hành thang máy có thể bất tỉnh giữa chuyến đi. Và cỗ máy, thờ ơ với số phận của người vận hành, cứ tiếp tục chạy — cho đến khi đâm vào thứ gì đó khiến nó dừng lại.",
+      p3: "Chính kỹ sư người Mỹ Frank J. Sprague, vào năm 1888, đã điện khí hóa các tuyến xe điện ở Richmond, Virginia — tuyến đường sắt điện đô thị thành công đầu tiên tại Hoa Kỳ. Sáng kiến của ông không dừng lại ở động cơ. Sprague hiểu rằng một phương tiện chở hành khách ở tốc độ cao cần có cách tự dừng nếu người vận hành mất khả năng điều khiển.",
+      p4: "Họ gọi nó là công tắc tử thần. Giữ tay cầm để tiếp tục di chuyển. Buông ra — dù vì mất tập trung, bệnh tật hay cái chết — và cỗ máy tự dừng lại. Cái tên không được chọn vì kịch tính. Nó được chọn vì sự chính xác. Công tắc được kích hoạt bởi sự vắng mặt của bàn tay sống.",
+      p5: "Ý tưởng lan truyền nhanh chóng. Tàu điện ngầm ở New York, London và Tokyo áp dụng nó. Các nhà máy điện hạt nhân tích hợp nó vào thanh điều khiển. Máy bay thương mại nhúng nó vào hệ thống lái tự động. Bất cứ nơi nào cỗ máy chở theo sinh mạng, công tắc tử thần đều theo sau — im lặng, kiên nhẫn, chờ đợi.",
+      h3a: "Công Tắc Tử Thần Hoạt Động Như Thế Nào Trong Thời Đại Này?",
+      p6: "Bạn đã làm việc chăm chỉ. Bạn đã tích lũy tài sản mã hóa — ICP, Bitcoin, Ethereum, stablecoin. Chúng nằm trong ví và canister, được bảo vệ bởi khóa riêng tư chỉ mình bạn sở hữu. Và như người tài xế nắm chặt tay cầm, chỉ có sự hiện diện sống động, tích cực của bạn trên mạng mới giữ cho mạch điện đóng.",
+      p7: "Đây là cách Sovereign Legacy áp dụng nguyên tắc tương tự. Bạn gửi tài sản vào một két sắt canister an toàn trên chuỗi. Bạn chỉ định một hoặc nhiều người thụ hưởng và đặt thời gian không hoạt động mạng. Chừng nào bạn còn đăng nhập định kỳ, công tắc vẫn đóng. Khoảnh khắc hoạt động đó dừng lại, Sovereign Legacy gửi cho bạn cảnh báo. Nếu bạn không phản hồi, giao dịch chuyển sẽ tự động thực hiện, chuyển tài sản của bạn đến những người thụ hưởng đã chọn mà không cần luật sư, tòa án hay chậm trễ.",
+      h3b: "Muốn Cá Nhân Hóa Di Nguyện Của Bạn?",
+      p8: "Nếu bạn muốn nhiều hơn một người nhận — vợ/chồng, con cái, một người bạn tin cậy, một tổ chức từ thiện — Sovereign Legacy cho phép bạn chia tài sản theo tỷ lệ phần trăm. Bạn đặt các phần. Người thụ hưởng của bạn nhận đúng những gì bạn dự định."
+    },
+    advantages: {
+      eyebrow: "Vì sao hiệu quả",
+      heading: "Lợi Ích Được Xây Dựng Vào Từng Bước",
+      card1: {
+        title: "Không luật sư. Không thủ tục. Không chậm trễ.",
+        body: "Canister thực thi chỉ dẫn của bạn ngay khi công tắc tử thần kích hoạt. Không tổ chức nào đứng giữa di nguyện của bạn và những người bạn yêu thương."
+      },
+      card2: {
+        title: "Bạn luôn nắm quyền kiểm soát.",
+        body: "Thay đổi người thụ hưởng, điều chỉnh tỷ lệ hoặc cập nhật thông điệp của bạn bất cứ lúc nào. Mọi thứ cập nhật tức thì, trên chuỗi."
+      },
+      card3: {
+        title: "Hoạt động khi bạn ngủ.",
+        body: "Nếu cuộc sống tiếp diễn, Sovereign Legacy giữ im lặng. Nếu không, mọi thứ tiến triển đúng như bạn đã hoạch định."
+      },
+      card4: {
+        title: "Tầm với toàn cầu.",
+        body: "Người thụ hưởng có thể ở bất kỳ đâu trên thế giới. Sovereign Legacy nói nhiều ngôn ngữ và lo phần giải thích để bạn không phải làm."
+      },
+      card5: {
+        title: "Dữ liệu của bạn vẫn là của bạn.",
+        body: "Két sắt của bạn là một canister trên Internet Computer, được bảo vệ bởi Internet Identity của bạn. Không bên thứ ba nào — kể cả chính Sovereign Legacy — có quyền truy cập nội dung của nó."
+      }
+    },
+    faq: {
+      eyebrow: "Câu hỏi",
+      heading: "Câu Hỏi Thường Gặp",
+      q1: {
+        q: "Sovereign Legacy hỗ trợ những ngôn ngữ nào?",
+        a: "Ứng dụng hỗ trợ 22 ngôn ngữ, bao gồm các ngôn ngữ từ phải sang trái như tiếng Ả Rập, tiếng Ba Tư và tiếng Urdu, để người thụ hưởng ở bất kỳ đâu trên thế giới có thể hiểu thông báo giải phóng bằng ngôn ngữ của họ."
+      },
+      q2: {
+        q: "Két sắt của tôi an toàn đến mức nào?",
+        a: "Két sắt của bạn là một canister trên Internet Computer, được bảo vệ bởi Internet Identity của bạn. Chỉ principal đã xác thực của bạn mới có thể xem hoặc quản lý nội dung của nó."
+      },
+      q3: {
+        q: "Tôi có thể mất két sắt của mình không?",
+        a: "Chừng nào bạn còn giữ quyền truy cập Internet Identity, két sắt của bạn vẫn nằm trong tầm kiểm soát. Rủi ro chính là mất thông tin xác thực Internet Identity, vì vậy việc giữ bản sao lưu an toàn cho phương thức khôi phục của bạn là điều quan trọng."
+      },
+      q4: {
+        q: "Tài sản được chia cho các người thụ hưởng như thế nào?",
+        a: "Bạn gán cho mỗi người thụ hưởng một phần trăm. Các phần có thể được điều chỉnh bất cứ lúc nào trước khi giải phóng, và tổng phân bổ cho tất cả người thụ hưởng không bao giờ được vượt quá 100%."
+      },
+      q5: {
+        q: "Làm thế nào để đặt lại bộ đếm thời gian không hoạt động mạng?",
+        a: "Chỉ cần đăng nhập bằng Internet Identity của bạn. Bất kỳ lần điểm danh đã xác thực nào cũng đặt lại đồng hồ không hoạt động và giữ công tắc tử thần ở trạng thái kích hoạt."
+      },
+      q6: {
+        q: "Làm thế nào để thêm người thụ hưởng?",
+        a: "Từ bảng điều khiển của bạn, mở bảng Người thụ hưởng và thêm tên, thông tin liên hệ và tỷ lệ phân bổ."
+      },
+      q7: {
+        q: "Tôi có thể thay đổi người thụ hưởng sau khi thiết lập không?",
+        a: "Có. Người thụ hưởng, phân bổ và thông điệp cá nhân đều có thể được cập nhật bất cứ lúc nào — các thay đổi có hiệu lực ngay lập tức, trên chuỗi."
+      },
+      q8: {
+        q: "Ai có thể nhìn thấy người thụ hưởng của tôi?",
+        a: "Chỉ mình bạn, khi đã xác thực với tư cách chủ sở hữu két sắt."
+      }
+    },
+    terms: {
+      eyebrow: "Điều khoản",
+      heading: "Điều Khoản & Điều Kiện",
+      card1: {
+        title: "1. Tổng quan",
+        body: "ICP Sovereign Legacy là một nền tảng thừa kế và công tắc tử thần phi tập trung, hoàn toàn trên chuỗi, được xây dựng trên Giao thức Internet Computer (ICP). Bằng việc sử dụng dịch vụ này, bạn đồng ý với các điều khoản này."
+      },
+      card2: {
+        title: "2. Không Chịu Trách Nhiệm",
+        body: "Các nhà phát triển không chịu trách nhiệm về bất kỳ tổn thất tài sản nào do cấu hình sai, mất thông tin xác thực Internet Identity, điều kiện mạng blockchain hoặc bất kỳ nguyên nhân nào khác. Sử dụng dịch vụ này với rủi ro của riêng bạn."
+      },
+      card3: {
+        title: "3. Thực Thi Tự Động",
+        body: "Việc phân phối tài sản được thực thi tự động bởi logic hợp đồng thông minh trên chuỗi khi công tắc tử thần của bạn kích hoạt. Không cần và không thể có sự can thiệp của con người sau khi kích hoạt."
+      },
+      card4: {
+        title: "4. Quyền Riêng Tư",
+        body: "Danh sách người thụ hưởng của bạn được lưu trữ trên chuỗi và chỉ principal Internet Identity đã xác thực của bạn mới có thể truy cập. Không bên thứ ba nào có thể xem dữ liệu của bạn."
+      },
+      card5: {
+        title: "5. Phí",
+        body: "Dịch vụ này được cung cấp như mô tả trong ứng dụng. Mọi khoản phí áp dụng cho một hành động cụ thể đều được hiển thị rõ ràng trong ứng dụng trước khi bạn xác nhận hành động đó — không có khoản phí ẩn hoặc định kỳ."
+      },
+      card6: {
+        title: "6. Điều Kiện Tham Gia",
+        body: "Bạn phải từ 18 tuổi trở lên (hoặc độ tuổi thành niên theo pháp luật nơi bạn cư trú) và có năng lực pháp lý để chấp nhận các điều khoản này khi sử dụng dịch vụ."
+      },
+      card7: {
+        title: "7. Không Bảo Hành",
+        body: "Dịch vụ này được cung cấp «nguyên trạng» và «theo tình trạng sẵn có», không có bất kỳ bảo hành nào, dù rõ ràng hay ngụ ý, bao gồm mọi bảo hành về hoạt động không gián đoạn hoặc không có lỗi."
+      },
+      card8: {
+        title: "8. Chấp Nhận Rủi Ro",
+        body: "Tiền mã hóa và công nghệ blockchain tiềm ẩn những rủi ro cố hữu, bao gồm biến động giá, tắc nghẽn mạng, lỗ hổng hợp đồng thông minh và thay đổi giao thức nền tảng. Bằng việc sử dụng dịch vụ này, bạn chấp nhận những rủi ro này."
+      },
+      card9: {
+        title: "9. Chấm Dứt",
+        body: "Quyền truy cập dịch vụ này có thể bị đình chỉ hoặc chấm dứt do vi phạm các điều khoản này hoặc do hành vi mà Sovereign Legacy xác định, theo quyết định của mình, là gây hại cho người dùng khác hoặc cho chính dịch vụ."
+      },
+      card10: {
+        title: "10. Sửa Đổi Các Điều Khoản Này",
+        body: "Các điều khoản này có thể được cập nhật theo thời gian. Các thay đổi quan trọng sẽ được trình bày trong ứng dụng, và việc tiếp tục sử dụng dịch vụ sau những thay đổi đó được coi là chấp nhận các điều khoản đã cập nhật."
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "Bảng điều khiển",
+    title: "Két Sắt",
+    balance: "Số Dư Két Sắt",
+    assetsHeld: "Đang giữ {count} tài sản",
+    noAssets: "Chưa có tài sản nào",
+    beneficiaries: "Người thụ hưởng",
+    named: "được chỉ định",
+    sealed: "{count} người thụ hưởng được niêm phong",
+    none: "Chưa có người thụ hưởng",
+    allocation: "Phân Bổ Người Thụ Hưởng",
+    allocationNone: "Chưa có phân bổ nào. Thêm người thụ hưởng để bắt đầu.",
+    allocationAria: "Phần phân bổ của người thụ hưởng",
+    switch: "Công Tắc",
+    lastVerified: "Xác minh lần cuối · {time}",
+    notVerified: "Chưa được xác minh"
+  },
+  beneficiaries: {
+    eyebrow: "Người thụ hưởng",
+    title: "Người thụ hưởng",
+    subtitle: "Những người và mục đích mà di sản của bạn được niêm phong. Phân bổ, thứ tự và điều kiện nằm ở đây.",
+    allocation: "Phân bổ",
+    count: "{count} người thụ hưởng",
+    noAllocations: "Chưa có phân bổ nào. Thêm người thụ hưởng để bắt đầu.",
+    allocationAria: "Phần phân bổ của người thụ hưởng",
+    manage: "Quản lý",
+    manageBody: "Thêm người thụ hưởng và gán phần của họ trong két sắt. Các phần có thể được chỉnh sửa hoặc thu hồi bất cứ lúc nào.",
+    loadError: "Không thể tải người thụ hưởng. Vui lòng thử lại.",
+    emptyTitle: "Chưa có người thụ hưởng",
+    emptyBody: "Di sản của bạn chưa được chỉ định. Thêm người thụ hưởng đầu tiên để niêm phong két sắt cho một người nào đó.",
+    noWallet: "Không có địa chỉ ví",
+    editAria: "Chỉnh sửa {name}",
+    removeAria: "Xóa {name}",
+    modal: {
+      editTitle: "Chỉnh sửa người thụ hưởng",
+      addTitle: "Thêm người thụ hưởng",
+      editDesc: "Cập nhật tên, phần hoặc địa chỉ ví của người thụ hưởng này.",
+      addDesc: "Gán tên và phần phân bổ cho một người thụ hưởng mới."
+    },
+    namePlaceholder: "vd: Elena Marchetti",
+    sharePlaceholder: "vd: 40",
+    errors: {
+      nameRequired: "Nhập tên cho người thụ hưởng này.",
+      sharePositive: "Phần phân bổ phải lớn hơn không.",
+      invalidChecksum: "Mã định danh tài khoản ICP này có checksum không hợp lệ. Kiểm tra lại địa chỉ.",
+      invalidWallet: "Nhập địa chỉ ví ICP hợp lệ — mã định danh tài khoản 64 ký tự hoặc principal ICP.",
+      totalExceedsEdit: "Điều này sẽ đưa tổng phân bổ lên {total}%, vượt quá giới hạn 100%.",
+      totalExceedsAdd: "Tổng phân bổ sẽ là {total}%, vượt quá giới hạn 100%.",
+      saveFailed: "Không thể lưu thay đổi. Vui lòng thử lại.",
+      addFailed: "Không thể thêm người thụ hưởng. Vui lòng thử lại."
+    }
+  },
+  assets: {
+    eyebrow: "Di sản & Tài sản",
+    title: "Tài Sản Đang Giữ",
+    subtitle: "Mọi thứ được giữ trong két sắt — số dư, tài sản nắm giữ và các chỉ dẫn quản lý chúng.",
+    assetsHeld: "Tài Sản Đang Giữ",
+    beneficiaries: "Người thụ hưởng",
+    allocationStatus: "Trạng Thái Phân Bổ",
+    sealed: "Đã niêm phong",
+    unallocated: "Chưa phân bổ",
+    beneficiaryFallback: "Người thụ hưởng #{id}",
+    errorEyebrow: "Két sắt không truy cập được",
+    errorBody: "Không thể đọc tài sản đang giữ. Vui lòng thử lại.",
+    emptyEyebrow: "Không có tài sản nào",
+    emptyBody: "Két sắt hiện không giữ tài sản mã hóa nào. Khi tài sản được thêm vào, số dư và phân bổ cho người thụ hưởng sẽ xuất hiện ở đây.",
+    allocationLabel: "Phân Bổ Người Thụ Hưởng"
+  },
+  switch: {
+    eyebrow: "Công Tắc",
+    title: "Công Tắc",
+    subtitle: "Điều khiển duy nhất trao két sắt. Được kích hoạt, xác minh và cân nhắc kỹ lưỡng.",
+    active: "Đang hoạt động · Công tắc tử thần",
+    standingDown: "Đứng yên",
+    armed: "ĐÃ KÍCH HOẠT",
+    disarmed: "ĐÃ HỦY KÍCH HOẠT",
+    checkIn: "Tôi vẫn ở đây",
+    arm: "Kích hoạt công tắc",
+    disarm: "Hủy kích hoạt",
+    cadence: "Chu kỳ · {duration}",
+    releaseIn: "Giải phóng sau {duration}",
+    timelineAriaArmed: "Dòng thời gian công tắc tử thần, {percent}% chu kỳ đã trôi qua",
+    timelineAriaDisarmed: "Dòng thời gian công tắc tử thần, đã hủy kích hoạt",
+    lastCheckIn: "Lần điểm danh cuối",
+    armedAt: "Kích hoạt lúc",
+    cadenceLabel: "Chu kỳ",
+    standingDownTitle: "Đứng yên",
+    standingDownBody: "Hủy kích hoạt sẽ dừng công tắc tử thần. Két sắt vẫn được niêm phong, nhưng sẽ không còn giải phóng cho người thụ hưởng khi bỏ lỡ một lần điểm danh.",
+    disarmTheSwitch: "Hủy kích hoạt công tắc",
+    armTitle: "Kích hoạt công tắc",
+    armBody: "Chọn khoảng thời gian két sắt chờ lần điểm danh tiếp theo của bạn. Nếu bạn bỏ lỡ, két sắt sẽ giải phóng cho người thụ hưởng của bạn.",
+    cadenceError: "Chọn chu kỳ điểm danh lớn hơn không trước khi kích hoạt công tắc.",
+    errorEyebrow: "Công tắc không truy cập được",
+    errorBody: "Không thể đọc trạng thái công tắc. Vui lòng thử lại.",
+    cadence24h: "24 giờ",
+    cadence7d: "7 ngày",
+    cadence30d: "30 ngày"
+  },
+  audit: {
+    eyebrow: "Nhật ký Kiểm toán",
+    title: "Nhật ký Kiểm toán",
+    ledger: "Sổ Cái Sự Kiện",
+    count: "{count} sự kiện được niêm phong",
+    timestamp: "Dấu thời gian",
+    event: "Sự kiện",
+    description: "Mô tả",
+    tableAria: "Nhật ký kiểm toán két sắt",
+    errorEyebrow: "Sổ cái không truy cập được",
+    errorBody: "Không thể đọc sổ cái kiểm toán. Vui lòng thử lại.",
+    emptyTitle: "Chưa có sự kiện nào",
+    emptyBody: "Mọi hành động thực hiện đối với két sắt sẽ được niêm phong ở đây, theo thứ tự, khi chúng xảy ra.",
+    footer: "Mọi mục đều được niêm phong trên sổ cái. Các mục không thể chỉnh sửa hoặc xóa."
+  },
+  settings: {
+    eyebrow: "Cài đặt",
+    title: "Cấu Hình Két Sắt",
+    subtitle: "Giữ gìn cấu hình quản lý di sản của bạn — trạng thái kích hoạt/hủy kích hoạt của Công Tắc, chu kỳ điểm danh và những người thụ hưởng mà nó được niêm phong.",
+    switchTitle: "Công Tắc",
+    switchDesc: "Kích hoạt hoặc hủy kích hoạt két sắt và đặt tần suất xác minh.",
+    beneficiariesTitle: "Người thụ hưởng",
+    beneficiariesDesc: "Chỉnh sửa những người và mục đích mà di sản của bạn được niêm phong.",
+    cadence: "Chu kỳ · {value}",
+    daily: "Hàng ngày",
+    weekly: "Hàng tuần",
+    monthly: "Hàng tháng",
+    yearly: "Hàng năm",
+    h24: "24 giờ",
+    h7d: "7 ngày",
+    h30d: "30 ngày",
+    h365d: "365 ngày",
+    emptyBeneficiaries: "Chưa có người thụ hưởng nào được cấu hình",
+    editBeneficiary: "Chỉnh sửa người thụ hưởng",
+    editBeneficiaryDesc: "Cập nhật tên, phần phân bổ và địa chỉ ví của người thụ hưởng này.",
+    removeBeneficiary: "Xóa người thụ hưởng",
+    removeBeneficiaryDesc: "Xóa {name} khỏi két sắt? Hành động này không thể hoàn tác.",
+    toast: {
+      armed: "Công Tắc đã được kích hoạt",
+      armedDesc: "Chu kỳ điểm danh được đặt thành {cadence}.",
+      armError: "Không thể kích hoạt Công Tắc",
+      armErrorDesc: "Két sắt không thể được kích hoạt. Vui lòng thử lại.",
+      disarmed: "Công Tắc đã được hủy kích hoạt",
+      disarmedDesc: "Két sắt không còn được kích hoạt.",
+      disarmError: "Không thể hủy kích hoạt Công Tắc",
+      disarmErrorDesc: "Két sắt không thể được hủy kích hoạt. Vui lòng thử lại.",
+      beneficiaryUpdated: "Đã cập nhật người thụ hưởng",
+      beneficiaryUpdatedDesc: "Cấu hình người thụ hưởng đã được lưu.",
+      updateError: "Không thể cập nhật người thụ hưởng",
+      updateErrorDesc: "Các thay đổi chưa được lưu. Vui lòng thử lại.",
+      beneficiaryRemoved: "Đã xóa người thụ hưởng",
+      beneficiaryRemovedDesc: "Người thụ hưởng đã được xóa khỏi két sắt.",
+      removeError: "Không thể xóa người thụ hưởng",
+      removeErrorDesc: "Người thụ hưởng không thể bị xóa. Vui lòng thử lại."
+    }
+  }
+};
+const zh = {
+  meta: {
+    title: "Sovereign Legacy — 金库",
+    description: "Sovereign Legacy — 金库。您的金库。在解封之前，始终密封。"
+  },
+  common: {
+    cancel: "取消",
+    saveChanges: "保存更改",
+    edit: "编辑",
+    remove: "删除",
+    name: "姓名",
+    optional: "可选",
+    addBeneficiary: "添加受益人",
+    allocationShare: "分配比例（%）",
+    walletAddress: "钱包地址",
+    checkInCadence: "签到频率",
+    selectCadence: "选择频率",
+    armed: "已启动",
+    disarmed: "已解除",
+    arming: "启动中…",
+    disarming: "解除中…",
+    saving: "保存中…",
+    removing: "删除中…",
+    arm: "启动",
+    disarm: "解除"
+  },
+  nav: {
+    dashboard: "仪表盘",
+    beneficiaries: "受益人",
+    legacyAssets: "遗产与资产",
+    theSwitch: "开关",
+    auditLogs: "审计日志",
+    settings: "设置"
+  },
+  header: {
+    home: "Sovereign Legacy 首页",
+    networkBadge: "网络 · 身份",
+    mobileMenu: "打开导航菜单",
+    mobilePrimary: "移动端主导航"
+  },
+  footer: {
+    copyright: "© {year}。Sovereign Legacy — 金库。保留所有权利。",
+    tagline: "在解封之前，始终密封"
+  },
+  loading: {
+    openingVault: "正在打开金库…"
+  },
+  language: {
+    label: "语言"
+  },
+  landing: {
+    eyebrow: "自主主权继承",
+    headline1: "你的金库。",
+    headline2: "封存，直至解封。",
+    login: "使用 Internet Identity 登录",
+    subhead: "基于 Internet Computer 原生构建的数字化死亡开关，专为加密资产设计 — 无需遗嘱认证，没有延迟，除链本身外无人监视。",
+    vaultDoorAlt: "一扇风化磨损的黄铜和钢制银行金库门，紧闭着，中央的 Internet Computer 无限循环徽标发出微弱的光芒。",
+    introduction: {
+      eyebrow: "引言",
+      heading: "死人开关——诞生于蒸汽时代",
+      p1: "在十九世纪最后几十年，一种新型机器正在重塑文明。电动有轨电车穿梭于拥挤的城市，电梯将乘客送往空前高度的建筑。它们是奇迹——也是危险。",
+      p2: "问题简单而可怕：当掌控者不再掌控时，会发生什么？电车司机可能在驾驶中突发心脏病。电梯操作员可能在途中失去意识。而机器对操作员的命运漠不关心，只会继续运行——直到撞上某个东西停下来。",
+      p3: "1888年，美国工程师弗兰克·J·斯普拉格为弗吉尼亚州里士满的电车线路实现了电气化——这是美国第一条成功的电动城市铁路。他的创新不止于电机。斯普拉格明白，高速载客的车辆必须在操作员丧失能力时能够自行停止。",
+      p4: "他们称之为死人开关。握住手柄，继续前进。松开它——无论是因分心、疾病还是死亡——机器便会自行停止。这个名字不是为了戏剧性，而是为了精确。开关因活人之手的缺席而被触发。",
+      p5: "这个想法迅速传播开来。纽约、伦敦和东京的地铁采用了它。核电站将其融入控制棒。商用飞机将其嵌入自动驾驶系统。任何承载生命的机器，死人开关都如影随形——沉默、耐心、等待。",
+      h3a: "在当今时代，死人开关如何运作？",
+      p6: "您辛勤工作，积累了加密资产——ICP、比特币、以太坊、稳定币。它们存放在钱包和容器中，由只有您拥有的私钥保护。就像紧握手柄的电车司机一样，只有您在网络上的鲜活存在才能保持电路闭合。",
+      p7: "Sovereign Legacy 正是应用同样的原理。您将资产存入安全的链上容器金库，指定一名或多名受益人，并设置网络不活动期限。只要您定期登录，开关就保持闭合。一旦活动停止，Sovereign Legacy 会向您发送警报。如果您不回应，转账将自动执行，将您的资产转移给您选择的受益人——无需律师、法院或延迟。",
+      h3b: "想要个性化您的意愿？",
+      p8: "如果您希望有多个接收人——配偶、子女、信任的朋友、慈善事业——Sovereign Legacy 允许您按百分比分割资产。您设定份额。您的受益人将收到您所期望的一切。"
+    },
+    advantages: {
+      eyebrow: "为什么有效",
+      heading: "优势融入每一步",
+      card1: {
+        title: "无需律师。无需遗嘱认证。无需延迟。",
+        body: "死人开关触发的那一刻，容器便执行您的指示。没有任何机构挡在您的意愿与您所爱之人之间。"
+      },
+      card2: {
+        title: "您始终掌控。",
+        body: "随时更改受益人、调整百分比或更新您的留言。一切都在链上即时更新。"
+      },
+      card3: {
+        title: "在您沉睡时依然运作。",
+        body: "如果生活继续，Sovereign Legacy 保持安静。如果不再继续，一切都会按照您的计划推进。"
+      },
+      card4: {
+        title: "全球覆盖。",
+        body: "受益人可以在世界任何地方。Sovereign Legacy 支持多种语言并负责解释，您无需操心。"
+      },
+      card5: {
+        title: "您的数据始终属于您。",
+        body: "您的金库是 Internet Computer 上的一个容器，由您的 Internet Identity 保护。任何第三方——包括 Sovereign Legacy 本身——都无法访问其内容。"
+      }
+    },
+    faq: {
+      eyebrow: "问题",
+      heading: "常见问题",
+      q1: {
+        q: "Sovereign Legacy 支持哪些语言？",
+        a: "该应用支持22种语言，包括阿拉伯语、波斯语和乌尔都语等从右到左的语言，让世界各地的受益人都能用自己的语言理解释放通知。"
+      },
+      q2: {
+        q: "我的金库有多安全？",
+        a: "您的金库是 Internet Computer 上的一个容器，由您的 Internet Identity 保护。只有您经过身份验证的主体才能查看或管理其内容。"
+      },
+      q3: {
+        q: "我会失去我的金库吗？",
+        a: "只要您保留对 Internet Identity 的访问权限，您的金库就始终在您的掌控之下。主要风险是丢失 Internet Identity 凭据，因此妥善备份您的恢复方法至关重要。"
+      },
+      q4: {
+        q: "资产如何在受益人之间分配？",
+        a: "您为每位受益人分配一个百分比份额。份额可以在释放前随时调整，所有受益人的分配总额绝不能超过100%。"
+      },
+      q5: {
+        q: "如何重置网络不活动计时器？",
+        a: "只需使用 Internet Identity 登录。任何经过身份验证的签到都会重置不活动时钟，并保持死人开关处于启动状态。"
+      },
+      q6: {
+        q: "如何添加受益人？",
+        a: "从您的仪表盘打开受益人面板，添加姓名、联系信息和分配百分比。"
+      },
+      q7: {
+        q: "设置完成后可以更改受益人吗？",
+        a: "可以。受益人、分配和个人留言都可以随时更新——更改立即在链上生效。"
+      },
+      q8: {
+        q: "谁能看到我的受益人？",
+        a: "只有您，在作为金库所有者通过身份验证时。"
+      }
+    },
+    terms: {
+      eyebrow: "条款",
+      heading: "条款与条件",
+      card1: {
+        title: "1. 概述",
+        body: "ICP Sovereign Legacy 是一个去中心化、完全链上的继承与死人开关平台，构建于 Internet Computer 协议（ICP）之上。使用本服务即表示您同意这些条款。"
+      },
+      card2: {
+        title: "2. 不承担责任",
+        body: "开发者不对因配置错误、Internet Identity 凭据丢失、区块链网络状况或任何其他原因造成的资产损失承担责任。使用本服务风险自负。"
+      },
+      card3: {
+        title: "3. 自主执行",
+        body: "当您的死人开关触发时，资产分配由链上智能合约逻辑自动执行。一旦触发，无需也不可能进行人工干预。"
+      },
+      card4: {
+        title: "4. 隐私",
+        body: "您的受益人列表存储在链上，仅您的经过身份验证的 Internet Identity 主体可以访问。任何第三方都无法查看您的数据。"
+      },
+      card5: {
+        title: "5. 费用",
+        body: "本服务按应用内所述提供。适用于特定操作的任何费用都会在您确认该操作前在应用内清楚显示——没有隐藏或经常性收费。"
+      },
+      card6: {
+        title: "6. 资格",
+        body: "您必须年满18周岁（或达到您所在司法辖区的成年年龄），并具有签订这些条款的法律能力，才能使用本服务。"
+      },
+      card7: {
+        title: "7. 不提供担保",
+        body: "本服务按“现状”和“可用状态”提供，不作任何明示或暗示的担保，包括任何不间断或无错误运行的担保。"
+      },
+      card8: {
+        title: "8. 风险承担",
+        body: "加密货币和区块链技术具有固有风险，包括价格波动、网络拥堵、智能合约漏洞以及底层协议的变更。使用本服务即表示您接受这些风险。"
+      },
+      card9: {
+        title: "9. 终止",
+        body: "如果违反这些条款，或出现 Sovereign Legacy 自行认定对其他用户或服务本身有害的行为，本服务的访问权限可能会被暂停或终止。"
+      },
+      card10: {
+        title: "10. 条款修改",
+        body: "这些条款可能不时更新。重大变更将在应用内呈现，在此类变更后继续使用本服务即构成对更新后条款的接受。"
+      }
+    }
+  },
+  dashboard: {
+    eyebrow: "仪表盘",
+    title: "金库",
+    balance: "金库余额",
+    assetsHeld: "持有 {count} 项资产",
+    noAssets: "尚未持有资产",
+    beneficiaries: "受益人",
+    named: "名",
+    sealed: "已密封 {count} 名受益人",
+    none: "尚无受益人",
+    allocation: "受益人分配",
+    allocationNone: "尚无分配。添加受益人即可开始。",
+    allocationAria: "受益人分配份额",
+    switch: "开关",
+    lastVerified: "上次验证 · {time}",
+    notVerified: "尚未验证"
+  },
+  beneficiaries: {
+    eyebrow: "受益人",
+    title: "受益人",
+    subtitle: "您的遗产为之密封的人与事业。分配、顺序和条件都在这里。",
+    allocation: "分配",
+    count: "{count} 名受益人",
+    noAllocations: "尚无分配。添加受益人即可开始。",
+    allocationAria: "受益人分配份额",
+    manage: "管理",
+    manageBody: "添加受益人并分配其金库份额。份额可随时编辑或撤销。",
+    loadError: "无法加载受益人。请重试。",
+    emptyTitle: "尚无受益人",
+    emptyBody: "您的遗产尚未分配。添加第一位受益人，为某人密封金库。",
+    noWallet: "无钱包地址",
+    editAria: "编辑 {name}",
+    removeAria: "删除 {name}",
+    modal: {
+      editTitle: "编辑受益人",
+      addTitle: "添加受益人",
+      editDesc: "更新此受益人的姓名、份额或钱包地址。",
+      addDesc: "为新受益人分配姓名和分配份额。"
+    },
+    namePlaceholder: "例如：Elena Marchetti",
+    sharePlaceholder: "例如：40",
+    errors: {
+      nameRequired: "请输入此受益人的姓名。",
+      sharePositive: "分配份额必须大于零。",
+      invalidChecksum: "此 ICP 账户标识符的校验和不正确。请检查地址。",
+      invalidWallet: "请输入有效的 ICP 钱包地址——64 字符的账户标识符或 ICP 主体。",
+      totalExceedsEdit: "这将使总分配达到 {total}%，超过 100% 的上限。",
+      totalExceedsAdd: "总分配将为 {total}%，超过 100% 的上限。",
+      saveFailed: "无法保存更改。请重试。",
+      addFailed: "无法添加受益人。请重试。"
+    }
+  },
+  assets: {
+    eyebrow: "遗产与资产",
+    title: "持有资产",
+    subtitle: "金库中持有的一切——余额、持仓以及管理它们的指示。",
+    assetsHeld: "持有资产",
+    beneficiaries: "受益人",
+    allocationStatus: "分配状态",
+    sealed: "已密封",
+    unallocated: "未分配",
+    beneficiaryFallback: "受益人 #{id}",
+    errorEyebrow: "金库无法访问",
+    errorBody: "无法读取持有资产。请重试。",
+    emptyEyebrow: "未持有资产",
+    emptyBody: "金库目前不持有加密资产。添加资产后，其余额和受益人分配将显示在这里。",
+    allocationLabel: "受益人分配"
+  },
+  switch: {
+    eyebrow: "开关",
+    title: "开关",
+    subtitle: "交出金库的唯一控制。启动、验证、深思熟虑。",
+    active: "运行中 · 死人开关",
+    standingDown: "待命",
+    armed: "已启动",
+    disarmed: "已解除",
+    checkIn: "我还在",
+    arm: "启动开关",
+    disarm: "解除",
+    cadence: "频率 · {duration}",
+    releaseIn: "{duration} 后释放",
+    timelineAriaArmed: "死人开关时间线，频率已过 {percent}%",
+    timelineAriaDisarmed: "死人开关时间线，已解除",
+    lastCheckIn: "上次签到",
+    armedAt: "启动时间",
+    cadenceLabel: "频率",
+    standingDownTitle: "待命",
+    standingDownBody: "解除将停止死人开关。金库保持密封，但错过签到时不再向您的受益人释放。",
+    disarmTheSwitch: "解除开关",
+    armTitle: "启动开关",
+    armBody: "选择金库等待您下次签到的时间。如果错过，金库将向您的受益人释放。",
+    cadenceError: "启动开关前，请选择大于零的签到频率。",
+    errorEyebrow: "开关无法访问",
+    errorBody: "无法读取开关状态。请重试。",
+    cadence24h: "24 小时",
+    cadence7d: "7 天",
+    cadence30d: "30 天"
+  },
+  audit: {
+    eyebrow: "审计日志",
+    title: "审计日志",
+    ledger: "事件账本",
+    count: "已密封 {count} 个事件",
+    timestamp: "时间戳",
+    event: "事件",
+    description: "描述",
+    tableAria: "金库审计日志",
+    errorEyebrow: "账本无法访问",
+    errorBody: "无法读取审计账本。请重试。",
+    emptyTitle: "尚无事件",
+    emptyBody: "对金库执行的每一项操作都将按发生顺序密封在这里。",
+    footer: "每个条目都已密封在账本中。条目无法编辑或删除。"
+  },
+  settings: {
+    eyebrow: "设置",
+    title: "金库配置",
+    subtitle: "保留管理您遗产的配置——开关的启动/解除状态、签到频率以及为之密封的受益人。",
+    switchTitle: "开关",
+    switchDesc: "启动或解除金库，并设置其验证频率。",
+    beneficiariesTitle: "受益人",
+    beneficiariesDesc: "编辑您的遗产为之密封的人与事业。",
+    cadence: "频率 · {value}",
+    daily: "每日",
+    weekly: "每周",
+    monthly: "每月",
+    yearly: "每年",
+    h24: "24 小时",
+    h7d: "7 天",
+    h30d: "30 天",
+    h365d: "365 天",
+    emptyBeneficiaries: "尚未配置受益人",
+    editBeneficiary: "编辑受益人",
+    editBeneficiaryDesc: "更新此受益人的姓名、分配份额和钱包地址。",
+    removeBeneficiary: "删除受益人",
+    removeBeneficiaryDesc: "从金库中删除 {name}？此操作无法撤销。",
+    toast: {
+      armed: "开关已启动",
+      armedDesc: "签到频率已设置为 {cadence}。",
+      armError: "无法启动开关",
+      armErrorDesc: "金库无法启动。请重试。",
+      disarmed: "开关已解除",
+      disarmedDesc: "金库不再处于启动状态。",
+      disarmError: "无法解除开关",
+      disarmErrorDesc: "金库无法解除。请重试。",
+      beneficiaryUpdated: "受益人已更新",
+      beneficiaryUpdatedDesc: "受益人配置已保存。",
+      updateError: "无法更新受益人",
+      updateErrorDesc: "更改未保存。请重试。",
+      beneficiaryRemoved: "受益人已删除",
+      beneficiaryRemovedDesc: "受益人已从金库中删除。",
+      removeError: "无法删除受益人",
+      removeErrorDesc: "受益人无法删除。请重试。"
+    }
+  }
+};
+const DICTIONARIES = {
+  en,
+  es,
+  fr,
+  de,
+  pt,
+  ja,
+  zh,
+  hi,
+  vi,
+  ko,
+  id,
+  fil,
+  tr,
+  uk,
+  pl,
+  it,
+  ar,
+  th,
+  bg,
+  sw,
+  fa,
+  ur
+};
+function mergeTranslations(base, partial) {
+  const result = { ...base };
+  for (const key of Object.keys(partial)) {
+    const value = partial[key];
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      result[key] = mergeTranslations(
+        base[key],
+        value
+      );
+    } else if (typeof value === "string") {
+      result[key] = value;
+    }
+  }
+  return result;
+}
+function resolvePath$1(dict, path) {
+  const parts = path.split(".");
+  let current = dict;
+  for (const part of parts) {
+    if (current == null || typeof current !== "object") return path;
+    current = current[part];
+  }
+  return typeof current === "string" ? current : path;
+}
+function interpolate(template, params) {
+  if (!params) return template;
+  return template.replace(/\{(\w+)\}/g, (match, key) => {
+    const value = params[key];
+    return value === void 0 ? match : String(value);
+  });
+}
+function t(key, params) {
+  return interpolate(resolvePath$1(en, key), params);
+}
+const DEFAULT_CONTEXT = {
+  language: LANGUAGES[0],
+  setLanguage: (language) => {
+    setStoredLanguage(language);
+    applyLanguageDirection(language);
+  },
+  dir: "ltr",
+  t,
+  formatNumber: (value, options) => new Intl.NumberFormat("en", options).format(value),
+  formatDate: (date, options) => new Intl.DateTimeFormat("en", options).format(date),
+  formatPercent: (value, options) => new Intl.NumberFormat("en", { style: "percent", ...options }).format(value)
+};
+const I18nContext = reactExports.createContext(DEFAULT_CONTEXT);
+function applyDocumentMeta(dict) {
+  if (typeof document === "undefined") return;
+  document.title = dict.meta.title;
+  const meta = document.querySelector(
+    'meta[name="description"]'
+  );
+  if (meta) meta.content = dict.meta.description;
+}
+function I18nProvider({ children }) {
+  const [language, setLanguageState] = reactExports.useState(
+    () => getStoredLanguage()
+  );
+  const dict = reactExports.useMemo(
+    () => mergeTranslations(en, DICTIONARIES[language.code] ?? {}),
+    [language]
+  );
+  const setLanguage = reactExports.useCallback((next) => {
+    setLanguageState(next);
+    setStoredLanguage(next);
+    applyLanguageDirection(next);
+  }, []);
+  reactExports.useEffect(() => {
+    applyLanguageDirection(language);
+    applyDocumentMeta(dict);
+  }, [language, dict]);
+  const value = reactExports.useMemo(
+    () => ({
+      language,
+      setLanguage,
+      dir: language.dir,
+      t: (key, params) => interpolate(resolvePath$1(dict, key), params),
+      formatNumber: (value2, options) => new Intl.NumberFormat(language.code, options).format(value2),
+      formatDate: (date, options) => new Intl.DateTimeFormat(language.code, options).format(date),
+      formatPercent: (value2, options) => new Intl.NumberFormat(language.code, {
+        style: "percent",
+        ...options
+      }).format(value2)
+    }),
+    [language, setLanguage, dict]
+  );
+  return reactExports.createElement(I18nContext.Provider, { value }, children);
+}
+function useTranslation() {
+  return reactExports.useContext(I18nContext);
+}
+function Footer() {
+  const { t: t2 } = useTranslation();
+  const year = (/* @__PURE__ */ new Date()).getFullYear();
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("footer", { "data-ocid": "footer", className: "border-t border-border bg-surface", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-6 py-6 font-mono text-xs text-muted-foreground md:flex-row lg:px-8", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { "data-ocid": "footer.copyright", children: t2("footer.copyright", { year }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-[0.6875rem] uppercase tracking-[0.18em]", children: t2("footer.tagline") })
+  ] }) });
 }
 /**
  * @license lucide-react v0.511.0 - ISC
@@ -33862,17 +41257,13 @@ const __iconNode = [
 ];
 const X = createLucideIcon("x", __iconNode);
 function LanguageSwitcher() {
-  const [language, setLanguage] = reactExports.useState(() => getStoredLanguage());
-  reactExports.useEffect(() => {
-    applyLanguageDirection(language);
-  }, [language]);
+  const { language, setLanguage, t: t2 } = useTranslation();
   const handleChange = (event) => {
     const next = LANGUAGES.find((lang) => lang.code === event.target.value) ?? LANGUAGES[0];
     setLanguage(next);
-    setStoredLanguage(next);
   };
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "language-switcher", className: "sr-only", children: "Language" }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("label", { htmlFor: "language-switcher", className: "sr-only", children: t2("language.label") }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(
       "select",
       {
@@ -33894,16 +41285,16 @@ function LanguageSwitcher() {
   ] });
 }
 function r(e) {
-  var t, f2, n = "";
+  var t2, f2, n = "";
   if ("string" == typeof e || "number" == typeof e) n += e;
   else if ("object" == typeof e) if (Array.isArray(e)) {
     var o = e.length;
-    for (t = 0; t < o; t++) e[t] && (f2 = r(e[t])) && (n && (n += " "), n += f2);
+    for (t2 = 0; t2 < o; t2++) e[t2] && (f2 = r(e[t2])) && (n && (n += " "), n += f2);
   } else for (f2 in e) e[f2] && (n && (n += " "), n += f2);
   return n;
 }
 function clsx() {
-  for (var e, t, f2 = 0, n = "", o = arguments.length; f2 < o; f2++) (e = arguments[f2]) && (t = r(e)) && (n && (n += " "), n += t);
+  for (var e, t2, f2 = 0, n = "", o = arguments.length; f2 < o; f2++) (e = arguments[f2]) && (t2 = r(e)) && (n && (n += " "), n += t2);
   return n;
 }
 const CLASS_PART_SEPARATOR = "-";
@@ -39055,8 +46446,8 @@ class RouterCore {
         parseCache: this.parsePathnameCache
       });
     };
-    this.cancelMatch = (id) => {
-      const match = this.getMatch(id);
+    this.cancelMatch = (id2) => {
+      const match = this.getMatch(id2);
       if (!match) return;
       match.abortController.abort();
       clearTimeout(match._nonReactive.pendingTimeout);
@@ -39507,15 +46898,15 @@ class RouterCore {
         fn();
       }
     };
-    this.updateMatch = (id, updater) => {
+    this.updateMatch = (id2, updater) => {
       var _a2;
-      const matchesKey = ((_a2 = this.state.pendingMatches) == null ? void 0 : _a2.some((d2) => d2.id === id)) ? "pendingMatches" : this.state.matches.some((d2) => d2.id === id) ? "matches" : this.state.cachedMatches.some((d2) => d2.id === id) ? "cachedMatches" : "";
+      const matchesKey = ((_a2 = this.state.pendingMatches) == null ? void 0 : _a2.some((d2) => d2.id === id2)) ? "pendingMatches" : this.state.matches.some((d2) => d2.id === id2) ? "matches" : this.state.cachedMatches.some((d2) => d2.id === id2) ? "cachedMatches" : "";
       if (matchesKey) {
         this.__store.setState((s) => {
           var _a22;
           return {
             ...s,
-            [matchesKey]: (_a22 = s[matchesKey]) == null ? void 0 : _a22.map((d2) => d2.id === id ? updater(d2) : d2)
+            [matchesKey]: (_a22 = s[matchesKey]) == null ? void 0 : _a22.map((d2) => d2.id === id2 ? updater(d2) : d2)
           };
         });
       }
@@ -39626,11 +47017,11 @@ class RouterCore {
           matches,
           location: next,
           preload: true,
-          updateMatch: (id, updater) => {
-            if (activeMatchIds.has(id)) {
-              matches = matches.map((d2) => d2.id === id ? updater(d2) : d2);
+          updateMatch: (id2, updater) => {
+            if (activeMatchIds.has(id2)) {
+              matches = matches.map((d2) => d2.id === id2 ? updater(d2) : d2);
             } else {
-              this.updateMatch(id, updater);
+              this.updateMatch(id2, updater);
             }
           }
         });
@@ -40119,19 +47510,19 @@ class BaseRoute {
         path = trimPathLeft(path);
       }
       const customId = (options2 == null ? void 0 : options2.id) || path;
-      let id = isRoot ? rootRouteId : joinPaths([
+      let id2 = isRoot ? rootRouteId : joinPaths([
         this.parentRoute.id === rootRouteId ? "" : this.parentRoute.id,
         customId
       ]);
       if (path === rootRouteId) {
         path = "/";
       }
-      if (id !== rootRouteId) {
-        id = joinPaths(["/", id]);
+      if (id2 !== rootRouteId) {
+        id2 = joinPaths(["/", id2]);
       }
-      const fullPath = id === rootRouteId ? "/" : joinPaths([this.parentRoute.fullPath, path]);
+      const fullPath = id2 === rootRouteId ? "/" : joinPaths([this.parentRoute.fullPath, path]);
       this._path = path;
-      this._id = id;
+      this._id = id2;
       this._fullPath = fullPath;
       this._to = fullPath;
     };
@@ -40285,10 +47676,10 @@ function ErrorComponent({ error }) {
   ] });
 }
 function ClientOnly({ children, fallback = null }) {
-  return useHydrated() ? /* @__PURE__ */ jsxRuntimeExports.jsx(React2.Fragment, { children }) : /* @__PURE__ */ jsxRuntimeExports.jsx(React2.Fragment, { children: fallback });
+  return useHydrated() ? /* @__PURE__ */ jsxRuntimeExports.jsx(React$4.Fragment, { children }) : /* @__PURE__ */ jsxRuntimeExports.jsx(React$4.Fragment, { children: fallback });
 }
 function useHydrated() {
-  return React2.useSyncExternalStore(
+  return React$4.useSyncExternalStore(
     subscribe,
     () => true,
     () => false
@@ -40850,19 +48241,19 @@ function useLinkProps(options, forwardedRef) {
       if (timeoutMap.has(eventTarget)) {
         return;
       }
-      const id = setTimeout(() => {
+      const id2 = setTimeout(() => {
         timeoutMap.delete(eventTarget);
         doPreload();
       }, preloadDelay);
-      timeoutMap.set(eventTarget, id);
+      timeoutMap.set(eventTarget, id2);
     }
   };
   const handleLeave = (e) => {
     if (disabled || !preload2 || !preloadDelay) return;
     const eventTarget = e.target;
-    const id = timeoutMap.get(eventTarget);
-    if (id) {
-      clearTimeout(id);
+    const id2 = timeoutMap.get(eventTarget);
+    if (id2) {
+      clearTimeout(id2);
       timeoutMap.delete(eventTarget);
     }
   };
@@ -40984,7 +48375,7 @@ class Route extends BaseRoute {
     this.useNavigate = () => {
       return useNavigate({ from: this.fullPath });
     };
-    this.Link = React2.forwardRef(
+    this.Link = React$4.forwardRef(
       (props, ref) => {
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { ref, from: this.fullPath, ...props });
       }
@@ -41038,7 +48429,7 @@ class RootRoute extends BaseRootRoute {
     this.useNavigate = () => {
       return useNavigate({ from: this.fullPath });
     };
-    this.Link = React2.forwardRef(
+    this.Link = React$4.forwardRef(
       (props, ref) => {
         return /* @__PURE__ */ jsxRuntimeExports.jsx(Link, { ref, from: this.fullPath, ...props });
       }
@@ -41116,11 +48507,11 @@ class LazyRoute {
     this.$$typeof = Symbol.for("react.memo");
   }
 }
-function createLazyFileRoute(id) {
-  if (typeof id === "object") {
-    return new LazyRoute(id);
+function createLazyFileRoute(id2) {
+  if (typeof id2 === "object") {
+    return new LazyRoute(id2);
   }
-  return (opts) => new LazyRoute({ id, ...opts });
+  return (opts) => new LazyRoute({ id: id2, ...opts });
 }
 function Transitioner() {
   const router2 = useRouter();
@@ -41594,14 +48985,15 @@ function RouterProvider({ router: router2, ...rest }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(RouterContextProvider, { router: router2, ...rest, children: /* @__PURE__ */ jsxRuntimeExports.jsx(Matches, {}) });
 }
 const NAV_ITEMS = [
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/beneficiaries", label: "Beneficiaries" },
-  { to: "/legacy-assets", label: "Legacy & Assets" },
-  { to: "/the-switch", label: "The Switch" },
-  { to: "/audit-logs", label: "Audit Logs" },
-  { to: "/settings", label: "Settings" }
+  { to: "/dashboard", labelKey: "nav.dashboard" },
+  { to: "/beneficiaries", labelKey: "nav.beneficiaries" },
+  { to: "/legacy-assets", labelKey: "nav.legacyAssets" },
+  { to: "/the-switch", labelKey: "nav.theSwitch" },
+  { to: "/audit-logs", labelKey: "nav.auditLogs" },
+  { to: "/settings", labelKey: "nav.settings" }
 ];
 function Sidebar() {
+  const { t: t2 } = useTranslation();
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "aside",
     {
@@ -41634,7 +49026,7 @@ function Sidebar() {
                     )
                   }
                 ),
-                item.label
+                t2(item.labelKey)
               ] })
             },
             item.to
@@ -41679,7 +49071,7 @@ function useComposedRefs(...refs) {
   return reactExports.useCallback(composeRefs(...refs), refs);
 }
 var REACT_LAZY_TYPE = Symbol.for("react.lazy");
-var use = React$4[" use ".trim().toString()];
+var use = React$5[" use ".trim().toString()];
 function isPromiseLike(value) {
   return typeof value === "object" && value !== null && "then" in value;
 }
@@ -41943,16 +49335,16 @@ function composeContextScopes(...scopes) {
 }
 var useLayoutEffect2 = (globalThis == null ? void 0 : globalThis.document) ? reactExports.useLayoutEffect : () => {
 };
-var useReactId = React$4[" useId ".trim().toString()] || (() => void 0);
+var useReactId = React$5[" useId ".trim().toString()] || (() => void 0);
 var count$1 = 0;
 function useId(deterministicId) {
-  const [id, setId] = reactExports.useState(useReactId());
+  const [id2, setId] = reactExports.useState(useReactId());
   useLayoutEffect2(() => {
     setId((reactId) => reactId ?? String(count$1++));
   }, [deterministicId]);
-  return deterministicId || (id ? `radix-${id}` : "");
+  return id2 ? `radix-${id2}` : "";
 }
-var useInsertionEffect = React$4[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
+var useInsertionEffect = React$5[" useInsertionEffect ".trim().toString()] || useLayoutEffect2;
 function useControllableState({
   prop,
   defaultProp,
@@ -42718,34 +50110,34 @@ function createFocusGuard() {
   return element;
 }
 var __assign = function() {
-  __assign = Object.assign || function __assign2(t) {
+  __assign = Object.assign || function __assign2(t2) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
       s = arguments[i];
-      for (var p2 in s) if (Object.prototype.hasOwnProperty.call(s, p2)) t[p2] = s[p2];
+      for (var p2 in s) if (Object.prototype.hasOwnProperty.call(s, p2)) t2[p2] = s[p2];
     }
-    return t;
+    return t2;
   };
   return __assign.apply(this, arguments);
 };
 function __rest(s, e) {
-  var t = {};
+  var t2 = {};
   for (var p2 in s) if (Object.prototype.hasOwnProperty.call(s, p2) && e.indexOf(p2) < 0)
-    t[p2] = s[p2];
+    t2[p2] = s[p2];
   if (s != null && typeof Object.getOwnPropertySymbols === "function")
     for (var i = 0, p2 = Object.getOwnPropertySymbols(s); i < p2.length; i++) {
       if (e.indexOf(p2[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p2[i]))
-        t[p2[i]] = s[p2[i]];
+        t2[p2[i]] = s[p2[i]];
     }
-  return t;
+  return t2;
 }
 function __spreadArray(to, from, pack) {
-  if (pack || arguments.length === 2) for (var i = 0, l2 = from.length, ar; i < l2; i++) {
-    if (ar || !(i in from)) {
-      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-      ar[i] = from[i];
+  if (pack || arguments.length === 2) for (var i = 0, l2 = from.length, ar2; i < l2; i++) {
+    if (ar2 || !(i in from)) {
+      if (!ar2) ar2 = Array.prototype.slice.call(from, 0, i);
+      ar2[i] = from[i];
     }
   }
-  return to.concat(ar || Array.prototype.slice.call(from));
+  return to.concat(ar2 || Array.prototype.slice.call(from));
 }
 typeof SuppressedError === "function" ? SuppressedError : function(error, suppressed, message) {
   var e = new Error(message);
@@ -43215,8 +50607,8 @@ var extractRef = function(ref) {
 var deltaCompare = function(x3, y2) {
   return x3[0] === y2[0] && x3[1] === y2[1];
 };
-var generateStyle = function(id) {
-  return "\n  .block-interactivity-".concat(id, " {pointer-events: none;}\n  .allow-interactivity-").concat(id, " {pointer-events: all;}\n");
+var generateStyle = function(id2) {
+  return "\n  .block-interactivity-".concat(id2, " {pointer-events: none;}\n  .allow-interactivity-").concat(id2, " {pointer-events: all;}\n");
 };
 var idCounter = 0;
 var lockStack = [];
@@ -43224,7 +50616,7 @@ function RemoveScrollSideCar(props) {
   var shouldPreventQueue = reactExports.useRef([]);
   var touchStartRef = reactExports.useRef([0, 0]);
   var activeAxis = reactExports.useRef();
-  var id = reactExports.useState(idCounter++)[0];
+  var id2 = reactExports.useState(idCounter++)[0];
   var Style2 = reactExports.useState(styleSingleton)[0];
   var lastProps = reactExports.useRef(props);
   reactExports.useEffect(function() {
@@ -43232,15 +50624,15 @@ function RemoveScrollSideCar(props) {
   }, [props]);
   reactExports.useEffect(function() {
     if (props.inert) {
-      document.body.classList.add("block-interactivity-".concat(id));
+      document.body.classList.add("block-interactivity-".concat(id2));
       var allow_1 = __spreadArray([props.lockRef.current], (props.shards || []).map(extractRef), true).filter(Boolean);
       allow_1.forEach(function(el) {
-        return el.classList.add("allow-interactivity-".concat(id));
+        return el.classList.add("allow-interactivity-".concat(id2));
       });
       return function() {
-        document.body.classList.remove("block-interactivity-".concat(id));
+        document.body.classList.remove("block-interactivity-".concat(id2));
         allow_1.forEach(function(el) {
-          return el.classList.remove("allow-interactivity-".concat(id));
+          return el.classList.remove("allow-interactivity-".concat(id2));
         });
       };
     }
@@ -43357,7 +50749,7 @@ function RemoveScrollSideCar(props) {
   return reactExports.createElement(
     reactExports.Fragment,
     null,
-    inert ? reactExports.createElement(Style2, { styles: generateStyle(id) }) : null,
+    inert ? reactExports.createElement(Style2, { styles: generateStyle(id2) }) : null,
     removeScrollBar ? reactExports.createElement(RemoveScrollBar, { noRelative: props.noRelative, gapMode: props.gapMode }) : null
   );
 }
@@ -43534,11 +50926,11 @@ var Dialog$1 = (props) => {
   );
 };
 Dialog$1.displayName = DIALOG_NAME;
-var TRIGGER_NAME$1 = "DialogTrigger";
+var TRIGGER_NAME$3 = "DialogTrigger";
 var DialogTrigger = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDialog, ...triggerProps } = props;
-    const context = useDialogContext(TRIGGER_NAME$1, __scopeDialog);
+    const context = useDialogContext(TRIGGER_NAME$3, __scopeDialog);
     const composedTriggerRef = useComposedRefs(forwardedRef, context.triggerRef);
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       Primitive$1.button,
@@ -43547,7 +50939,7 @@ var DialogTrigger = reactExports.forwardRef(
         "aria-haspopup": "dialog",
         "aria-expanded": context.open,
         "aria-controls": context.contentId,
-        "data-state": getState(context.open),
+        "data-state": getState$2(context.open),
         ...triggerProps,
         ref: composedTriggerRef,
         onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
@@ -43555,7 +50947,7 @@ var DialogTrigger = reactExports.forwardRef(
     );
   }
 );
-DialogTrigger.displayName = TRIGGER_NAME$1;
+DialogTrigger.displayName = TRIGGER_NAME$3;
 var PORTAL_NAME$1 = "DialogPortal";
 var [PortalProvider, usePortalContext] = createDialogContext(PORTAL_NAME$1, {
   forceMount: void 0
@@ -43587,7 +50979,7 @@ var DialogOverlayImpl = reactExports.forwardRef(
       /* @__PURE__ */ jsxRuntimeExports.jsx(ReactRemoveScroll, { as: Slot$1, allowPinchZoom: true, shards: [context.contentRef], children: /* @__PURE__ */ jsxRuntimeExports.jsx(
         Primitive$1.div,
         {
-          "data-state": getState(context.open),
+          "data-state": getState$2(context.open),
           ...overlayProps,
           ref: forwardedRef,
           style: { pointerEvents: "auto", ...overlayProps.style }
@@ -43596,19 +50988,19 @@ var DialogOverlayImpl = reactExports.forwardRef(
     );
   }
 );
-var CONTENT_NAME$2 = "DialogContent";
+var CONTENT_NAME$4 = "DialogContent";
 var DialogContent$1 = reactExports.forwardRef(
   (props, forwardedRef) => {
-    const portalContext = usePortalContext(CONTENT_NAME$2, props.__scopeDialog);
+    const portalContext = usePortalContext(CONTENT_NAME$4, props.__scopeDialog);
     const { forceMount = portalContext.forceMount, ...contentProps } = props;
-    const context = useDialogContext(CONTENT_NAME$2, props.__scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$4, props.__scopeDialog);
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Presence, { present: forceMount || context.open, children: context.modal ? /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentModal, { ...contentProps, ref: forwardedRef }) : /* @__PURE__ */ jsxRuntimeExports.jsx(DialogContentNonModal, { ...contentProps, ref: forwardedRef }) });
   }
 );
-DialogContent$1.displayName = CONTENT_NAME$2;
+DialogContent$1.displayName = CONTENT_NAME$4;
 var DialogContentModal = reactExports.forwardRef(
   (props, forwardedRef) => {
-    const context = useDialogContext(CONTENT_NAME$2, props.__scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$4, props.__scopeDialog);
     const contentRef = reactExports.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, context.contentRef, contentRef);
     reactExports.useEffect(() => {
@@ -43643,7 +51035,7 @@ var DialogContentModal = reactExports.forwardRef(
 );
 var DialogContentNonModal = reactExports.forwardRef(
   (props, forwardedRef) => {
-    const context = useDialogContext(CONTENT_NAME$2, props.__scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$4, props.__scopeDialog);
     const hasInteractedOutsideRef = reactExports.useRef(false);
     const hasPointerDownOutsideRef = reactExports.useRef(false);
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -43686,7 +51078,7 @@ var DialogContentNonModal = reactExports.forwardRef(
 var DialogContentImpl = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeDialog, trapFocus, onOpenAutoFocus, onCloseAutoFocus, ...contentProps } = props;
-    const context = useDialogContext(CONTENT_NAME$2, __scopeDialog);
+    const context = useDialogContext(CONTENT_NAME$4, __scopeDialog);
     const contentRef = reactExports.useRef(null);
     const composedRefs = useComposedRefs(forwardedRef, contentRef);
     useFocusGuards();
@@ -43706,7 +51098,7 @@ var DialogContentImpl = reactExports.forwardRef(
               id: context.contentId,
               "aria-describedby": context.descriptionId,
               "aria-labelledby": context.titleId,
-              "data-state": getState(context.open),
+              "data-state": getState$2(context.open),
               ...contentProps,
               ref: composedRefs,
               onDismiss: () => context.onOpenChange(false)
@@ -43756,12 +51148,12 @@ var DialogClose = reactExports.forwardRef(
   }
 );
 DialogClose.displayName = CLOSE_NAME;
-function getState(open) {
+function getState$2(open) {
   return open ? "open" : "closed";
 }
 var TITLE_WARNING_NAME = "DialogTitleWarning";
 var [WarningProvider, useWarningContext] = createContext2(TITLE_WARNING_NAME, {
-  contentName: CONTENT_NAME$2,
+  contentName: CONTENT_NAME$4,
   titleName: TITLE_NAME,
   docsSlug: "dialog"
 });
@@ -43794,21 +51186,21 @@ var DescriptionWarning = ({ contentRef, descriptionId }) => {
   }, [MESSAGE, contentRef, descriptionId]);
   return null;
 };
-var Root$2 = Dialog$1;
-var Trigger$1 = DialogTrigger;
+var Root$3 = Dialog$1;
+var Trigger$2 = DialogTrigger;
 var Portal$1 = DialogPortal$1;
 var Overlay = DialogOverlay$1;
-var Content$1 = DialogContent$1;
+var Content$2 = DialogContent$1;
 var Title = DialogTitle$1;
 var Description = DialogDescription$1;
 var Close = DialogClose;
 function Sheet({ ...props }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$2, { "data-slot": "sheet", ...props });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$3, { "data-slot": "sheet", ...props });
 }
 function SheetTrigger({
   ...props
 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Trigger$1, { "data-slot": "sheet-trigger", ...props });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Trigger$2, { "data-slot": "sheet-trigger", ...props });
 }
 function SheetPortal({
   ...props
@@ -43840,7 +51232,7 @@ function SheetContent({
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(SheetPortal, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(SheetOverlay, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      Content$1,
+      Content$2,
       {
         "data-slot": "sheet-content",
         className: cn(
@@ -43886,7 +51278,8 @@ function SheetTitle({
     }
   );
 }
-function Header() {
+function Header$1() {
+  const { t: t2 } = useTranslation();
   const pathname = useRouterState({
     select: (state) => state.location.pathname
   });
@@ -43895,7 +51288,10 @@ function Header() {
     "header",
     {
       "data-ocid": "header",
-      className: "sticky top-0 z-40 border-b border-border bg-background/90 backdrop-blur-sm",
+      className: cn(
+        "border-b border-border bg-background/90 backdrop-blur-sm",
+        !isLanding && "sticky top-0 z-40"
+      ),
       children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-6 lg:px-8", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
           Link,
@@ -43903,7 +51299,7 @@ function Header() {
             to: "/",
             "data-ocid": "header.wordmark",
             className: "group flex items-center gap-3",
-            "aria-label": "Sovereign Legacy home",
+            "aria-label": t2("header.home"),
             children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-extruded-gold font-display text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl", children: "Sovereign Legacy" })
           }
         ),
@@ -43922,7 +51318,7 @@ function Header() {
                     "aria-hidden": "true"
                   }
                 ),
-                "Network · Identity"
+                t2("header.networkBadge")
               ]
             }
           ),
@@ -43934,7 +51330,7 @@ function Header() {
                 variant: "outline",
                 size: "icon",
                 className: "md:hidden",
-                "aria-label": "Open navigation menu",
+                "aria-label": t2("header.mobileMenu"),
                 children: /* @__PURE__ */ jsxRuntimeExports.jsx(Menu, { className: "size-5", "aria-hidden": "true" })
               }
             ) }),
@@ -43944,7 +51340,7 @@ function Header() {
                 "nav",
                 {
                   className: "flex flex-col gap-1 px-4",
-                  "aria-label": "Mobile primary",
+                  "aria-label": t2("header.mobilePrimary"),
                   children: NAV_ITEMS.map((item) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                     Link,
                     {
@@ -43967,7 +51363,7 @@ function Header() {
                             )
                           }
                         ),
-                        item.label
+                        t2(item.labelKey)
                       ] })
                     },
                     item.to
@@ -43982,6 +51378,7 @@ function Header() {
   );
 }
 function Layout() {
+  const { t: t2 } = useTranslation();
   const { isAuthenticated, isInitializing } = useInternetIdentity();
   const pathname = useRouterState({
     select: (state) => state.location.pathname
@@ -43989,7 +51386,7 @@ function Layout() {
   const isLanding = pathname === "/";
   if (isInitializing) {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-screen flex-col", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Header, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Header$1, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx("main", { className: "flex flex-1 items-center justify-center bg-background", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
@@ -44003,7 +51400,7 @@ function Layout() {
                 "aria-hidden": "true"
               }
             ),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Opening vault…" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("loading.openingVault") })
           ]
         }
       ) }),
@@ -44015,7 +51412,7 @@ function Layout() {
       return /* @__PURE__ */ jsxRuntimeExports.jsx(Navigate, { to: "/dashboard", replace: true });
     }
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-screen flex-col", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(Header, {}),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Header$1, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx("main", { className: "flex-1 bg-background", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(Footer, {})
     ] });
@@ -44024,7 +51421,7 @@ function Layout() {
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Navigate, { to: "/", replace: true });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex min-h-screen flex-col", children: [
-    /* @__PURE__ */ jsxRuntimeExports.jsx(Header, {}),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Header$1, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-1", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(Sidebar, {}),
       /* @__PURE__ */ jsxRuntimeExports.jsx("main", { className: "min-w-0 flex-1 bg-background", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Outlet, {}) })
@@ -44823,16 +52220,17 @@ function useBeneficiaries$1() {
     enabled: !!actor && !isFetching
   });
 }
-function beneficiaryName(id, beneficiaries) {
-  const match = beneficiaries == null ? void 0 : beneficiaries.find((b2) => b2.id === id);
-  return match ? match.name : `Beneficiary #${id.toString()}`;
+function beneficiaryName(id2, beneficiaries, t2) {
+  const match = beneficiaries == null ? void 0 : beneficiaries.find((b2) => b2.id === id2);
+  return match ? match.name : t2("assets.beneficiaryFallback", { id: id2.toString() });
 }
 function AllocationBar({
-  allocations
+  allocations,
+  t: t2
 }) {
   const total = allocations.reduce((sum, a2) => sum + a2.share, 0n);
   if (total <= 0n) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: "Unallocated" });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: t2("assets.unallocated") });
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex h-2.5 w-full overflow-hidden rounded-full bg-surface-raised", children: allocations.map((allocation, index2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
     "span",
@@ -44848,7 +52246,8 @@ function AllocationBar({
 }
 function AllocationLegend({
   allocations,
-  beneficiaries
+  beneficiaries,
+  t: t2
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-x-5 gap-y-1", children: allocations.map((allocation, index2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "span",
@@ -44862,7 +52261,7 @@ function AllocationLegend({
             "aria-hidden": "true"
           }
         ),
-        beneficiaryName(allocation.beneficiaryId, beneficiaries),
+        beneficiaryName(allocation.beneficiaryId, beneficiaries, t2),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-foreground", children: [
           allocation.share.toString(),
           "%"
@@ -44873,6 +52272,7 @@ function AllocationLegend({
   )) });
 }
 function AssetsPage() {
+  const { t: t2 } = useTranslation();
   const assetsQuery = useAssets();
   const beneficiariesQuery = useBeneficiaries$1();
   const loading = assetsQuery.isLoading || beneficiariesQuery.isLoading;
@@ -44880,9 +52280,9 @@ function AssetsPage() {
   const beneficiaries = beneficiariesQuery.data;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "assets", className: "mx-auto max-w-7xl px-6 py-10 lg:px-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8 animate-fade-rise", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: "Legacy & Assets" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: "Held Assets" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: "Everything held in the vault — balances, holdings, and the instructions that govern them." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: t2("assets.eyebrow") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: t2("assets.title") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: t2("assets.subtitle") })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
       "section",
@@ -44891,15 +52291,15 @@ function AssetsPage() {
         className: "mb-6 grid animate-fade-rise gap-6 md:grid-cols-3",
         children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Assets Held" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("assets.assetsHeld") }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 font-display text-4xl font-semibold tracking-tight text-foreground", children: loading ? "—" : assets.length.toString() })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Beneficiaries" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("assets.beneficiaries") }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-4 font-display text-4xl font-semibold tracking-tight text-foreground", children: loading ? "—" : ((beneficiaries == null ? void 0 : beneficiaries.length) ?? 0).toString() })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:120ms]", children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Allocation Status" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("assets.allocationStatus") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 flex items-center gap-3", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "span",
@@ -44908,7 +52308,7 @@ function AssetsPage() {
                   "aria-hidden": "true"
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-sm font-semibold uppercase tracking-[0.16em] text-foreground", children: "Sealed" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-sm font-semibold uppercase tracking-[0.16em] text-foreground", children: t2("assets.sealed") })
             ] })
           ] })
         ]
@@ -44920,8 +52320,8 @@ function AssetsPage() {
         "data-ocid": "assets.error_state",
         className: "rounded border border-destructive/40 bg-surface p-8 text-center shadow-subtle",
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-destructive", children: "Vault unreachable" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-muted-foreground", children: "We couldn't read the held assets. Please try again." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-destructive", children: t2("assets.errorEyebrow") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 text-sm text-muted-foreground", children: t2("assets.errorBody") })
         ]
       }
     ),
@@ -44946,8 +52346,8 @@ function AssetsPage() {
         "data-ocid": "assets.empty_state",
         className: "rounded border border-border bg-surface p-10 text-center shadow-subtle",
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "No assets held" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground", children: "The vault currently holds no crypto assets. Once assets are added, their balances and beneficiary allocations will appear here." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("assets.emptyEyebrow") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground", children: t2("assets.emptyBody") })
         ]
       }
     ),
@@ -44973,13 +52373,14 @@ function AssetsPage() {
                 ] })
               ] }) }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-6", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-2 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Beneficiary Allocation" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx(AllocationBar, { allocations: asset.allocations }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mb-2 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("assets.allocationLabel") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AllocationBar, { allocations: asset.allocations, t: t2 }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
                   AllocationLegend,
                   {
                     allocations: asset.allocations,
-                    beneficiaries
+                    beneficiaries,
+                    t: t2
                   }
                 ) })
               ] })
@@ -45034,6 +52435,7 @@ function formatTimestamp(timestamp) {
   };
 }
 function AuditLogPage() {
+  const { t: t2 } = useTranslation();
   const { data: events2 = [], isLoading, isError } = useAuditEvents();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
@@ -45042,8 +52444,8 @@ function AuditLogPage() {
       className: "mx-auto max-w-7xl px-6 py-10 lg:px-8",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8 animate-fade-rise", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: "Audit Logs" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: "Audit Logs" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: t2("audit.eyebrow") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: t2("audit.title") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           "section",
@@ -45052,13 +52454,8 @@ function AuditLogPage() {
             className: "animate-fade-rise overflow-hidden rounded border border-border bg-surface shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Event Ledger" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-muted-foreground", children: [
-                  events2.length,
-                  " event",
-                  events2.length === 1 ? "" : "s",
-                  " sealed"
-                ] })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("audit.ledger") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: t2("audit.count", { count: events2.length }) })
               ] }),
               isLoading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "div",
@@ -45080,8 +52477,8 @@ function AuditLogPage() {
                   "data-ocid": "audit_logs.error_state",
                   className: "flex flex-col items-center gap-3 px-6 py-12 text-center",
                   children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-destructive", children: "Ledger unreachable" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm leading-relaxed text-muted-foreground", children: "We couldn't read the audit ledger. Please try again." })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-destructive", children: t2("audit.errorEyebrow") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm leading-relaxed text-muted-foreground", children: t2("audit.errorBody") })
                   ]
                 }
               ) : events2.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -45090,8 +52487,8 @@ function AuditLogPage() {
                   "data-ocid": "audit_logs.empty_state",
                   className: "flex flex-col items-center gap-3 px-6 py-12 text-center",
                   children: [
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-xl font-semibold text-foreground", children: "No events yet" }),
-                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm leading-relaxed text-muted-foreground", children: "Every action taken against the vault will be sealed here, in order, as it happens." })
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-xl font-semibold text-foreground", children: t2("audit.emptyTitle") }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm leading-relaxed text-muted-foreground", children: t2("audit.emptyBody") })
                   ]
                 }
               ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -45099,7 +52496,7 @@ function AuditLogPage() {
                 {
                   "data-ocid": "audit_logs.table",
                   className: "w-full border-collapse",
-                  "aria-label": "Vault audit log",
+                  "aria-label": t2("audit.tableAria"),
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-border", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45107,7 +52504,7 @@ function AuditLogPage() {
                         {
                           scope: "col",
                           className: "w-[8.5rem] px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground",
-                          children: "Timestamp"
+                          children: t2("audit.timestamp")
                         }
                       ),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45115,7 +52512,7 @@ function AuditLogPage() {
                         {
                           scope: "col",
                           className: "w-[8.5rem] px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground",
-                          children: "Event"
+                          children: t2("audit.event")
                         }
                       ),
                       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45123,7 +52520,7 @@ function AuditLogPage() {
                         {
                           scope: "col",
                           className: "px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground",
-                          children: "Description"
+                          children: t2("audit.description")
                         }
                       )
                     ] }) }),
@@ -45172,7 +52569,7 @@ function AuditLogPage() {
                     "aria-hidden": "true"
                   }
                 ),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: "Every entry is sealed on the ledger. Entries cannot be edited or removed." })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: t2("audit.footer") })
               ] })
             ]
           }
@@ -45184,7 +52581,7 @@ function AuditLogPage() {
 function Dialog({
   ...props
 }) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$2, { "data-slot": "dialog", ...props });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$3, { "data-slot": "dialog", ...props });
 }
 function DialogPortal({
   ...props
@@ -45216,7 +52613,7 @@ function DialogContent({
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogPortal, { "data-slot": "dialog-portal", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(DialogOverlay, {}),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      Content$1,
+      Content$2,
       {
         "data-slot": "dialog-content",
         className: cn(
@@ -45357,13 +52754,13 @@ var Label$1 = reactExports.forwardRef((props, forwardedRef) => {
   );
 });
 Label$1.displayName = NAME$2;
-var Root$1 = Label$1;
+var Root$2 = Label$1;
 function Label({
   className,
   ...props
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Root$1,
+    Root$2,
     {
       "data-slot": "label",
       className: cn(
@@ -45425,9 +52822,9 @@ function useRemoveBeneficiary() {
   const { actor } = useActor(createActor);
   const queryClient2 = useQueryClient();
   return useMutation({
-    mutationFn: async (id) => {
+    mutationFn: async (id2) => {
       if (!actor) throw new Error("Backend is not ready");
-      return actor.removeBeneficiary(id);
+      return actor.removeBeneficiary(id2);
     },
     onSuccess: () => {
       void queryClient2.invalidateQueries({ queryKey: ["beneficiaries"] });
@@ -45437,12 +52834,43 @@ function useRemoveBeneficiary() {
 function formatShare$1(share) {
   return `${share.toString()}%`;
 }
+function crc32(bytes) {
+  let crc = 4294967295;
+  for (let i = 0; i < bytes.length; i++) {
+    crc ^= bytes[i];
+    for (let j2 = 0; j2 < 8; j2++) {
+      crc = crc >>> 1 ^ (crc & 1 ? 3988292384 : 0);
+    }
+  }
+  return (crc ^ 4294967295) >>> 0;
+}
+function isValidAccountIdChecksum(hex) {
+  const bytes = new Uint8Array(32);
+  for (let i = 0; i < 32; i++) {
+    bytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  }
+  const provided = (bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3]) >>> 0;
+  const expected = crc32(bytes.slice(4));
+  return provided === expected;
+}
+function validateWalletAddress(raw, t2) {
+  const address = raw.trim();
+  if (!address) return null;
+  if (/^[0-9a-fA-F]{64}$/.test(address)) {
+    return isValidAccountIdChecksum(address) ? null : t2("beneficiaries.errors.invalidChecksum");
+  }
+  if (/^[a-z0-9]+(-[a-z0-9]+)*-[a-z0-9]{3}$/.test(address)) {
+    return null;
+  }
+  return t2("beneficiaries.errors.invalidWallet");
+}
 const EMPTY_FORM = {
   name: "",
   allocationShare: "",
   walletAddress: ""
 };
 function BeneficiariesPage() {
+  const { t: t2 } = useTranslation();
   const {
     data: beneficiaries = [],
     isLoading,
@@ -45479,11 +52907,27 @@ function BeneficiariesPage() {
     event.preventDefault();
     const share = BigInt(form.allocationShare.trim() || "0");
     if (!form.name.trim()) {
-      setFormError("Enter a name for this beneficiary.");
+      setFormError(t2("beneficiaries.errors.nameRequired"));
       return;
     }
     if (share <= 0n) {
-      setFormError("Allocation share must be greater than zero.");
+      setFormError(t2("beneficiaries.errors.sharePositive"));
+      return;
+    }
+    const walletError = validateWalletAddress(form.walletAddress, t2);
+    if (walletError) {
+      setFormError(walletError);
+      return;
+    }
+    const newTotal = editing ? totalShare - editing.allocationShare + share : totalShare + share;
+    if (newTotal > 100n) {
+      setFormError(
+        editing ? t2("beneficiaries.errors.totalExceedsEdit", {
+          total: newTotal.toString()
+        }) : t2("beneficiaries.errors.totalExceedsAdd", {
+          total: newTotal.toString()
+        })
+      );
       return;
     }
     setFormError(null);
@@ -45497,7 +52941,7 @@ function BeneficiariesPage() {
         { id: editing.id, ...payload },
         {
           onSuccess: () => setDialogOpen(false),
-          onError: () => setFormError("Could not save changes. Please try again.")
+          onError: () => setFormError(t2("beneficiaries.errors.saveFailed"))
         }
       );
     } else {
@@ -45506,7 +52950,7 @@ function BeneficiariesPage() {
           setDialogOpen(false);
           setForm(EMPTY_FORM);
         },
-        onError: () => setFormError("Could not add beneficiary. Please try again.")
+        onError: () => setFormError(t2("beneficiaries.errors.addFailed"))
       });
     }
   };
@@ -45521,9 +52965,9 @@ function BeneficiariesPage() {
       className: "mx-auto max-w-7xl px-6 py-10 lg:px-8",
       children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8 animate-fade-rise", children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: "Beneficiaries" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: "Beneficiaries" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: "The people and causes your legacy is sealed for. Allocation, order, and conditions live here." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: t2("beneficiaries.eyebrow") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: t2("beneficiaries.title") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: t2("beneficiaries.subtitle") })
         ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-6 lg:grid-cols-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -45533,20 +52977,16 @@ function BeneficiariesPage() {
               className: "animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow lg:col-span-2",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Allocation" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-muted-foreground", children: [
-                    beneficiaries.length,
-                    " beneficiary",
-                    beneficiaries.length === 1 ? "" : "ies"
-                  ] })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("beneficiaries.allocation") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: t2("beneficiaries.count", { count: beneficiaries.length }) })
                 ] }),
-                beneficiaries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-6 font-mono text-xs text-muted-foreground", children: "No allocations yet. Add a beneficiary to begin." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                beneficiaries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-6 font-mono text-xs text-muted-foreground", children: t2("beneficiaries.noAllocations") }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
                     "div",
                     {
                       className: "mt-6 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-raised",
                       role: "img",
-                      "aria-label": "Beneficiary allocation shares",
+                      "aria-label": t2("beneficiaries.allocationAria"),
                       children: beneficiaries.map((b2, index2) => {
                         const width = totalShare > 0n ? Number(b2.allocationShare * 10000n / totalShare) / 100 : 0;
                         const isPrimary = index2 === 0;
@@ -45593,8 +53033,8 @@ function BeneficiariesPage() {
               className: "animate-fade-rise flex flex-col justify-between rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]",
               children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Manage" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm leading-relaxed text-muted-foreground", children: "Add a beneficiary and assign their share of the vault. Shares can be edited or revoked at any time." })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("beneficiaries.manage") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 text-sm leading-relaxed text-muted-foreground", children: t2("beneficiaries.manageBody") })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsxs(
                   Button,
@@ -45604,7 +53044,7 @@ function BeneficiariesPage() {
                     className: "mt-6 w-full bg-gradient-gold text-primary-foreground hover:opacity-90",
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, {}),
-                      "Add beneficiary"
+                      t2("common.addBeneficiary")
                     ]
                   }
                 )
@@ -45635,7 +53075,7 @@ function BeneficiariesPage() {
               {
                 "data-ocid": "beneficiaries.error_state",
                 className: "p-6 text-sm text-destructive",
-                children: "Could not load beneficiaries. Please try again."
+                children: t2("beneficiaries.loadError")
               }
             ) : beneficiaries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
               "div",
@@ -45643,8 +53083,8 @@ function BeneficiariesPage() {
                 "data-ocid": "beneficiaries.empty_state",
                 className: "flex flex-col items-center gap-3 px-6 py-12 text-center",
                 children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-xl font-semibold text-foreground", children: "No beneficiaries yet" }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm text-muted-foreground", children: "Your legacy is unassigned. Add your first beneficiary to seal the vault for someone." }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-display text-xl font-semibold text-foreground", children: t2("beneficiaries.emptyTitle") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "max-w-sm text-sm text-muted-foreground", children: t2("beneficiaries.emptyBody") }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     Button,
                     {
@@ -45653,7 +53093,7 @@ function BeneficiariesPage() {
                       className: "mt-2 bg-gradient-gold text-primary-foreground hover:opacity-90",
                       children: [
                         /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, {}),
-                        "Add beneficiary"
+                        t2("common.addBeneficiary")
                       ]
                     }
                   )
@@ -45676,7 +53116,7 @@ function BeneficiariesPage() {
                     ),
                     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate font-display text-base font-semibold text-foreground", children: b2.name }),
-                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate font-mono text-xs text-muted-foreground", children: b2.walletAddress || "No wallet address" })
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "truncate font-mono text-xs text-muted-foreground", children: b2.walletAddress || t2("beneficiaries.noWallet") })
                     ] })
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-4", children: [
@@ -45688,7 +53128,7 @@ function BeneficiariesPage() {
                           "data-ocid": `beneficiaries.edit_button.${index2}`,
                           variant: "ghost",
                           size: "icon",
-                          "aria-label": `Edit ${b2.name}`,
+                          "aria-label": t2("beneficiaries.editAria", { name: b2.name }),
                           onClick: () => openEdit(b2),
                           children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pencil, {})
                         }
@@ -45699,7 +53139,9 @@ function BeneficiariesPage() {
                           "data-ocid": `beneficiaries.delete_button.${index2}`,
                           variant: "ghost",
                           size: "icon",
-                          "aria-label": `Remove ${b2.name}`,
+                          "aria-label": t2("beneficiaries.removeAria", {
+                            name: b2.name
+                          }),
                           className: "text-muted-foreground hover:text-destructive",
                           onClick: () => handleRemove(b2),
                           children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, {})
@@ -45715,12 +53157,12 @@ function BeneficiariesPage() {
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: dialogOpen, onOpenChange: setDialogOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { "data-ocid": "beneficiaries.modal", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display text-xl text-foreground", children: editing ? "Edit beneficiary" : "Add beneficiary" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { children: editing ? "Update the name, share, or wallet address for this beneficiary." : "Assign a name and allocation share to a new beneficiary." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { className: "font-display text-xl text-foreground", children: editing ? t2("beneficiaries.modal.editTitle") : t2("beneficiaries.modal.addTitle") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { children: editing ? t2("beneficiaries.modal.editDesc") : t2("beneficiaries.modal.addDesc") })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("form", { onSubmit: handleSubmit, className: "grid gap-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-name", children: "Name" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-name", children: t2("common.name") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
                 {
@@ -45728,12 +53170,12 @@ function BeneficiariesPage() {
                   "data-ocid": "beneficiaries.name_input",
                   value: form.name,
                   onChange: (e) => setForm((f2) => ({ ...f2, name: e.target.value })),
-                  placeholder: "e.g. Elena Marchetti"
+                  placeholder: t2("beneficiaries.namePlaceholder")
                 }
               )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-share", children: "Allocation share (%)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-share", children: t2("common.allocationShare") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
                 {
@@ -45746,12 +53188,12 @@ function BeneficiariesPage() {
                     ...f2,
                     allocationShare: e.target.value
                   })),
-                  placeholder: "e.g. 40"
+                  placeholder: t2("beneficiaries.sharePlaceholder")
                 }
               )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-wallet", children: "Wallet address" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-wallet", children: t2("common.walletAddress") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
                 {
@@ -45762,7 +53204,7 @@ function BeneficiariesPage() {
                     ...f2,
                     walletAddress: e.target.value
                   })),
-                  placeholder: "Optional"
+                  placeholder: t2("common.optional")
                 }
               )
             ] }),
@@ -45782,7 +53224,7 @@ function BeneficiariesPage() {
                   variant: "outline",
                   "data-ocid": "beneficiaries.cancel_button",
                   onClick: () => setDialogOpen(false),
-                  children: "Cancel"
+                  children: t2("common.cancel")
                 }
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45792,7 +53234,7 @@ function BeneficiariesPage() {
                   "data-ocid": "beneficiaries.submit_button",
                   disabled: isPending,
                   className: "bg-gradient-gold text-primary-foreground hover:opacity-90",
-                  children: editing ? "Save changes" : "Add beneficiary"
+                  children: editing ? t2("common.saveChanges") : t2("common.addBeneficiary")
                 }
               )
             ] })
@@ -45847,10 +53289,10 @@ function totalBalance(assets) {
   if (!assets || assets.length === 0) return "0.00";
   return assets.map((asset) => formatBalance(asset.balance, asset.decimals)).join(" + ");
 }
-function formatDateTime$1(timestamp) {
+function formatDateTime$1(timestamp, formatDate) {
   const date = new Date(Number(timestamp / 1000000n));
   if (Number.isNaN(date.getTime())) return "—";
-  return date.toLocaleString(void 0, {
+  return formatDate(date, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -45868,6 +53310,7 @@ function SummarySkeleton() {
 }
 function DashboardPage() {
   var _a2;
+  const { t: t2, formatDate } = useTranslation();
   const balanceQuery = useWalletBalance();
   const beneficiariesQuery = useBeneficiaries();
   const switchQuery = useSwitchState$1();
@@ -45882,8 +53325,8 @@ function DashboardPage() {
   const isArmed = (switchState == null ? void 0 : switchState.status) === "armed";
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "dashboard", className: "mx-auto max-w-7xl px-6 py-10 lg:px-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8 animate-fade-rise", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: "Dashboard" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: "The Vault" })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: t2("dashboard.eyebrow") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: t2("dashboard.title") })
     ] }),
     loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(SummarySkeleton, {}) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-6 md:grid-cols-3", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -45892,12 +53335,12 @@ function DashboardPage() {
           "data-ocid": "dashboard.balance",
           className: "animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Vault Balance" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("dashboard.balance") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-4 font-display text-5xl font-semibold tracking-tight text-foreground", children: [
               totalBalance(assets),
               /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 font-mono text-lg font-medium text-muted-foreground", children: "ICP" })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-xs text-muted-foreground", children: assets && assets.length > 0 ? `${assets.length} asset${assets.length === 1 ? "" : "s"} held` : "No assets held yet" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-xs text-muted-foreground", children: assets && assets.length > 0 ? t2("dashboard.assetsHeld", { count: assets.length }) : t2("dashboard.noAssets") })
           ]
         }
       ),
@@ -45907,12 +53350,12 @@ function DashboardPage() {
           "data-ocid": "dashboard.beneficiaries",
           className: "animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]",
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Beneficiaries" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("dashboard.beneficiaries") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "mt-4 font-display text-5xl font-semibold tracking-tight text-foreground", children: [
               beneficiaries.length,
-              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 font-mono text-lg font-medium text-muted-foreground", children: "named" })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-2 font-mono text-lg font-medium text-muted-foreground", children: t2("dashboard.named") })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-xs text-muted-foreground", children: beneficiaries.length > 0 ? `${beneficiaries.length} ${beneficiaries.length === 1 ? "beneficiary" : "beneficiaries"} sealed` : "No beneficiaries yet" })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 font-mono text-xs text-muted-foreground", children: beneficiaries.length > 0 ? t2("dashboard.sealed", { count: beneficiaries.length }) : t2("dashboard.none") })
           ]
         }
       ),
@@ -45922,14 +53365,14 @@ function DashboardPage() {
           "data-ocid": "dashboard.allocation",
           className: "animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:120ms]",
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Beneficiary Allocation" }),
-            beneficiaries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-6 font-mono text-xs text-muted-foreground", children: "No allocations yet. Add a beneficiary to begin." }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("dashboard.allocation") }),
+            beneficiaries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-6 font-mono text-xs text-muted-foreground", children: t2("dashboard.allocationNone") }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "div",
                 {
                   className: "mt-6 flex h-3 w-full overflow-hidden rounded-full bg-surface-raised",
                   role: "img",
-                  "aria-label": "Beneficiary allocation shares",
+                  "aria-label": t2("dashboard.allocationAria"),
                   children: beneficiaries.map((b2, index2) => {
                     const width = totalShare > 0n ? Number(b2.allocationShare * 10000n / totalShare) / 100 : 0;
                     return /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -45976,7 +53419,7 @@ function DashboardPage() {
         className: "mt-6 animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:180ms]",
         children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-4", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "The Switch" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("dashboard.switch") }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-3 flex items-center gap-3", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 "span",
@@ -45989,26 +53432,577 @@ function DashboardPage() {
                 "span",
                 {
                   className: `font-mono text-sm font-semibold uppercase tracking-[0.16em] ${isArmed ? "text-extruded-gold" : "text-muted-foreground"}`,
-                  children: isArmed ? "Armed" : "Disarmed"
+                  children: isArmed ? t2("common.armed") : t2("common.disarmed")
                 }
               )
             ] })
           ] }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: (switchState == null ? void 0 : switchState.lastCheckIn) ? `Last verified · ${formatDateTime$1(switchState.lastCheckIn)}` : "Not yet verified" })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: (switchState == null ? void 0 : switchState.lastCheckIn) ? t2("dashboard.lastVerified", {
+            time: formatDateTime$1(switchState.lastCheckIn, formatDate)
+          }) : t2("dashboard.notVerified") })
         ] })
       }
     )
   ] });
 }
+function createCollection(name) {
+  const PROVIDER_NAME = name + "CollectionProvider";
+  const [createCollectionContext, createCollectionScope2] = createContextScope(PROVIDER_NAME);
+  const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
+    PROVIDER_NAME,
+    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
+  );
+  const CollectionProvider = (props) => {
+    const { scope, children } = props;
+    const ref = React$4.useRef(null);
+    const itemMap = React$4.useRef(/* @__PURE__ */ new Map()).current;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
+  };
+  CollectionProvider.displayName = PROVIDER_NAME;
+  const COLLECTION_SLOT_NAME = name + "CollectionSlot";
+  const CollectionSlotImpl = /* @__PURE__ */ createSlot(COLLECTION_SLOT_NAME);
+  const CollectionSlot = React$4.forwardRef(
+    (props, forwardedRef) => {
+      const { scope, children } = props;
+      const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
+      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(CollectionSlotImpl, { ref: composedRefs, children });
+    }
+  );
+  CollectionSlot.displayName = COLLECTION_SLOT_NAME;
+  const ITEM_SLOT_NAME = name + "CollectionItemSlot";
+  const ITEM_DATA_ATTR = "data-radix-collection-item";
+  const CollectionItemSlotImpl = /* @__PURE__ */ createSlot(ITEM_SLOT_NAME);
+  const CollectionItemSlot = React$4.forwardRef(
+    (props, forwardedRef) => {
+      const { scope, children, ...itemData } = props;
+      const ref = React$4.useRef(null);
+      const composedRefs = useComposedRefs(forwardedRef, ref);
+      const context = useCollectionContext(ITEM_SLOT_NAME, scope);
+      React$4.useEffect(() => {
+        context.itemMap.set(ref, { ref, ...itemData });
+        return () => void context.itemMap.delete(ref);
+      });
+      return /* @__PURE__ */ jsxRuntimeExports.jsx(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
+    }
+  );
+  CollectionItemSlot.displayName = ITEM_SLOT_NAME;
+  function useCollection2(scope) {
+    const context = useCollectionContext(name + "CollectionConsumer", scope);
+    const getItems = React$4.useCallback(() => {
+      const collectionNode = context.collectionRef.current;
+      if (!collectionNode) return [];
+      const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
+      const items = Array.from(context.itemMap.values());
+      const orderedItems = items.sort(
+        (a2, b2) => orderedNodes.indexOf(a2.ref.current) - orderedNodes.indexOf(b2.ref.current)
+      );
+      return orderedItems;
+    }, [context.collectionRef, context.itemMap]);
+    return getItems;
+  }
+  return [
+    { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
+    useCollection2,
+    createCollectionScope2
+  ];
+}
+var COLLAPSIBLE_NAME = "Collapsible";
+var [createCollapsibleContext, createCollapsibleScope] = createContextScope(COLLAPSIBLE_NAME);
+var [CollapsibleProvider, useCollapsibleContext] = createCollapsibleContext(COLLAPSIBLE_NAME);
+var Collapsible = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeCollapsible,
+      open: openProp,
+      defaultOpen,
+      disabled,
+      onOpenChange,
+      ...collapsibleProps
+    } = props;
+    const [open, setOpen] = useControllableState({
+      prop: openProp,
+      defaultProp: defaultOpen ?? false,
+      onChange: onOpenChange,
+      caller: COLLAPSIBLE_NAME
+    });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CollapsibleProvider,
+      {
+        scope: __scopeCollapsible,
+        disabled,
+        contentId: useId(),
+        open,
+        onOpenToggle: reactExports.useCallback(() => setOpen((prevOpen) => !prevOpen), [setOpen]),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Primitive$1.div,
+          {
+            "data-state": getState$1(open),
+            "data-disabled": disabled ? "" : void 0,
+            ...collapsibleProps,
+            ref: forwardedRef
+          }
+        )
+      }
+    );
+  }
+);
+Collapsible.displayName = COLLAPSIBLE_NAME;
+var TRIGGER_NAME$2 = "CollapsibleTrigger";
+var CollapsibleTrigger = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeCollapsible, ...triggerProps } = props;
+    const context = useCollapsibleContext(TRIGGER_NAME$2, __scopeCollapsible);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Primitive$1.button,
+      {
+        type: "button",
+        "aria-controls": context.contentId,
+        "aria-expanded": context.open || false,
+        "data-state": getState$1(context.open),
+        "data-disabled": context.disabled ? "" : void 0,
+        disabled: context.disabled,
+        ...triggerProps,
+        ref: forwardedRef,
+        onClick: composeEventHandlers(props.onClick, context.onOpenToggle)
+      }
+    );
+  }
+);
+CollapsibleTrigger.displayName = TRIGGER_NAME$2;
+var CONTENT_NAME$3 = "CollapsibleContent";
+var CollapsibleContent = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { forceMount, ...contentProps } = props;
+    const context = useCollapsibleContext(CONTENT_NAME$3, props.__scopeCollapsible);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Presence, { present: forceMount || context.open, children: ({ present }) => /* @__PURE__ */ jsxRuntimeExports.jsx(CollapsibleContentImpl, { ...contentProps, ref: forwardedRef, present }) });
+  }
+);
+CollapsibleContent.displayName = CONTENT_NAME$3;
+var CollapsibleContentImpl = reactExports.forwardRef((props, forwardedRef) => {
+  const { __scopeCollapsible, present, children, ...contentProps } = props;
+  const context = useCollapsibleContext(CONTENT_NAME$3, __scopeCollapsible);
+  const [isPresent, setIsPresent] = reactExports.useState(present);
+  const ref = reactExports.useRef(null);
+  const composedRefs = useComposedRefs(forwardedRef, ref);
+  const heightRef = reactExports.useRef(0);
+  const height = heightRef.current;
+  const widthRef = reactExports.useRef(0);
+  const width = widthRef.current;
+  const isOpen = context.open || isPresent;
+  const isMountAnimationPreventedRef = reactExports.useRef(isOpen);
+  const originalStylesRef = reactExports.useRef(void 0);
+  reactExports.useEffect(() => {
+    const rAF = requestAnimationFrame(() => isMountAnimationPreventedRef.current = false);
+    return () => cancelAnimationFrame(rAF);
+  }, []);
+  useLayoutEffect2(() => {
+    const node = ref.current;
+    if (node) {
+      originalStylesRef.current = originalStylesRef.current || {
+        transitionDuration: node.style.transitionDuration,
+        animationName: node.style.animationName
+      };
+      node.style.transitionDuration = "0s";
+      node.style.animationName = "none";
+      const rect = node.getBoundingClientRect();
+      heightRef.current = rect.height;
+      widthRef.current = rect.width;
+      if (!isMountAnimationPreventedRef.current) {
+        node.style.transitionDuration = originalStylesRef.current.transitionDuration;
+        node.style.animationName = originalStylesRef.current.animationName;
+      }
+      setIsPresent(present);
+    }
+  }, [context.open, present]);
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Primitive$1.div,
+    {
+      "data-state": getState$1(context.open),
+      "data-disabled": context.disabled ? "" : void 0,
+      id: context.contentId,
+      hidden: !isOpen,
+      ...contentProps,
+      ref: composedRefs,
+      style: {
+        [`--radix-collapsible-content-height`]: height ? `${height}px` : void 0,
+        [`--radix-collapsible-content-width`]: width ? `${width}px` : void 0,
+        ...props.style
+      },
+      children: isOpen && children
+    }
+  );
+});
+function getState$1(open) {
+  return open ? "open" : "closed";
+}
+var Root$1 = Collapsible;
+var Trigger$1 = CollapsibleTrigger;
+var Content$1 = CollapsibleContent;
+var DirectionContext = reactExports.createContext(void 0);
+function useDirection(localDir) {
+  const globalDir = reactExports.useContext(DirectionContext);
+  return localDir || globalDir || "ltr";
+}
+var ACCORDION_NAME = "Accordion";
+var ACCORDION_KEYS = ["Home", "End", "ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight"];
+var [Collection$1, useCollection$1, createCollectionScope$1] = createCollection(ACCORDION_NAME);
+var [createAccordionContext] = createContextScope(ACCORDION_NAME, [
+  createCollectionScope$1,
+  createCollapsibleScope
+]);
+var useCollapsibleScope = createCollapsibleScope();
+var Accordion$1 = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const { type, ...accordionProps } = props;
+    const singleProps = accordionProps;
+    const multipleProps = accordionProps;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Collection$1.Provider, { scope: props.__scopeAccordion, children: type === "multiple" ? /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionImplMultiple, { ...multipleProps, ref: forwardedRef }) : /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionImplSingle, { ...singleProps, ref: forwardedRef }) });
+  }
+);
+Accordion$1.displayName = ACCORDION_NAME;
+var [AccordionValueProvider, useAccordionValueContext] = createAccordionContext(ACCORDION_NAME);
+var [AccordionCollapsibleProvider, useAccordionCollapsibleContext] = createAccordionContext(
+  ACCORDION_NAME,
+  { collapsible: false }
+);
+var AccordionImplSingle = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      value: valueProp,
+      defaultValue,
+      onValueChange = () => {
+      },
+      collapsible = false,
+      ...accordionSingleProps
+    } = props;
+    const [value, setValue] = useControllableState({
+      prop: valueProp,
+      defaultProp: defaultValue ?? "",
+      onChange: onValueChange,
+      caller: ACCORDION_NAME
+    });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AccordionValueProvider,
+      {
+        scope: props.__scopeAccordion,
+        value: React$4.useMemo(() => value ? [value] : [], [value]),
+        onItemOpen: setValue,
+        onItemClose: React$4.useCallback(() => collapsible && setValue(""), [collapsible, setValue]),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionImpl, { ...accordionSingleProps, ref: forwardedRef }) })
+      }
+    );
+  }
+);
+var AccordionImplMultiple = React$4.forwardRef((props, forwardedRef) => {
+  const {
+    value: valueProp,
+    defaultValue,
+    onValueChange = () => {
+    },
+    ...accordionMultipleProps
+  } = props;
+  const [value, setValue] = useControllableState({
+    prop: valueProp,
+    defaultProp: defaultValue ?? [],
+    onChange: onValueChange,
+    caller: ACCORDION_NAME
+  });
+  const handleItemOpen = React$4.useCallback(
+    (itemValue) => setValue((prevValue = []) => [...prevValue, itemValue]),
+    [setValue]
+  );
+  const handleItemClose = React$4.useCallback(
+    (itemValue) => setValue((prevValue = []) => prevValue.filter((value2) => value2 !== itemValue)),
+    [setValue]
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    AccordionValueProvider,
+    {
+      scope: props.__scopeAccordion,
+      value,
+      onItemOpen: handleItemOpen,
+      onItemClose: handleItemClose,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionCollapsibleProvider, { scope: props.__scopeAccordion, collapsible: true, children: /* @__PURE__ */ jsxRuntimeExports.jsx(AccordionImpl, { ...accordionMultipleProps, ref: forwardedRef }) })
+    }
+  );
+});
+var [AccordionImplProvider, useAccordionContext] = createAccordionContext(ACCORDION_NAME);
+var AccordionImpl = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, disabled, dir, orientation = "vertical", ...accordionProps } = props;
+    const accordionRef = React$4.useRef(null);
+    const composedRefs = useComposedRefs(accordionRef, forwardedRef);
+    const getItems = useCollection$1(__scopeAccordion);
+    const direction = useDirection(dir);
+    const isDirectionLTR = direction === "ltr";
+    const handleKeyDown = composeEventHandlers(props.onKeyDown, (event) => {
+      var _a2;
+      if (!ACCORDION_KEYS.includes(event.key)) return;
+      const target = event.target;
+      const triggerCollection = getItems().filter((item) => {
+        var _a3;
+        return !((_a3 = item.ref.current) == null ? void 0 : _a3.disabled);
+      });
+      const triggerIndex = triggerCollection.findIndex((item) => item.ref.current === target);
+      const triggerCount = triggerCollection.length;
+      if (triggerIndex === -1) return;
+      event.preventDefault();
+      let nextIndex = triggerIndex;
+      const homeIndex = 0;
+      const endIndex = triggerCount - 1;
+      const moveNext = () => {
+        nextIndex = triggerIndex + 1;
+        if (nextIndex > endIndex) {
+          nextIndex = homeIndex;
+        }
+      };
+      const movePrev = () => {
+        nextIndex = triggerIndex - 1;
+        if (nextIndex < homeIndex) {
+          nextIndex = endIndex;
+        }
+      };
+      switch (event.key) {
+        case "Home":
+          nextIndex = homeIndex;
+          break;
+        case "End":
+          nextIndex = endIndex;
+          break;
+        case "ArrowRight":
+          if (orientation === "horizontal") {
+            if (isDirectionLTR) {
+              moveNext();
+            } else {
+              movePrev();
+            }
+          }
+          break;
+        case "ArrowDown":
+          if (orientation === "vertical") {
+            moveNext();
+          }
+          break;
+        case "ArrowLeft":
+          if (orientation === "horizontal") {
+            if (isDirectionLTR) {
+              movePrev();
+            } else {
+              moveNext();
+            }
+          }
+          break;
+        case "ArrowUp":
+          if (orientation === "vertical") {
+            movePrev();
+          }
+          break;
+      }
+      const clampedIndex = nextIndex % triggerCount;
+      (_a2 = triggerCollection[clampedIndex].ref.current) == null ? void 0 : _a2.focus();
+    });
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AccordionImplProvider,
+      {
+        scope: __scopeAccordion,
+        disabled,
+        direction: dir,
+        orientation,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Collection$1.Slot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Primitive$1.div,
+          {
+            ...accordionProps,
+            "data-orientation": orientation,
+            ref: composedRefs,
+            onKeyDown: disabled ? void 0 : handleKeyDown
+          }
+        ) })
+      }
+    );
+  }
+);
+var ITEM_NAME$1 = "AccordionItem";
+var [AccordionItemProvider, useAccordionItemContext] = createAccordionContext(ITEM_NAME$1);
+var AccordionItem$1 = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, value, ...accordionItemProps } = props;
+    const accordionContext = useAccordionContext(ITEM_NAME$1, __scopeAccordion);
+    const valueContext = useAccordionValueContext(ITEM_NAME$1, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    const triggerId = useId();
+    const open = value && valueContext.value.includes(value) || false;
+    const disabled = accordionContext.disabled || props.disabled;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AccordionItemProvider,
+      {
+        scope: __scopeAccordion,
+        open,
+        disabled,
+        triggerId,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Root$1,
+          {
+            "data-orientation": accordionContext.orientation,
+            "data-state": getState(open),
+            ...collapsibleScope,
+            ...accordionItemProps,
+            ref: forwardedRef,
+            disabled,
+            open,
+            onOpenChange: (open2) => {
+              if (open2) {
+                valueContext.onItemOpen(value);
+              } else {
+                valueContext.onItemClose(value);
+              }
+            }
+          }
+        )
+      }
+    );
+  }
+);
+AccordionItem$1.displayName = ITEM_NAME$1;
+var HEADER_NAME = "AccordionHeader";
+var AccordionHeader = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...headerProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(HEADER_NAME, __scopeAccordion);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Primitive$1.h3,
+      {
+        "data-orientation": accordionContext.orientation,
+        "data-state": getState(itemContext.open),
+        "data-disabled": itemContext.disabled ? "" : void 0,
+        ...headerProps,
+        ref: forwardedRef
+      }
+    );
+  }
+);
+AccordionHeader.displayName = HEADER_NAME;
+var TRIGGER_NAME$1 = "AccordionTrigger";
+var AccordionTrigger$1 = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...triggerProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(TRIGGER_NAME$1, __scopeAccordion);
+    const collapsibleContext = useAccordionCollapsibleContext(TRIGGER_NAME$1, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Collection$1.ItemSlot, { scope: __scopeAccordion, children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Trigger$1,
+      {
+        "aria-disabled": itemContext.open && !collapsibleContext.collapsible || void 0,
+        "data-orientation": accordionContext.orientation,
+        id: itemContext.triggerId,
+        ...collapsibleScope,
+        ...triggerProps,
+        ref: forwardedRef
+      }
+    ) });
+  }
+);
+AccordionTrigger$1.displayName = TRIGGER_NAME$1;
+var CONTENT_NAME$2 = "AccordionContent";
+var AccordionContent$1 = React$4.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeAccordion, ...contentProps } = props;
+    const accordionContext = useAccordionContext(ACCORDION_NAME, __scopeAccordion);
+    const itemContext = useAccordionItemContext(CONTENT_NAME$2, __scopeAccordion);
+    const collapsibleScope = useCollapsibleScope(__scopeAccordion);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Content$1,
+      {
+        role: "region",
+        "aria-labelledby": itemContext.triggerId,
+        "data-orientation": accordionContext.orientation,
+        ...collapsibleScope,
+        ...contentProps,
+        ref: forwardedRef,
+        style: {
+          ["--radix-accordion-content-height"]: "var(--radix-collapsible-content-height)",
+          ["--radix-accordion-content-width"]: "var(--radix-collapsible-content-width)",
+          ...props.style
+        }
+      }
+    );
+  }
+);
+AccordionContent$1.displayName = CONTENT_NAME$2;
+function getState(open) {
+  return open ? "open" : "closed";
+}
+var Root2$2 = Accordion$1;
+var Item$1 = AccordionItem$1;
+var Header = AccordionHeader;
+var Trigger2 = AccordionTrigger$1;
+var Content2$1 = AccordionContent$1;
+function Accordion({
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Root2$2, { "data-slot": "accordion", ...props });
+}
+function AccordionItem({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Item$1,
+    {
+      "data-slot": "accordion-item",
+      className: cn("border-b last:border-b-0", className),
+      ...props
+    }
+  );
+}
+function AccordionTrigger({
+  className,
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Header, { className: "flex", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    Trigger2,
+    {
+      "data-slot": "accordion-trigger",
+      className: cn(
+        "focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 rounded-md py-4 text-left text-sm font-medium transition-all outline-none hover:underline focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180",
+        className
+      ),
+      ...props,
+      children: [
+        children,
+        /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "text-muted-foreground pointer-events-none size-4 shrink-0 translate-y-0.5 transition-transform duration-200" })
+      ]
+    }
+  ) });
+}
+function AccordionContent({
+  className,
+  children,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Content2$1,
+    {
+      "data-slot": "accordion-content",
+      className: "data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down overflow-hidden text-sm",
+      ...props,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: cn("pt-0 pb-4", className), children })
+    }
+  );
+}
 function LandingPage() {
   const { login } = useInternetIdentity();
+  const { t: t2 } = useTranslation();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("section", { "data-ocid": "landing", className: "bg-background", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative h-[62vh] min-h-[26rem] w-full max-h-[32rem] overflow-hidden md:h-[70vh]", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "img",
         {
           src: "/assets/generated/vault-door-photo.dim_1200x900.jpg",
-          alt: "A photograph of a massive circular steel bank vault door with heavy locking bolts and hinges, a glowing pink-to-blue Internet Computer infinity emblem at its center",
+          alt: t2("landing.vaultDoorAlt"),
           className: "absolute inset-0 h-full w-full object-cover object-center"
         }
       ),
@@ -46040,13 +54034,13 @@ function LandingPage() {
         {
           "data-ocid": "landing.eyebrow",
           className: "mb-4 font-mono text-[0.6875rem] uppercase tracking-[0.28em] text-muted-foreground md:text-xs",
-          children: "Self-sovereign inheritance"
+          children: t2("landing.eyebrow")
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-extruded-gold mb-8 font-display text-xl font-semibold leading-snug tracking-tight md:text-2xl", children: [
-        "Your vault.",
+        t2("landing.headline1"),
         /* @__PURE__ */ jsxRuntimeExports.jsx("br", {}),
-        "Sealed until it isn't."
+        t2("landing.headline2")
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
         "button",
@@ -46055,7 +54049,7 @@ function LandingPage() {
           "data-ocid": "landing.login",
           onClick: () => login(),
           className: "inline-flex items-center gap-2 rounded border border-primary/40 bg-gradient-gold px-8 py-4 font-mono text-sm font-semibold uppercase tracking-[0.16em] text-primary-foreground shadow-gold-glow transition-smooth hover:shadow-elevated hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-          children: "Login with Internet Identity"
+          children: t2("landing.login")
         }
       ),
       /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -46063,9 +54057,474 @@ function LandingPage() {
         {
           "data-ocid": "landing.subhead",
           className: "mt-8 max-w-2xl text-base leading-relaxed text-muted-foreground md:text-lg",
-          children: "A digital dead man's switch for crypto, built natively on the Internet Computer — no probate, no delays, no one watching but the chain itself."
+          children: t2("landing.subhead")
         }
       )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        "data-ocid": "landing.introduction",
+        className: "mx-auto max-w-3xl px-6 pb-24",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
+            {
+              "data-ocid": "landing.introduction.eyebrow",
+              className: "mb-4 font-mono text-[0.6875rem] uppercase tracking-[0.28em] text-muted-foreground md:text-xs",
+              children: t2("landing.introduction.eyebrow")
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "mb-8 font-display text-3xl font-semibold leading-snug tracking-tight text-foreground md:text-4xl", children: t2("landing.introduction.heading") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5 text-base leading-relaxed text-muted-foreground md:text-lg", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p1") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p2") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p3") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p4") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p5") })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mt-12 mb-4 font-display text-2xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.introduction.h3a") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5 text-base leading-relaxed text-muted-foreground md:text-lg", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p6") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: t2("landing.introduction.p7") })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mt-12 mb-4 font-display text-2xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.introduction.h3b") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground md:text-lg", children: t2("landing.introduction.p8") })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        "data-ocid": "landing.advantages",
+        className: "mx-auto max-w-6xl px-6 pb-24",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "p",
+            {
+              "data-ocid": "landing.advantages.eyebrow",
+              className: "mb-4 text-center font-mono text-[0.6875rem] uppercase tracking-[0.28em] text-muted-foreground md:text-xs",
+              children: t2("landing.advantages.eyebrow")
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "mb-12 text-center font-display text-3xl font-semibold leading-snug tracking-tight text-foreground md:text-4xl", children: t2("landing.advantages.heading") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-6 md:grid-cols-2 lg:grid-cols-3", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                "data-ocid": "landing.advantages.card.1",
+                className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.advantages.card1.title") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.advantages.card1.body") })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                "data-ocid": "landing.advantages.card.2",
+                className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.advantages.card2.title") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.advantages.card2.body") })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                "data-ocid": "landing.advantages.card.3",
+                className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.advantages.card3.title") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.advantages.card3.body") })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                "data-ocid": "landing.advantages.card.4",
+                className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.advantages.card4.title") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.advantages.card4.body") })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "article",
+              {
+                "data-ocid": "landing.advantages.card.5",
+                className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.advantages.card5.title") }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.advantages.card5.body") })
+                ]
+              }
+            )
+          ] })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "landing.faq", className: "mx-auto max-w-3xl px-6 pb-24", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          "data-ocid": "landing.faq.eyebrow",
+          className: "mb-4 font-mono text-[0.6875rem] uppercase tracking-[0.28em] text-muted-foreground md:text-xs",
+          children: t2("landing.faq.eyebrow")
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "h2",
+        {
+          "data-ocid": "landing.faq.heading",
+          className: "mb-8 font-display text-3xl font-semibold leading-snug tracking-tight text-foreground md:text-4xl",
+          children: t2("landing.faq.heading")
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Accordion, { type: "single", collapsible: true, className: "space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q1",
+            "data-ocid": "landing.faq.item.1",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.1.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q1.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.1.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q1.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q2",
+            "data-ocid": "landing.faq.item.2",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.2.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q2.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.2.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q2.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q3",
+            "data-ocid": "landing.faq.item.3",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.3.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q3.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.3.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q3.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q4",
+            "data-ocid": "landing.faq.item.4",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.4.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q4.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.4.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q4.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q5",
+            "data-ocid": "landing.faq.item.5",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.5.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q5.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.5.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q5.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q6",
+            "data-ocid": "landing.faq.item.6",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.6.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q6.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.6.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q6.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q7",
+            "data-ocid": "landing.faq.item.7",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.7.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q7.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.7.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q7.a")
+                }
+              )
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          AccordionItem,
+          {
+            value: "q8",
+            "data-ocid": "landing.faq.item.8",
+            className: "rounded border border-border bg-surface shadow-subtle transition-smooth",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionTrigger,
+                {
+                  "data-ocid": "landing.faq.item.8.trigger",
+                  className: "px-6 py-5 font-display text-lg font-semibold leading-snug tracking-tight text-foreground hover:no-underline",
+                  children: t2("landing.faq.q8.q")
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                AccordionContent,
+                {
+                  "data-ocid": "landing.faq.item.8.content",
+                  className: "px-6 text-base leading-relaxed text-muted-foreground",
+                  children: t2("landing.faq.q8.a")
+                }
+              )
+            ]
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "landing.terms", className: "mx-auto max-w-6xl px-6 pb-24", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "p",
+        {
+          "data-ocid": "landing.terms.eyebrow",
+          className: "mb-4 text-center font-mono text-[0.6875rem] uppercase tracking-[0.28em] text-muted-foreground md:text-xs",
+          children: t2("landing.terms.eyebrow")
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "h2",
+        {
+          "data-ocid": "landing.terms.heading",
+          className: "mb-12 text-center font-display text-3xl font-semibold leading-snug tracking-tight text-foreground md:text-4xl",
+          children: t2("landing.terms.heading")
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-6 md:grid-cols-2 lg:grid-cols-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.1",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card1.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card1.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.2",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card2.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card2.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.3",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card3.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card3.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.4",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card4.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card4.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.5",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card5.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card5.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.6",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card6.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card6.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.7",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card7.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card7.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.8",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card8.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card8.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.9",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card9.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card9.body") })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "article",
+          {
+            "data-ocid": "landing.terms.card.10",
+            className: "animate-fade-rise rounded border border-border bg-surface p-8 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("h3", { className: "mb-3 font-display text-xl font-semibold leading-snug tracking-tight text-foreground", children: t2("landing.terms.card10.title") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base leading-relaxed text-muted-foreground", children: t2("landing.terms.card10.body") })
+            ]
+          }
+        )
+      ] })
     ] })
   ] });
 }
@@ -46114,73 +54573,6 @@ function CardContent({ className, ...props }) {
 }
 function clamp$1(value, [min2, max2]) {
   return Math.min(max2, Math.max(min2, value));
-}
-function createCollection(name) {
-  const PROVIDER_NAME = name + "CollectionProvider";
-  const [createCollectionContext, createCollectionScope2] = createContextScope(PROVIDER_NAME);
-  const [CollectionProviderImpl, useCollectionContext] = createCollectionContext(
-    PROVIDER_NAME,
-    { collectionRef: { current: null }, itemMap: /* @__PURE__ */ new Map() }
-  );
-  const CollectionProvider = (props) => {
-    const { scope, children } = props;
-    const ref = React2.useRef(null);
-    const itemMap = React2.useRef(/* @__PURE__ */ new Map()).current;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(CollectionProviderImpl, { scope, itemMap, collectionRef: ref, children });
-  };
-  CollectionProvider.displayName = PROVIDER_NAME;
-  const COLLECTION_SLOT_NAME = name + "CollectionSlot";
-  const CollectionSlotImpl = /* @__PURE__ */ createSlot(COLLECTION_SLOT_NAME);
-  const CollectionSlot = React2.forwardRef(
-    (props, forwardedRef) => {
-      const { scope, children } = props;
-      const context = useCollectionContext(COLLECTION_SLOT_NAME, scope);
-      const composedRefs = useComposedRefs(forwardedRef, context.collectionRef);
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(CollectionSlotImpl, { ref: composedRefs, children });
-    }
-  );
-  CollectionSlot.displayName = COLLECTION_SLOT_NAME;
-  const ITEM_SLOT_NAME = name + "CollectionItemSlot";
-  const ITEM_DATA_ATTR = "data-radix-collection-item";
-  const CollectionItemSlotImpl = /* @__PURE__ */ createSlot(ITEM_SLOT_NAME);
-  const CollectionItemSlot = React2.forwardRef(
-    (props, forwardedRef) => {
-      const { scope, children, ...itemData } = props;
-      const ref = React2.useRef(null);
-      const composedRefs = useComposedRefs(forwardedRef, ref);
-      const context = useCollectionContext(ITEM_SLOT_NAME, scope);
-      React2.useEffect(() => {
-        context.itemMap.set(ref, { ref, ...itemData });
-        return () => void context.itemMap.delete(ref);
-      });
-      return /* @__PURE__ */ jsxRuntimeExports.jsx(CollectionItemSlotImpl, { ...{ [ITEM_DATA_ATTR]: "" }, ref: composedRefs, children });
-    }
-  );
-  CollectionItemSlot.displayName = ITEM_SLOT_NAME;
-  function useCollection2(scope) {
-    const context = useCollectionContext(name + "CollectionConsumer", scope);
-    const getItems = React2.useCallback(() => {
-      const collectionNode = context.collectionRef.current;
-      if (!collectionNode) return [];
-      const orderedNodes = Array.from(collectionNode.querySelectorAll(`[${ITEM_DATA_ATTR}]`));
-      const items = Array.from(context.itemMap.values());
-      const orderedItems = items.sort(
-        (a2, b2) => orderedNodes.indexOf(a2.ref.current) - orderedNodes.indexOf(b2.ref.current)
-      );
-      return orderedItems;
-    }, [context.collectionRef, context.itemMap]);
-    return getItems;
-  }
-  return [
-    { Provider: CollectionProvider, Slot: CollectionSlot, ItemSlot: CollectionItemSlot },
-    useCollection2,
-    createCollectionScope2
-  ];
-}
-var DirectionContext = reactExports.createContext(void 0);
-function useDirection(localDir) {
-  const globalDir = reactExports.useContext(DirectionContext);
-  return localDir || globalDir || "ltr";
 }
 const sides = ["top", "right", "bottom", "left"];
 const min = Math.min;
@@ -49729,19 +58121,24 @@ function Skeleton({ className, ...props }) {
   );
 }
 const CADENCE_OPTIONS$1 = [
-  { seconds: 86400n, label: "Daily", hint: "24 hours" },
-  { seconds: 604800n, label: "Weekly", hint: "7 days" },
-  { seconds: 2592000n, label: "Monthly", hint: "30 days" },
-  { seconds: 31536000n, label: "Yearly", hint: "365 days" }
+  { seconds: 86400n, labelKey: "settings.daily", hintKey: "settings.h24" },
+  { seconds: 604800n, labelKey: "settings.weekly", hintKey: "settings.h7d" },
+  { seconds: 2592000n, labelKey: "settings.monthly", hintKey: "settings.h30d" },
+  {
+    seconds: 31536000n,
+    labelKey: "settings.yearly",
+    hintKey: "settings.h365d"
+  }
 ];
-function formatCadence(seconds) {
+function formatCadence(seconds, t2) {
   const option = CADENCE_OPTIONS$1.find((o) => o.seconds === seconds);
-  return option ? option.label : `${seconds} s`;
+  return option ? t2(option.labelKey) : `${seconds} s`;
 }
 function formatShare(share) {
   return `${Number(share)}%`;
 }
 function SwitchSettings() {
+  const { t: t2 } = useTranslation();
   const { actor, isFetching } = useActor(createActor);
   const queryClient2 = useQueryClient();
   const { data: state, isLoading } = useQuery({
@@ -49759,13 +58156,15 @@ function SwitchSettings() {
     },
     onSuccess: (next) => {
       queryClient2.setQueryData(["switchState"], next);
-      ue.success("The Switch armed", {
-        description: `Check-in cadence set to ${formatCadence(next.cadenceSeconds)}.`
+      ue.success(t2("settings.toast.armed"), {
+        description: t2("settings.toast.armedDesc", {
+          cadence: formatCadence(next.cadenceSeconds, t2)
+        })
       });
     },
     onError: () => {
-      ue.error("Could not arm The Switch", {
-        description: "The vault could not be armed. Please try again."
+      ue.error(t2("settings.toast.armError"), {
+        description: t2("settings.toast.armErrorDesc")
       });
     }
   });
@@ -49776,13 +58175,13 @@ function SwitchSettings() {
     },
     onSuccess: (next) => {
       queryClient2.setQueryData(["switchState"], next);
-      ue.success("The Switch disarmed", {
-        description: "The vault is no longer armed."
+      ue.success(t2("settings.toast.disarmed"), {
+        description: t2("settings.toast.disarmedDesc")
       });
     },
     onError: () => {
-      ue.error("Could not disarm The Switch", {
-        description: "The vault could not be disarmed. Please try again."
+      ue.error(t2("settings.toast.disarmError"), {
+        description: t2("settings.toast.disarmErrorDesc")
       });
     }
   });
@@ -49807,16 +58206,15 @@ function SwitchSettings() {
             "aria-hidden": "true"
           }
         ),
-        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-sm font-semibold uppercase tracking-[0.16em] text-foreground", children: isArmed ? "Armed" : "Disarmed" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-mono text-sm font-semibold uppercase tracking-[0.16em] text-foreground", children: isArmed ? t2("common.armed") : t2("common.disarmed") })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-mono text-xs text-muted-foreground", children: [
-        "Cadence · ",
-        formatCadence(state.cadenceSeconds)
-      ] })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs text-muted-foreground", children: t2("settings.cadence", {
+        value: formatCadence(state.cadenceSeconds, t2)
+      }) })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "cadence", children: "Check-in cadence" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "cadence", children: t2("common.checkInCadence") }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Select,
           {
@@ -49830,7 +58228,7 @@ function SwitchSettings() {
                   id: "cadence",
                   "data-ocid": "settings.cadence",
                   className: "w-full",
-                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select cadence" })
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: t2("common.selectCadence") })
                 }
               ),
               /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CADENCE_OPTIONS$1.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -49838,9 +58236,9 @@ function SwitchSettings() {
                 {
                   value: option.seconds.toString(),
                   children: [
-                    option.label,
+                    t2(option.labelKey),
                     " · ",
-                    option.hint
+                    t2(option.hintKey)
                   ]
                 },
                 option.seconds.toString()
@@ -49858,7 +58256,7 @@ function SwitchSettings() {
           disabled: disarmMutation.isPending,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldOff, { className: "size-4" }),
-            disarmMutation.isPending ? "Disarming…" : "Disarm"
+            disarmMutation.isPending ? t2("common.disarming") : t2("common.disarm")
           ]
         }
       ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -49869,7 +58267,7 @@ function SwitchSettings() {
           disabled: armMutation.isPending,
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, { className: "size-4" }),
-            armMutation.isPending ? "Arming…" : "Arm"
+            armMutation.isPending ? t2("common.arming") : t2("common.arm")
           ]
         }
       )
@@ -49879,7 +58277,8 @@ function SwitchSettings() {
 function BeneficiaryRow({
   beneficiary,
   onEdit,
-  onRemove
+  onRemove,
+  t: t2
 }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsxs(
     "div",
@@ -49900,7 +58299,7 @@ function BeneficiaryRow({
               variant: "outline",
               size: "sm",
               onClick: () => onEdit(beneficiary),
-              children: "Edit"
+              children: t2("common.edit")
             }
           ),
           /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -49909,7 +58308,7 @@ function BeneficiaryRow({
               "data-ocid": `settings.beneficiary.delete_button.${beneficiary.id}`,
               variant: "ghost",
               size: "icon",
-              "aria-label": `Remove ${beneficiary.name}`,
+              "aria-label": t2("beneficiaries.removeAria", { name: beneficiary.name }),
               onClick: () => onRemove(beneficiary),
               children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { className: "size-4" })
             }
@@ -49920,6 +58319,7 @@ function BeneficiaryRow({
   );
 }
 function BeneficiarySettings() {
+  const { t: t2 } = useTranslation();
   const { actor, isFetching } = useActor(createActor);
   const queryClient2 = useQueryClient();
   const { data: beneficiaries, isLoading } = useQuery({
@@ -49958,13 +58358,13 @@ function BeneficiarySettings() {
     onSuccess: () => {
       void queryClient2.invalidateQueries({ queryKey: ["beneficiaries"] });
       setEditing(null);
-      ue.success("Beneficiary updated", {
-        description: "The beneficiary configuration has been saved."
+      ue.success(t2("settings.toast.beneficiaryUpdated"), {
+        description: t2("settings.toast.beneficiaryUpdatedDesc")
       });
     },
     onError: () => {
-      ue.error("Could not update beneficiary", {
-        description: "The changes were not saved. Please try again."
+      ue.error(t2("settings.toast.updateError"), {
+        description: t2("settings.toast.updateErrorDesc")
       });
     }
   });
@@ -49976,13 +58376,13 @@ function BeneficiarySettings() {
     onSuccess: () => {
       void queryClient2.invalidateQueries({ queryKey: ["beneficiaries"] });
       setRemoving(null);
-      ue.success("Beneficiary removed", {
-        description: "The beneficiary has been removed from the vault."
+      ue.success(t2("settings.toast.beneficiaryRemoved"), {
+        description: t2("settings.toast.beneficiaryRemovedDesc")
       });
     },
     onError: () => {
-      ue.error("Could not remove beneficiary", {
-        description: "The beneficiary could not be removed. Please try again."
+      ue.error(t2("settings.toast.removeError"), {
+        description: t2("settings.toast.removeErrorDesc")
       });
     }
   });
@@ -50000,14 +58400,15 @@ function BeneficiarySettings() {
       {
         "data-ocid": "settings.beneficiaries.empty_state",
         className: "rounded border border-dashed border-border px-4 py-8 text-center font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground",
-        children: "No beneficiaries configured yet"
+        children: t2("settings.emptyBeneficiaries")
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", children: list.map((b2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
       BeneficiaryRow,
       {
         beneficiary: b2,
         onEdit: openEdit,
-        onRemove: setRemoving
+        onRemove: setRemoving,
+        t: t2
       },
       b2.id.toString()
     )) }),
@@ -50018,12 +58419,12 @@ function BeneficiarySettings() {
         onOpenChange: (open) => !open && setEditing(null),
         children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { "data-ocid": "settings.beneficiary_modal", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Edit beneficiary" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { children: "Update the name, allocation share, and wallet address for this beneficiary." })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: t2("settings.editBeneficiary") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { children: t2("settings.editBeneficiaryDesc") })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-name", children: "Name" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-name", children: t2("common.name") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
                 {
@@ -50035,7 +58436,7 @@ function BeneficiarySettings() {
               )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-share", children: "Allocation share (%)" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-share", children: t2("common.allocationShare") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
                 {
@@ -50048,7 +58449,7 @@ function BeneficiarySettings() {
               )
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-wallet", children: "Wallet address" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "beneficiary-wallet", children: t2("common.walletAddress") }),
               /* @__PURE__ */ jsxRuntimeExports.jsx(
                 Input,
                 {
@@ -50067,7 +58468,7 @@ function BeneficiarySettings() {
                 variant: "outline",
                 "data-ocid": "settings.beneficiary.cancel_button",
                 onClick: () => setEditing(null),
-                children: "Cancel"
+                children: t2("common.cancel")
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -50076,7 +58477,7 @@ function BeneficiarySettings() {
                 "data-ocid": "settings.beneficiary.save_button",
                 onClick: () => updateMutation.mutate(),
                 disabled: !canSave || updateMutation.isPending,
-                children: updateMutation.isPending ? "Saving…" : "Save changes"
+                children: updateMutation.isPending ? t2("common.saving") : t2("common.saveChanges")
               }
             )
           ] })
@@ -50090,12 +58491,10 @@ function BeneficiarySettings() {
         onOpenChange: (open) => !open && setRemoving(null),
         children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { "data-ocid": "settings.beneficiary_remove_modal", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogHeader, { children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Remove beneficiary" }),
-            /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogDescription, { children: [
-              "Remove ",
-              removing == null ? void 0 : removing.name,
-              " from the vault? This cannot be undone."
-            ] })
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: t2("settings.removeBeneficiary") }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(DialogDescription, { children: t2("settings.removeBeneficiaryDesc", {
+              name: (removing == null ? void 0 : removing.name) ?? ""
+            }) })
           ] }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -50104,7 +58503,7 @@ function BeneficiarySettings() {
                 variant: "outline",
                 "data-ocid": "settings.beneficiary.remove_cancel_button",
                 onClick: () => setRemoving(null),
-                children: "Cancel"
+                children: t2("common.cancel")
               }
             ),
             /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -50114,7 +58513,7 @@ function BeneficiarySettings() {
                 "data-ocid": "settings.beneficiary.remove_confirm_button",
                 onClick: () => removeMutation.mutate(),
                 disabled: removeMutation.isPending,
-                children: removeMutation.isPending ? "Removing…" : "Remove"
+                children: removeMutation.isPending ? t2("common.removing") : t2("common.remove")
               }
             )
           ] })
@@ -50124,11 +58523,12 @@ function BeneficiarySettings() {
   ] });
 }
 function SettingsPage() {
+  const { t: t2 } = useTranslation();
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "settings", className: "mx-auto max-w-7xl px-6 py-10 lg:px-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8 animate-fade-rise", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: "Settings" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: "Vault Configuration" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: "Preserve the configuration that governs your legacy — the arm/disarm state of The Switch, its check-in cadence, and the beneficiaries it is sealed for." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: t2("settings.eyebrow") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: t2("settings.title") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: t2("settings.subtitle") })
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid gap-6 lg:grid-cols-2", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -50138,8 +58538,8 @@ function SettingsPage() {
           className: "animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow",
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "px-0 pt-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "font-display text-xl font-semibold tracking-tight", children: "The Switch" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: "Arm or disarm the vault and set how often it must be verified." })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "font-display text-xl font-semibold tracking-tight", children: t2("settings.switchTitle") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: t2("settings.switchDesc") })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "px-0 pb-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SwitchSettings, {}) })
           ]
@@ -50152,8 +58552,8 @@ function SettingsPage() {
           className: "animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]",
           children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "px-0 pt-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "font-display text-xl font-semibold tracking-tight", children: "Beneficiaries" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: "Edit the people and causes your legacy is sealed for." })
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "font-display text-xl font-semibold tracking-tight", children: t2("settings.beneficiariesTitle") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CardDescription, { children: t2("settings.beneficiariesDesc") })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "px-0 pb-0", children: /* @__PURE__ */ jsxRuntimeExports.jsx(BeneficiarySettings, {}) })
           ]
@@ -50163,9 +58563,9 @@ function SettingsPage() {
   ] });
 }
 const CADENCE_OPTIONS = [
-  { label: "24 hours", seconds: 86400n },
-  { label: "7 days", seconds: 604800n },
-  { label: "30 days", seconds: 2592000n }
+  { labelKey: "switch.cadence24h", seconds: 86400n },
+  { labelKey: "switch.cadence7d", seconds: 604800n },
+  { labelKey: "switch.cadence30d", seconds: 2592000n }
 ];
 const DEFAULT_CADENCE = "604800";
 function useSwitchState() {
@@ -50242,10 +58642,10 @@ function formatDuration(seconds) {
   if (hours > 0) return `${hours}h ${minutes}m`;
   return `${minutes}m`;
 }
-function formatDateTime(timestamp) {
+function formatDateTime(timestamp, formatDate) {
   const date = new Date(Number(timestamp / 1000000n));
   if (Number.isNaN(date.getTime())) return "—";
-  return date.toLocaleString(void 0, {
+  return formatDate(date, {
     month: "short",
     day: "numeric",
     hour: "2-digit",
@@ -50253,12 +58653,14 @@ function formatDateTime(timestamp) {
   });
 }
 function SwitchPage() {
+  const { t: t2, formatDate } = useTranslation();
   const stateQuery = useSwitchState();
   const timelineQuery = useSwitchTimeline();
   const armMutation = useArmSwitch();
   const disarmMutation = useDisarmSwitch();
   const checkInMutation = useCheckIn();
   const [cadence, setCadence] = reactExports.useState(DEFAULT_CADENCE);
+  const [cadenceError, setCadenceError] = reactExports.useState(null);
   const state = stateQuery.data;
   const timeline = timelineQuery.data;
   const loading = stateQuery.isLoading || timelineQuery.isLoading;
@@ -50270,6 +58672,12 @@ function SwitchPage() {
   ) : 0;
   const ticks = [0, 0.25, 0.5, 0.75, 1];
   const handleArm = () => {
+    const parsed = Number(cadence);
+    if (!Number.isFinite(parsed) || parsed <= 0) {
+      setCadenceError(t2("switch.cadenceError"));
+      return;
+    }
+    setCadenceError(null);
     armMutation.mutate(BigInt(cadence));
   };
   const handleDisarm = () => {
@@ -50281,9 +58689,9 @@ function SwitchPage() {
   const anyPending = armMutation.isPending || disarmMutation.isPending || checkInMutation.isPending;
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { "data-ocid": "switch", className: "mx-auto max-w-7xl px-6 py-10 lg:px-8", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("header", { className: "mb-8 animate-fade-rise", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: "The Switch" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: "The Switch" }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: "The single control that hands the vault over. Armed, verified, and deliberate." })
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: t2("switch.eyebrow") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "mt-2 font-display text-3xl font-semibold tracking-tight text-foreground", children: t2("switch.title") }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground", children: t2("switch.subtitle") })
     ] }),
     loading ? /* @__PURE__ */ jsxRuntimeExports.jsx(
       "section",
@@ -50305,8 +58713,8 @@ function SwitchPage() {
         "data-ocid": "switch.error_state",
         className: "rounded border border-destructive/40 bg-surface p-10 text-center shadow-subtle",
         children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-destructive", children: "Switch unreachable" }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground", children: "We couldn't read the switch state. Please try again." })
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-destructive", children: t2("switch.errorEyebrow") }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground", children: t2("switch.errorBody") })
         ]
       }
     ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -50326,14 +58734,14 @@ function SwitchPage() {
                       "aria-hidden": "true"
                     }
                   ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: isArmed ? "Active · Dead man's switch" : "Standing down" })
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground", children: isArmed ? t2("switch.active") : t2("switch.standingDown") })
                 ] }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx(
                   "p",
                   {
                     "data-ocid": "switch.status_word",
                     className: `mt-4 font-display text-6xl font-semibold tracking-tight md:text-7xl ${isArmed ? "text-extruded-gold" : "text-muted-foreground"}`,
-                    children: isArmed ? "ARMED" : "DISARMED"
+                    children: isArmed ? t2("switch.armed") : t2("switch.disarmed")
                   }
                 )
               ] }),
@@ -50347,7 +58755,7 @@ function SwitchPage() {
                     className: "bg-gradient-gold px-6 text-primary-foreground hover:opacity-90",
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, {}),
-                      "I'm still here"
+                      t2("switch.checkIn")
                     ]
                   }
                 ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -50359,7 +58767,7 @@ function SwitchPage() {
                     className: "bg-gradient-gold px-6 text-primary-foreground hover:opacity-90",
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, {}),
-                      "Arm the switch"
+                      t2("switch.arm")
                     ]
                   }
                 ),
@@ -50373,7 +58781,7 @@ function SwitchPage() {
                     className: "text-muted-foreground",
                     children: [
                       /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldOff, {}),
-                      "Disarm"
+                      t2("switch.disarm")
                     ]
                   }
                 )
@@ -50383,20 +58791,22 @@ function SwitchPage() {
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: [
                 /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(Timer, { className: "size-3.5", "aria-hidden": "true" }),
-                  "Cadence · ",
-                  formatDuration(cadenceSeconds)
+                  t2("switch.cadence", {
+                    duration: formatDuration(cadenceSeconds)
+                  })
                 ] }),
-                isArmed && (timeline == null ? void 0 : timeline.timeUntilRelease) != null && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { "data-ocid": "switch.time_until_release", children: [
-                  "Release in ",
-                  formatDuration(timeline.timeUntilRelease)
-                ] })
+                isArmed && (timeline == null ? void 0 : timeline.timeUntilRelease) != null && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { "data-ocid": "switch.time_until_release", children: t2("switch.releaseIn", {
+                  duration: formatDuration(timeline.timeUntilRelease)
+                }) })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 "div",
                 {
                   className: "relative mt-4 h-3 w-full",
                   role: "img",
-                  "aria-label": isArmed ? `Dead man's switch timeline, ${Math.round(progress * 100)}% of cadence elapsed` : "Dead man's switch timeline, disarmed",
+                  "aria-label": isArmed ? t2("switch.timelineAriaArmed", {
+                    percent: Math.round(progress * 100)
+                  }) : t2("switch.timelineAriaDisarmed"),
                   children: [
                     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "absolute inset-x-0 top-1/2 h-1 -translate-y-1/2 rounded-full bg-surface-raised" }),
                     /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -50407,33 +58817,33 @@ function SwitchPage() {
                         "aria-hidden": "true"
                       }
                     ),
-                    ticks.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    ticks.map((t22) => /* @__PURE__ */ jsxRuntimeExports.jsx(
                       "span",
                       {
                         className: "absolute top-1/2 h-3 w-px -translate-y-1/2 bg-border",
-                        style: { left: `${t * 100}%` },
+                        style: { left: `${t22 * 100}%` },
                         "aria-hidden": "true"
                       },
-                      t
+                      t22
                     ))
                   ]
                 }
               ),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 flex justify-between font-mono text-[0.6875rem] text-muted-foreground", children: ticks.map((t) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: formatDuration(
-                BigInt(Math.round(t * Number(cadenceSeconds)))
-              ) }, t)) })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-2 flex justify-between font-mono text-[0.6875rem] text-muted-foreground", children: ticks.map((t22) => /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: formatDuration(
+                BigInt(Math.round(t22 * Number(cadenceSeconds)))
+              ) }, t22)) })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-8 grid gap-4 border-t border-border pt-6 sm:grid-cols-3", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Last check-in" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-sm text-foreground", children: (state == null ? void 0 : state.lastCheckIn) ? formatDateTime(state.lastCheckIn) : "—" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("switch.lastCheckIn") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-sm text-foreground", children: (state == null ? void 0 : state.lastCheckIn) ? formatDateTime(state.lastCheckIn, formatDate) : "—" })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Armed at" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-sm text-foreground", children: (state == null ? void 0 : state.armedAt) ? formatDateTime(state.armedAt) : "—" })
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("switch.armedAt") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-sm text-foreground", children: (state == null ? void 0 : state.armedAt) ? formatDateTime(state.armedAt, formatDate) : "—" })
               ] }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Cadence" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("switch.cadenceLabel") }),
                 /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 font-mono text-sm text-foreground", children: formatDuration(cadenceSeconds) })
               ] })
             ] })
@@ -50447,8 +58857,8 @@ function SwitchPage() {
           className: "mt-6 animate-fade-rise rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]",
           children: isArmed ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-4", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Standing down" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground", children: "Disarming halts the dead man's switch. The vault stays sealed, but it will no longer release to your beneficiaries on a missed check-in." })
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("switch.standingDownTitle") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground", children: t2("switch.standingDownBody") })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
               Button,
@@ -50460,35 +58870,53 @@ function SwitchPage() {
                 className: "text-muted-foreground",
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldOff, {}),
-                  "Disarm the switch"
+                  t2("switch.disarmTheSwitch")
                 ]
               }
             )
           ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-end justify-between gap-6", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0", children: [
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: "Arm the switch" }),
-              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground", children: "Choose how long the vault waits for your next check-in. If you miss it, the vault releases to your beneficiaries." }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground", children: t2("switch.armTitle") }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground", children: t2("switch.armBody") }),
               /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-5 grid gap-2", children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "switch-cadence", children: "Check-in cadence" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: cadence, onValueChange: setCadence, children: [
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    SelectTrigger,
-                    {
-                      id: "switch-cadence",
-                      "data-ocid": "switch.cadence_select",
-                      className: "w-48",
-                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select cadence" })
-                    }
-                  ),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CADENCE_OPTIONS.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-                    SelectItem,
-                    {
-                      value: option.seconds.toString(),
-                      children: option.label
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label, { htmlFor: "switch-cadence", children: t2("common.checkInCadence") }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Select,
+                  {
+                    value: cadence,
+                    onValueChange: (value) => {
+                      setCadence(value);
+                      setCadenceError(null);
                     },
-                    option.seconds.toString()
-                  )) })
-                ] })
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        SelectTrigger,
+                        {
+                          id: "switch-cadence",
+                          "data-ocid": "switch.cadence_select",
+                          className: "w-48",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: t2("common.selectCadence") })
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: CADENCE_OPTIONS.map((option) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        SelectItem,
+                        {
+                          value: option.seconds.toString(),
+                          children: t2(option.labelKey)
+                        },
+                        option.seconds.toString()
+                      )) })
+                    ]
+                  }
+                ),
+                cadenceError && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "p",
+                  {
+                    "data-ocid": "switch.cadence_error",
+                    className: "text-sm text-destructive",
+                    children: cadenceError
+                  }
+                )
               ] })
             ] }),
             /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -50500,7 +58928,7 @@ function SwitchPage() {
                 className: "bg-gradient-gold px-6 text-primary-foreground hover:opacity-90",
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(ShieldCheck, {}),
-                  "Arm the switch"
+                  t2("switch.arm")
                 ]
               }
             )
@@ -50567,7 +58995,7 @@ const router = createRouter({
   scrollRestoration: true
 });
 function App() {
-  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(I18nProvider, { children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx(RouterProvider, { router }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Toaster, { theme: "dark", position: "bottom-right" })
   ] });
@@ -50575,6 +59003,7 @@ function App() {
 BigInt.prototype.toJSON = function() {
   return this.toString();
 };
+applyLanguageDirection(getStoredLanguage());
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root")).render(
   /* @__PURE__ */ jsxRuntimeExports.jsx(QueryClientProvider, { client: queryClient, children: /* @__PURE__ */ jsxRuntimeExports.jsx(J, { attribute: "class", defaultTheme: "dark", forcedTheme: "dark", children: /* @__PURE__ */ jsxRuntimeExports.jsx(InternetIdentityProvider, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(App, {}) }) }) })

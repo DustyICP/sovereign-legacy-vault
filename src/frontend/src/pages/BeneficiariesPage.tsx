@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { type TranslationKey, useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Pencil, Plus, Trash2 } from "lucide-react";
@@ -96,6 +97,57 @@ function formatShare(share: bigint): string {
   return `${share.toString()}%`;
 }
 
+/** Standard CRC-32 (IEEE 802.3) over a byte array, returned as an unsigned int. */
+function crc32(bytes: Uint8Array): number {
+  let crc = 0xffffffff;
+  for (let i = 0; i < bytes.length; i++) {
+    crc ^= bytes[i];
+    for (let j = 0; j < 8; j++) {
+      crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0);
+    }
+  }
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+/**
+ * Validate the CRC-32 checksum of an ICP account identifier. The 64-hex-char
+ * string encodes 32 bytes: the first 4 bytes are the CRC-32 of the remaining
+ * 28 bytes (the account hash).
+ */
+function isValidAccountIdChecksum(hex: string): boolean {
+  const bytes = new Uint8Array(32);
+  for (let i = 0; i < 32; i++) {
+    bytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  }
+  const provided =
+    ((bytes[0] << 24) | (bytes[1] << 16) | (bytes[2] << 8) | bytes[3]) >>> 0;
+  const expected = crc32(bytes.slice(4));
+  return provided === expected;
+}
+
+/**
+ * Validate a beneficiary wallet address. Returns a user-facing error message,
+ * or null when the address is valid (or left blank, which is optional).
+ * Accepts an ICP account identifier (64-hex-char string with a valid CRC-32
+ * checksum) or an ICP principal.
+ */
+function validateWalletAddress(
+  raw: string,
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string,
+): string | null {
+  const address = raw.trim();
+  if (!address) return null;
+  if (/^[0-9a-fA-F]{64}$/.test(address)) {
+    return isValidAccountIdChecksum(address)
+      ? null
+      : t("beneficiaries.errors.invalidChecksum");
+  }
+  if (/^[a-z0-9]+(-[a-z0-9]+)*-[a-z0-9]{3}$/.test(address)) {
+    return null;
+  }
+  return t("beneficiaries.errors.invalidWallet");
+}
+
 interface BeneficiaryFormState {
   name: string;
   allocationShare: string;
@@ -115,6 +167,7 @@ const EMPTY_FORM: BeneficiaryFormState = {
  * rest in neutral steel greys.
  */
 export function BeneficiariesPage() {
+  const { t } = useTranslation();
   const {
     data: beneficiaries = [],
     isLoading,
@@ -156,11 +209,31 @@ export function BeneficiariesPage() {
     event.preventDefault();
     const share = BigInt(form.allocationShare.trim() || "0");
     if (!form.name.trim()) {
-      setFormError("Enter a name for this beneficiary.");
+      setFormError(t("beneficiaries.errors.nameRequired"));
       return;
     }
     if (share <= 0n) {
-      setFormError("Allocation share must be greater than zero.");
+      setFormError(t("beneficiaries.errors.sharePositive"));
+      return;
+    }
+    const walletError = validateWalletAddress(form.walletAddress, t);
+    if (walletError) {
+      setFormError(walletError);
+      return;
+    }
+    const newTotal = editing
+      ? totalShare - editing.allocationShare + share
+      : totalShare + share;
+    if (newTotal > 100n) {
+      setFormError(
+        editing
+          ? t("beneficiaries.errors.totalExceedsEdit", {
+              total: newTotal.toString(),
+            })
+          : t("beneficiaries.errors.totalExceedsAdd", {
+              total: newTotal.toString(),
+            }),
+      );
       return;
     }
     setFormError(null);
@@ -174,8 +247,7 @@ export function BeneficiariesPage() {
         { id: editing.id, ...payload },
         {
           onSuccess: () => setDialogOpen(false),
-          onError: () =>
-            setFormError("Could not save changes. Please try again."),
+          onError: () => setFormError(t("beneficiaries.errors.saveFailed")),
         },
       );
     } else {
@@ -184,8 +256,7 @@ export function BeneficiariesPage() {
           setDialogOpen(false);
           setForm(EMPTY_FORM);
         },
-        onError: () =>
-          setFormError("Could not add beneficiary. Please try again."),
+        onError: () => setFormError(t("beneficiaries.errors.addFailed")),
       });
     }
   };
@@ -203,14 +274,13 @@ export function BeneficiariesPage() {
     >
       <header className="mb-8 animate-fade-rise">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          Beneficiaries
+          {t("beneficiaries.eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground">
-          Beneficiaries
+          {t("beneficiaries.title")}
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          The people and causes your legacy is sealed for. Allocation, order,
-          and conditions live here.
+          {t("beneficiaries.subtitle")}
         </p>
       </header>
 
@@ -222,24 +292,23 @@ export function BeneficiariesPage() {
         >
           <div className="flex items-center justify-between">
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Allocation
+              {t("beneficiaries.allocation")}
             </p>
             <p className="font-mono text-xs text-muted-foreground">
-              {beneficiaries.length} beneficiary
-              {beneficiaries.length === 1 ? "" : "ies"}
+              {t("beneficiaries.count", { count: beneficiaries.length })}
             </p>
           </div>
 
           {beneficiaries.length === 0 ? (
             <p className="mt-6 font-mono text-xs text-muted-foreground">
-              No allocations yet. Add a beneficiary to begin.
+              {t("beneficiaries.noAllocations")}
             </p>
           ) : (
             <>
               <div
                 className="mt-6 flex h-2.5 w-full overflow-hidden rounded-full bg-surface-raised"
                 role="img"
-                aria-label="Beneficiary allocation shares"
+                aria-label={t("beneficiaries.allocationAria")}
               >
                 {beneficiaries.map((b, index) => {
                   const width =
@@ -283,11 +352,10 @@ export function BeneficiariesPage() {
         >
           <div>
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-              Manage
+              {t("beneficiaries.manage")}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-              Add a beneficiary and assign their share of the vault. Shares can
-              be edited or revoked at any time.
+              {t("beneficiaries.manageBody")}
             </p>
           </div>
           <Button
@@ -296,7 +364,7 @@ export function BeneficiariesPage() {
             className="mt-6 w-full bg-gradient-gold text-primary-foreground hover:opacity-90"
           >
             <Plus />
-            Add beneficiary
+            {t("common.addBeneficiary")}
           </Button>
         </section>
       </div>
@@ -323,7 +391,7 @@ export function BeneficiariesPage() {
             data-ocid="beneficiaries.error_state"
             className="p-6 text-sm text-destructive"
           >
-            Could not load beneficiaries. Please try again.
+            {t("beneficiaries.loadError")}
           </div>
         ) : beneficiaries.length === 0 ? (
           <div
@@ -331,11 +399,10 @@ export function BeneficiariesPage() {
             className="flex flex-col items-center gap-3 px-6 py-12 text-center"
           >
             <p className="font-display text-xl font-semibold text-foreground">
-              No beneficiaries yet
+              {t("beneficiaries.emptyTitle")}
             </p>
             <p className="max-w-sm text-sm text-muted-foreground">
-              Your legacy is unassigned. Add your first beneficiary to seal the
-              vault for someone.
+              {t("beneficiaries.emptyBody")}
             </p>
             <Button
               data-ocid="beneficiaries.empty_add_button"
@@ -343,7 +410,7 @@ export function BeneficiariesPage() {
               className="mt-2 bg-gradient-gold text-primary-foreground hover:opacity-90"
             >
               <Plus />
-              Add beneficiary
+              {t("common.addBeneficiary")}
             </Button>
           </div>
         ) : (
@@ -366,7 +433,7 @@ export function BeneficiariesPage() {
                       {b.name}
                     </p>
                     <p className="truncate font-mono text-xs text-muted-foreground">
-                      {b.walletAddress || "No wallet address"}
+                      {b.walletAddress || t("beneficiaries.noWallet")}
                     </p>
                   </div>
                 </div>
@@ -380,7 +447,7 @@ export function BeneficiariesPage() {
                       data-ocid={`beneficiaries.edit_button.${index}`}
                       variant="ghost"
                       size="icon"
-                      aria-label={`Edit ${b.name}`}
+                      aria-label={t("beneficiaries.editAria", { name: b.name })}
                       onClick={() => openEdit(b)}
                     >
                       <Pencil />
@@ -389,7 +456,9 @@ export function BeneficiariesPage() {
                       data-ocid={`beneficiaries.delete_button.${index}`}
                       variant="ghost"
                       size="icon"
-                      aria-label={`Remove ${b.name}`}
+                      aria-label={t("beneficiaries.removeAria", {
+                        name: b.name,
+                      })}
                       className="text-muted-foreground hover:text-destructive"
                       onClick={() => handleRemove(b)}
                     >
@@ -408,18 +477,20 @@ export function BeneficiariesPage() {
         <DialogContent data-ocid="beneficiaries.modal">
           <DialogHeader>
             <DialogTitle className="font-display text-xl text-foreground">
-              {editing ? "Edit beneficiary" : "Add beneficiary"}
+              {editing
+                ? t("beneficiaries.modal.editTitle")
+                : t("beneficiaries.modal.addTitle")}
             </DialogTitle>
             <DialogDescription>
               {editing
-                ? "Update the name, share, or wallet address for this beneficiary."
-                : "Assign a name and allocation share to a new beneficiary."}
+                ? t("beneficiaries.modal.editDesc")
+                : t("beneficiaries.modal.addDesc")}
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid gap-2">
-              <Label htmlFor="beneficiary-name">Name</Label>
+              <Label htmlFor="beneficiary-name">{t("common.name")}</Label>
               <Input
                 id="beneficiary-name"
                 data-ocid="beneficiaries.name_input"
@@ -427,12 +498,14 @@ export function BeneficiariesPage() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, name: e.target.value }))
                 }
-                placeholder="e.g. Elena Marchetti"
+                placeholder={t("beneficiaries.namePlaceholder")}
               />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="beneficiary-share">Allocation share (%)</Label>
+              <Label htmlFor="beneficiary-share">
+                {t("common.allocationShare")}
+              </Label>
               <Input
                 id="beneficiary-share"
                 data-ocid="beneficiaries.share_input"
@@ -445,12 +518,14 @@ export function BeneficiariesPage() {
                     allocationShare: e.target.value,
                   }))
                 }
-                placeholder="e.g. 40"
+                placeholder={t("beneficiaries.sharePlaceholder")}
               />
             </div>
 
             <div className="grid gap-2">
-              <Label htmlFor="beneficiary-wallet">Wallet address</Label>
+              <Label htmlFor="beneficiary-wallet">
+                {t("common.walletAddress")}
+              </Label>
               <Input
                 id="beneficiary-wallet"
                 data-ocid="beneficiaries.wallet_input"
@@ -461,7 +536,7 @@ export function BeneficiariesPage() {
                     walletAddress: e.target.value,
                   }))
                 }
-                placeholder="Optional"
+                placeholder={t("common.optional")}
               />
             </div>
 
@@ -481,7 +556,7 @@ export function BeneficiariesPage() {
                 data-ocid="beneficiaries.cancel_button"
                 onClick={() => setDialogOpen(false)}
               >
-                Cancel
+                {t("common.cancel")}
               </Button>
               <Button
                 type="submit"
@@ -489,7 +564,7 @@ export function BeneficiariesPage() {
                 disabled={isPending}
                 className="bg-gradient-gold text-primary-foreground hover:opacity-90"
               >
-                {editing ? "Save changes" : "Add beneficiary"}
+                {editing ? t("common.saveChanges") : t("common.addBeneficiary")}
               </Button>
             </DialogFooter>
           </form>

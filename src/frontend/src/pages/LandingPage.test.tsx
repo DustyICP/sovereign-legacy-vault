@@ -1,7 +1,7 @@
 import { LandingPage } from "@/pages/LandingPage";
 import { authState } from "@/test/state";
 import { renderPage } from "@/test/utils";
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 
@@ -229,5 +229,446 @@ describe("LandingPage", () => {
       headline.compareDocumentPosition(login) &
         Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
+  });
+
+  it("renders the Introduction section below the hero with verbatim copy", () => {
+    renderPage(<LandingPage />);
+
+    const introduction = screen.getByTestId("landing.introduction");
+    expect(introduction).toBeInTheDocument();
+
+    // The Introduction eyebrow and heading are verbatim.
+    expect(within(introduction).getByText("Introduction")).toBeInTheDocument();
+    expect(
+      within(introduction).getByRole("heading", {
+        name: "The Dead Man's Switch — Born in the Age of Steam",
+      }),
+    ).toBeInTheDocument();
+
+    // Verbatim body copy from the provided marketing text.
+    expect(
+      within(introduction).getByText(
+        /It was the American engineer Frank J\. Sprague who, in 1888,/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(introduction).getByText(
+        /They called it the dead man's switch\. Hold the handle to keep/,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(introduction).getByRole("heading", {
+        name: "So How Does a Dead Man's Switch Work in These Times?",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(introduction).getByRole("heading", {
+        name: "Want to Personalize Your Wishes?",
+      }),
+    ).toBeInTheDocument();
+
+    // The Introduction sits below the hero text block in document order.
+    const heroTextBlock = screen
+      .getByText("Self-sovereign inheritance")
+      .closest("div.mx-auto");
+    expect(heroTextBlock).not.toBeNull();
+    expect(
+      heroTextBlock!.compareDocumentPosition(introduction) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("renders the Advantages section with all five verbatim cards", () => {
+    renderPage(<LandingPage />);
+
+    const advantages = screen.getByTestId("landing.advantages");
+    expect(advantages).toBeInTheDocument();
+
+    // The Advantages eyebrow and heading are verbatim.
+    expect(within(advantages).getByText("Why it works")).toBeInTheDocument();
+    expect(
+      within(advantages).getByRole("heading", {
+        name: "The Advantages Are Built Into Every Step",
+      }),
+    ).toBeInTheDocument();
+
+    // All five advantage cards render with their verbatim headings.
+    const cardHeadings = [
+      "No lawyers. No probate. No delays.",
+      "You stay in control.",
+      "Works while you sleep.",
+      "Global reach.",
+      "Your data stays yours.",
+    ];
+    for (const heading of cardHeadings) {
+      expect(
+        within(advantages).getByRole("heading", { name: heading }),
+      ).toBeInTheDocument();
+    }
+
+    // Each card keeps its data-ocid seam.
+    for (let i = 1; i <= 5; i += 1) {
+      expect(
+        within(advantages).getByTestId(`landing.advantages.card.${i}`),
+      ).toBeInTheDocument();
+    }
+
+    // The Advantages section follows the Introduction in document order.
+    const introduction = screen.getByTestId("landing.introduction");
+    expect(
+      introduction.compareDocumentPosition(advantages) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("keeps the Advantages cards on the surface-card treatment the new sections must match", () => {
+    renderPage(<LandingPage />);
+
+    // The Advantages cards define the surface-card pattern (rounded border,
+    // surface fill, subtle shadow, smooth hover transition) that the new
+    // Terms & Conditions cards must match. Pin the treatment so a styling
+    // change to the shared pattern is caught here.
+    const card = screen.getByTestId("landing.advantages.card.1");
+    expect(card.className).toContain("rounded");
+    expect(card.className).toContain("border-border");
+    expect(card.className).toContain("bg-surface");
+    expect(card.className).toContain("shadow-subtle");
+    expect(card.className).toContain("transition-smooth");
+    expect(card.className).toContain("hover:border-primary/40");
+    expect(card.className).toContain("hover:shadow-gold-glow");
+
+    // The card heading uses the plain non-italic gold Fraunces treatment, not
+    // the wordmark's gradient/emboss.
+    const cardHeading = within(card).getByRole("heading", {
+      name: "No lawyers. No probate. No delays.",
+    });
+    expect(cardHeading.className).toContain("font-display");
+    expect(cardHeading.className).toContain("text-foreground");
+    expect(cardHeading.className).not.toContain("text-extruded-gold");
+    expect(cardHeading.className).not.toContain("italic");
+  });
+
+  it("keeps the new sections' headings below the wordmark size", () => {
+    renderPage(<LandingPage />);
+
+    // The new section headings use text-3xl/text-4xl, which must stay below the
+    // wordmark's largest size step so the wordmark remains the largest text.
+    const introductionHeading = screen.getByRole("heading", {
+      name: "The Dead Man's Switch — Born in the Age of Steam",
+    });
+    const advantagesHeading = screen.getByRole("heading", {
+      name: "The Advantages Are Built Into Every Step",
+    });
+
+    const sizeStep = (element: HTMLElement): number => {
+      const steps = [
+        "xs",
+        "sm",
+        "base",
+        "lg",
+        "xl",
+        "2xl",
+        "3xl",
+        "4xl",
+        "5xl",
+      ];
+      const tokens = Array.from(element.classList).filter((token) =>
+        /^text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl)$/.test(token),
+      );
+      expect(tokens.length).toBeGreaterThan(0);
+      return Math.max(...tokens.map((token) => steps.indexOf(token.slice(5))));
+    };
+
+    // Both new headings are text-3xl/text-4xl (steps 6/7), well below the
+    // wordmark's text-5xl (step 8). Assert they do not exceed text-4xl.
+    expect(sizeStep(introductionHeading)).toBeLessThanOrEqual(7);
+    expect(sizeStep(advantagesHeading)).toBeLessThanOrEqual(7);
+  });
+
+  it("renders the FAQ section after Advantages with the mono label and heading", () => {
+    renderPage(<LandingPage />);
+
+    const faq = screen.getByTestId("landing.faq");
+    expect(faq).toBeInTheDocument();
+
+    // The FAQ eyebrow and heading are verbatim.
+    expect(within(faq).getByText("Questions")).toBeInTheDocument();
+    expect(
+      within(faq).getByRole("heading", {
+        name: "Frequently Asked Questions",
+      }),
+    ).toBeInTheDocument();
+
+    // The FAQ section follows the Advantages section in document order.
+    const advantages = screen.getByTestId("landing.advantages");
+    expect(
+      advantages.compareDocumentPosition(faq) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("renders all eight FAQ questions as accordion triggers", () => {
+    renderPage(<LandingPage />);
+
+    const faq = screen.getByTestId("landing.faq");
+    const questions = [
+      "What languages does Sovereign Legacy support?",
+      "How secure is my vault?",
+      "Could I ever lose my vault?",
+      "How are assets divided among beneficiaries?",
+      "How do I reset the network inactivity timer?",
+      "How do I add a beneficiary?",
+      "Can I change my beneficiaries after setup?",
+      "Who can see my beneficiaries?",
+    ];
+
+    for (const question of questions) {
+      expect(
+        within(faq).getByRole("button", { name: question }),
+      ).toBeInTheDocument();
+    }
+
+    // Each FAQ item keeps its data-ocid seam.
+    for (let i = 1; i <= 8; i += 1) {
+      expect(
+        within(faq).getByTestId(`landing.faq.item.${i}`),
+      ).toBeInTheDocument();
+    }
+  });
+
+  it("expands an FAQ answer on click and collapses the previously open item", async () => {
+    const user = userEvent.setup();
+    renderPage(<LandingPage />);
+
+    const faq = screen.getByTestId("landing.faq");
+
+    // Answers are hidden until their trigger is clicked.
+    const firstAnswer =
+      "The app supports 22 languages, including right-to-left languages such as Arabic, Persian, and Urdu, so beneficiaries anywhere in the world can understand a release notice in their own language.";
+    const secondAnswer =
+      "Your vault is a canister on the Internet Computer, secured by your Internet Identity. Only your authenticated principal can view or manage its contents.";
+
+    expect(within(faq).queryByText(firstAnswer)).not.toBeInTheDocument();
+
+    // Clicking the first question reveals its exact answer.
+    await user.click(
+      within(faq).getByRole("button", {
+        name: "What languages does Sovereign Legacy support?",
+      }),
+    );
+    expect(within(faq).getByText(firstAnswer)).toBeInTheDocument();
+
+    // Clicking a second question collapses the first and reveals the second
+    // (single-open accordion behavior).
+    await user.click(
+      within(faq).getByRole("button", {
+        name: "How secure is my vault?",
+      }),
+    );
+    expect(within(faq).queryByText(firstAnswer)).not.toBeInTheDocument();
+    expect(within(faq).getByText(secondAnswer)).toBeInTheDocument();
+  });
+
+  it("expands each FAQ question to its exact provided answer", async () => {
+    const user = userEvent.setup();
+    renderPage(<LandingPage />);
+
+    const faq = screen.getByTestId("landing.faq");
+    const answers: Array<[string, string]> = [
+      [
+        "What languages does Sovereign Legacy support?",
+        "The app supports 22 languages, including right-to-left languages such as Arabic, Persian, and Urdu, so beneficiaries anywhere in the world can understand a release notice in their own language.",
+      ],
+      [
+        "How secure is my vault?",
+        "Your vault is a canister on the Internet Computer, secured by your Internet Identity. Only your authenticated principal can view or manage its contents.",
+      ],
+      [
+        "Could I ever lose my vault?",
+        "As long as you retain access to your Internet Identity, your vault remains under your control. The main risk is losing your Internet Identity credentials, which is why keeping a secure backup of your recovery method matters.",
+      ],
+      [
+        "How are assets divided among beneficiaries?",
+        "You assign each beneficiary a percentage share. Shares can be adjusted at any time before release, and the total allocated across all beneficiaries must never exceed 100%.",
+      ],
+      [
+        "How do I reset the network inactivity timer?",
+        "Simply log in with your Internet Identity. Any authenticated check-in resets the inactivity clock and keeps the dead man's switch armed.",
+      ],
+      [
+        "How do I add a beneficiary?",
+        "From your dashboard, open the Beneficiaries panel and add a name, contact information, and allocation percentage.",
+      ],
+      [
+        "Can I change my beneficiaries after setup?",
+        "Yes. Beneficiaries, allocations, and personal messages can all be updated at any time — changes take effect immediately, on-chain.",
+      ],
+      [
+        "Who can see my beneficiaries?",
+        "Only you, while authenticated as the vault's owner.",
+      ],
+    ];
+
+    for (const [question, answer] of answers) {
+      await user.click(within(faq).getByRole("button", { name: question }));
+      expect(within(faq).getByText(answer)).toBeInTheDocument();
+    }
+  });
+
+  it("renders the Terms & Conditions section after FAQ with all ten numbered cards", () => {
+    renderPage(<LandingPage />);
+
+    const terms = screen.getByTestId("landing.terms");
+    expect(terms).toBeInTheDocument();
+
+    // The Terms eyebrow and heading are verbatim.
+    expect(within(terms).getByText("Terms")).toBeInTheDocument();
+    expect(
+      within(terms).getByRole("heading", {
+        name: "Terms & Conditions",
+      }),
+    ).toBeInTheDocument();
+
+    // All ten numbered term cards render with their verbatim headings.
+    const cardHeadings = [
+      "1. Overview",
+      "2. No Liability",
+      "3. Autonomous Execution",
+      "4. Privacy",
+      "5. Fees",
+      "6. Eligibility",
+      "7. No Warranty",
+      "8. Assumption of Risk",
+      "9. Termination",
+      "10. Modifications to These Terms",
+    ];
+    for (const heading of cardHeadings) {
+      expect(
+        within(terms).getByRole("heading", { name: heading }),
+      ).toBeInTheDocument();
+    }
+
+    // Each term card keeps its data-ocid seam.
+    for (let i = 1; i <= 10; i += 1) {
+      expect(
+        within(terms).getByTestId(`landing.terms.card.${i}`),
+      ).toBeInTheDocument();
+    }
+
+    // The Terms section follows the FAQ section in document order.
+    const faq = screen.getByTestId("landing.faq");
+    expect(
+      faq.compareDocumentPosition(terms) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
+  it("renders the exact provided copy for each term card", () => {
+    renderPage(<LandingPage />);
+
+    const terms = screen.getByTestId("landing.terms");
+    const bodies = [
+      /ICP Sovereign Legacy is a decentralized, fully on-chain inheritance and dead-man's-switch platform built on the Internet Computer Protocol \(ICP\)\. By using this service, you agree to these terms\./,
+      /The developers are not liable for any loss of assets resulting from incorrect configuration, lost Internet Identity credentials, blockchain network conditions, or any other cause\. Use this service at your own risk\./,
+      /Asset distribution is executed automatically by on-chain smart contract logic when your dead-man's-switch triggers\. No human intervention is required or possible once triggered\./,
+      /Your beneficiary list is stored on-chain and accessible only to your authenticated Internet Identity principal\. No third party can view your data\./,
+      /This service is provided as described within the app\. Any fees that apply to a specific action are shown clearly in the app before you confirm that action — no hidden or recurring charges\./,
+      /You must be at least 18 years old \(or the age of majority in your jurisdiction\) and have the legal capacity to enter into these terms to use this service\./,
+      /This service is provided "as is" and "as available," without warranties of any kind, whether express or implied, including any warranty of uninterrupted or error-free operation\./,
+      /Cryptocurrency and blockchain technology carry inherent risks, including price volatility, network congestion, smart contract vulnerabilities, and changes to underlying protocols\. By using this service, you accept these risks\./,
+      /Access to this service may be suspended or terminated for violation of these terms or for conduct that Sovereign Legacy determines, in its discretion, to be harmful to other users or to the service itself\./,
+      /These terms may be updated from time to time\. Material changes will be presented within the app, and continued use of the service after such changes constitutes acceptance of the updated terms\./,
+    ];
+
+    for (const body of bodies) {
+      expect(within(terms).getByText(body)).toBeInTheDocument();
+    }
+  });
+
+  it("keeps the FAQ and Terms headings on the plain gold Fraunces treatment", () => {
+    renderPage(<LandingPage />);
+
+    const faqHeading = screen.getByRole("heading", {
+      name: "Frequently Asked Questions",
+    });
+    const termsHeading = screen.getByRole("heading", {
+      name: "Terms & Conditions",
+    });
+
+    for (const heading of [faqHeading, termsHeading]) {
+      expect(heading.className).toContain("font-display");
+      expect(heading.className).toContain("text-foreground");
+      // Plain non-italic Fraunces in gold — no wordmark gradient/emboss.
+      expect(heading.className).not.toContain("text-extruded-gold");
+      expect(heading.className).not.toContain("italic");
+    }
+  });
+
+  it("keeps the Terms cards on the surface-card treatment matching Advantages", () => {
+    renderPage(<LandingPage />);
+
+    const terms = screen.getByTestId("landing.terms");
+    const card = within(terms).getByTestId("landing.terms.card.1");
+    expect(card.className).toContain("rounded");
+    expect(card.className).toContain("border-border");
+    expect(card.className).toContain("bg-surface");
+    expect(card.className).toContain("shadow-subtle");
+    expect(card.className).toContain("transition-smooth");
+    expect(card.className).toContain("hover:border-primary/40");
+    expect(card.className).toContain("hover:shadow-gold-glow");
+
+    const cardHeading = within(card).getByRole("heading", {
+      name: "1. Overview",
+    });
+    expect(cardHeading.className).toContain("font-display");
+    expect(cardHeading.className).toContain("text-foreground");
+    expect(cardHeading.className).not.toContain("text-extruded-gold");
+    expect(cardHeading.className).not.toContain("italic");
+  });
+
+  it("keeps the new term cards (6-10) on the same surface-card treatment", () => {
+    renderPage(<LandingPage />);
+
+    const terms = screen.getByTestId("landing.terms");
+    const newCardHeadings = [
+      "6. Eligibility",
+      "7. No Warranty",
+      "8. Assumption of Risk",
+      "9. Termination",
+      "10. Modifications to These Terms",
+    ];
+
+    for (let i = 6; i <= 10; i += 1) {
+      const card = within(terms).getByTestId(`landing.terms.card.${i}`);
+      // The new cards match the existing surface-card treatment exactly.
+      expect(card.className).toContain("rounded");
+      expect(card.className).toContain("border-border");
+      expect(card.className).toContain("bg-surface");
+      expect(card.className).toContain("shadow-subtle");
+      expect(card.className).toContain("transition-smooth");
+      expect(card.className).toContain("hover:border-primary/40");
+      expect(card.className).toContain("hover:shadow-gold-glow");
+
+      // The new card headings use the plain non-italic gold Fraunces
+      // treatment, not the wordmark's gradient/emboss.
+      const cardHeading = within(card).getByRole("heading", {
+        name: newCardHeadings[i - 6],
+      });
+      expect(cardHeading.className).toContain("font-display");
+      expect(cardHeading.className).toContain("text-foreground");
+      expect(cardHeading.className).not.toContain("text-extruded-gold");
+      expect(cardHeading.className).not.toContain("italic");
+    }
+  });
+
+  it("does not add a terms-acceptance checkbox or gating to the login flow", () => {
+    renderPage(<LandingPage />);
+
+    // The login CTA remains a plain button that starts Internet Identity login;
+    // no checkbox or terms-acceptance control is added to the hero.
+    const login = screen.getByRole("button", {
+      name: "Login with Internet Identity",
+    });
+    expect(login).toHaveAttribute("data-ocid", "landing.login");
+    expect(screen.queryByRole("checkbox")).toBeNull();
   });
 });

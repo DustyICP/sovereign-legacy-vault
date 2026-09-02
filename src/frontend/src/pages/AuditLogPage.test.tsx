@@ -43,12 +43,41 @@ describe("AuditLogPage", () => {
     expect(screen.getByText("VERIFICATION")).toBeInTheDocument();
     expect(screen.getByText("Vault armed")).toBeInTheDocument();
     expect(screen.getByText("Check-in recorded")).toBeInTheDocument();
-    expect(screen.getByText("2 events sealed")).toBeInTheDocument();
+    expect(screen.getByText("2 event(s) sealed")).toBeInTheDocument();
 
     const table = screen.getByRole("table", { name: "Vault audit log" });
     expect(within(table).getByText("Timestamp")).toBeInTheDocument();
     expect(within(table).getByText("Event")).toBeInTheDocument();
     expect(within(table).getByText("Description")).toBeInTheDocument();
+  });
+
+  it("shows the error state when the ledger is unreachable", async () => {
+    const actor = createMockActor();
+    actor.listAuditEvents.mockRejectedValue(new Error("boom"));
+    setActor(actor);
+
+    renderPage(<AuditLogPage />);
+
+    expect(await screen.findByText("Ledger unreachable")).toBeInTheDocument();
+    expect(
+      screen.getByText(/couldn't read the audit ledger/i),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the tamper-evidence claim on the ledger footer", async () => {
+    const actor = createMockActor();
+    actor.listAuditEvents.mockResolvedValue([]);
+    setActor(actor);
+
+    renderPage(<AuditLogPage />);
+
+    expect(await screen.findByText("No events yet")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Every entry is sealed on the ledger/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Entries cannot be edited or removed/i),
+    ).toBeInTheDocument();
   });
 
   it("shows the empty state when the ledger has no events", async () => {
@@ -59,6 +88,6 @@ describe("AuditLogPage", () => {
     renderPage(<AuditLogPage />);
 
     expect(await screen.findByText("No events yet")).toBeInTheDocument();
-    expect(screen.getByText("0 events sealed")).toBeInTheDocument();
+    expect(screen.getByText("0 event(s) sealed")).toBeInTheDocument();
   });
 });

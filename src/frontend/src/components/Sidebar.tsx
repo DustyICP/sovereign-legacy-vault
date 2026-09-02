@@ -1,16 +1,19 @@
+import { useTranslation } from "@/lib/translations";
 import { cn } from "@/lib/utils";
 import { Link } from "@tanstack/react-router";
 
 export const NAV_ITEMS = [
-  { to: "/dashboard", label: "Dashboard" },
-  { to: "/beneficiaries", label: "Beneficiaries" },
-  { to: "/legacy-assets", label: "Legacy & Assets" },
-  { to: "/the-switch", label: "The Switch" },
-  { to: "/audit-logs", label: "Audit Logs" },
-  { to: "/settings", label: "Settings" },
+  { to: "/dashboard", labelKey: "nav.dashboard" },
+  { to: "/beneficiaries", labelKey: "nav.beneficiaries" },
+  { to: "/legacy-assets", labelKey: "nav.legacyAssets" },
+  { to: "/the-switch", labelKey: "nav.theSwitch" },
+  { to: "/audit-logs", labelKey: "nav.auditLogs" },
+  { to: "/settings", labelKey: "nav.settings" },
 ] as const;
 
 export function Sidebar() {
+  const { t } = useTranslation();
+
   return (
     <aside
       data-ocid="sidebar"
@@ -42,7 +45,7 @@ export function Sidebar() {
                     isActive ? "opacity-100" : "opacity-0",
                   )}
                 />
-                {item.label}
+                {t(item.labelKey)}
               </>
             )}
           </Link>

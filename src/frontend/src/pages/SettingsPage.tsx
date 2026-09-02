@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { type TranslationKey, useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShieldCheck, ShieldOff, Trash2 } from "lucide-react";
@@ -33,15 +34,22 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 const CADENCE_OPTIONS = [
-  { seconds: 86400n, label: "Daily", hint: "24 hours" },
-  { seconds: 604800n, label: "Weekly", hint: "7 days" },
-  { seconds: 2592000n, label: "Monthly", hint: "30 days" },
-  { seconds: 31536000n, label: "Yearly", hint: "365 days" },
+  { seconds: 86400n, labelKey: "settings.daily", hintKey: "settings.h24" },
+  { seconds: 604800n, labelKey: "settings.weekly", hintKey: "settings.h7d" },
+  { seconds: 2592000n, labelKey: "settings.monthly", hintKey: "settings.h30d" },
+  {
+    seconds: 31536000n,
+    labelKey: "settings.yearly",
+    hintKey: "settings.h365d",
+  },
 ] as const;
 
-function formatCadence(seconds: bigint): string {
+function formatCadence(
+  seconds: bigint,
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string,
+): string {
   const option = CADENCE_OPTIONS.find((o) => o.seconds === seconds);
-  return option ? option.label : `${seconds} s`;
+  return option ? t(option.labelKey) : `${seconds} s`;
 }
 
 function formatShare(share: bigint): string {
@@ -49,6 +57,7 @@ function formatShare(share: bigint): string {
 }
 
 function SwitchSettings() {
+  const { t } = useTranslation();
   const { actor, isFetching } = useActor(createActor);
   const queryClient = useQueryClient();
 
@@ -68,13 +77,15 @@ function SwitchSettings() {
     },
     onSuccess: (next: SwitchState) => {
       queryClient.setQueryData(["switchState"], next);
-      toast.success("The Switch armed", {
-        description: `Check-in cadence set to ${formatCadence(next.cadenceSeconds)}.`,
+      toast.success(t("settings.toast.armed"), {
+        description: t("settings.toast.armedDesc", {
+          cadence: formatCadence(next.cadenceSeconds, t),
+        }),
       });
     },
     onError: () => {
-      toast.error("Could not arm The Switch", {
-        description: "The vault could not be armed. Please try again.",
+      toast.error(t("settings.toast.armError"), {
+        description: t("settings.toast.armErrorDesc"),
       });
     },
   });
@@ -86,13 +97,13 @@ function SwitchSettings() {
     },
     onSuccess: (next: SwitchState) => {
       queryClient.setQueryData(["switchState"], next);
-      toast.success("The Switch disarmed", {
-        description: "The vault is no longer armed.",
+      toast.success(t("settings.toast.disarmed"), {
+        description: t("settings.toast.disarmedDesc"),
       });
     },
     onError: () => {
-      toast.error("Could not disarm The Switch", {
-        description: "The vault could not be disarmed. Please try again.",
+      toast.error(t("settings.toast.disarmError"), {
+        description: t("settings.toast.disarmErrorDesc"),
       });
     },
   });
@@ -122,17 +133,19 @@ function SwitchSettings() {
             aria-hidden="true"
           />
           <span className="font-mono text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
-            {isArmed ? "Armed" : "Disarmed"}
+            {isArmed ? t("common.armed") : t("common.disarmed")}
           </span>
         </div>
         <p className="font-mono text-xs text-muted-foreground">
-          Cadence · {formatCadence(state.cadenceSeconds)}
+          {t("settings.cadence", {
+            value: formatCadence(state.cadenceSeconds, t),
+          })}
         </p>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
         <div className="space-y-2">
-          <Label htmlFor="cadence">Check-in cadence</Label>
+          <Label htmlFor="cadence">{t("common.checkInCadence")}</Label>
           <Select
             value={cadence}
             onValueChange={setCadence}
@@ -143,7 +156,7 @@ function SwitchSettings() {
               data-ocid="settings.cadence"
               className="w-full"
             >
-              <SelectValue placeholder="Select cadence" />
+              <SelectValue placeholder={t("common.selectCadence")} />
             </SelectTrigger>
             <SelectContent>
               {CADENCE_OPTIONS.map((option) => (
@@ -151,7 +164,7 @@ function SwitchSettings() {
                   key={option.seconds.toString()}
                   value={option.seconds.toString()}
                 >
-                  {option.label} · {option.hint}
+                  {t(option.labelKey)} · {t(option.hintKey)}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -166,7 +179,9 @@ function SwitchSettings() {
             disabled={disarmMutation.isPending}
           >
             <ShieldOff className="size-4" />
-            {disarmMutation.isPending ? "Disarming…" : "Disarm"}
+            {disarmMutation.isPending
+              ? t("common.disarming")
+              : t("common.disarm")}
           </Button>
         ) : (
           <Button
@@ -175,7 +190,7 @@ function SwitchSettings() {
             disabled={armMutation.isPending}
           >
             <ShieldCheck className="size-4" />
-            {armMutation.isPending ? "Arming…" : "Arm"}
+            {armMutation.isPending ? t("common.arming") : t("common.arm")}
           </Button>
         )}
       </div>
@@ -193,10 +208,12 @@ function BeneficiaryRow({
   beneficiary,
   onEdit,
   onRemove,
+  t,
 }: {
   beneficiary: Beneficiary;
   onEdit: (b: Beneficiary) => void;
   onRemove: (b: Beneficiary) => void;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
 }) {
   return (
     <div
@@ -221,13 +238,13 @@ function BeneficiaryRow({
           size="sm"
           onClick={() => onEdit(beneficiary)}
         >
-          Edit
+          {t("common.edit")}
         </Button>
         <Button
           data-ocid={`settings.beneficiary.delete_button.${beneficiary.id}`}
           variant="ghost"
           size="icon"
-          aria-label={`Remove ${beneficiary.name}`}
+          aria-label={t("beneficiaries.removeAria", { name: beneficiary.name })}
           onClick={() => onRemove(beneficiary)}
         >
           <Trash2 className="size-4" />
@@ -238,6 +255,7 @@ function BeneficiaryRow({
 }
 
 function BeneficiarySettings() {
+  const { t } = useTranslation();
   const { actor, isFetching } = useActor(createActor);
   const queryClient = useQueryClient();
 
@@ -280,13 +298,13 @@ function BeneficiarySettings() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
       setEditing(null);
-      toast.success("Beneficiary updated", {
-        description: "The beneficiary configuration has been saved.",
+      toast.success(t("settings.toast.beneficiaryUpdated"), {
+        description: t("settings.toast.beneficiaryUpdatedDesc"),
       });
     },
     onError: () => {
-      toast.error("Could not update beneficiary", {
-        description: "The changes were not saved. Please try again.",
+      toast.error(t("settings.toast.updateError"), {
+        description: t("settings.toast.updateErrorDesc"),
       });
     },
   });
@@ -299,13 +317,13 @@ function BeneficiarySettings() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ["beneficiaries"] });
       setRemoving(null);
-      toast.success("Beneficiary removed", {
-        description: "The beneficiary has been removed from the vault.",
+      toast.success(t("settings.toast.beneficiaryRemoved"), {
+        description: t("settings.toast.beneficiaryRemovedDesc"),
       });
     },
     onError: () => {
-      toast.error("Could not remove beneficiary", {
-        description: "The beneficiary could not be removed. Please try again.",
+      toast.error(t("settings.toast.removeError"), {
+        description: t("settings.toast.removeErrorDesc"),
       });
     },
   });
@@ -333,7 +351,7 @@ function BeneficiarySettings() {
           data-ocid="settings.beneficiaries.empty_state"
           className="rounded border border-dashed border-border px-4 py-8 text-center font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground"
         >
-          No beneficiaries configured yet
+          {t("settings.emptyBeneficiaries")}
         </p>
       ) : (
         <div className="space-y-3">
@@ -343,6 +361,7 @@ function BeneficiarySettings() {
               beneficiary={b}
               onEdit={openEdit}
               onRemove={setRemoving}
+              t={t}
             />
           ))}
         </div>
@@ -354,15 +373,14 @@ function BeneficiarySettings() {
       >
         <DialogContent data-ocid="settings.beneficiary_modal">
           <DialogHeader>
-            <DialogTitle>Edit beneficiary</DialogTitle>
+            <DialogTitle>{t("settings.editBeneficiary")}</DialogTitle>
             <DialogDescription>
-              Update the name, allocation share, and wallet address for this
-              beneficiary.
+              {t("settings.editBeneficiaryDesc")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="beneficiary-name">Name</Label>
+              <Label htmlFor="beneficiary-name">{t("common.name")}</Label>
               <Input
                 id="beneficiary-name"
                 data-ocid="settings.beneficiary.name_input"
@@ -373,7 +391,9 @@ function BeneficiarySettings() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="beneficiary-share">Allocation share (%)</Label>
+              <Label htmlFor="beneficiary-share">
+                {t("common.allocationShare")}
+              </Label>
               <Input
                 id="beneficiary-share"
                 data-ocid="settings.beneficiary.share_input"
@@ -385,7 +405,9 @@ function BeneficiarySettings() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="beneficiary-wallet">Wallet address</Label>
+              <Label htmlFor="beneficiary-wallet">
+                {t("common.walletAddress")}
+              </Label>
               <Input
                 id="beneficiary-wallet"
                 data-ocid="settings.beneficiary.wallet_input"
@@ -402,14 +424,16 @@ function BeneficiarySettings() {
               data-ocid="settings.beneficiary.cancel_button"
               onClick={() => setEditing(null)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               data-ocid="settings.beneficiary.save_button"
               onClick={() => updateMutation.mutate()}
               disabled={!canSave || updateMutation.isPending}
             >
-              {updateMutation.isPending ? "Saving…" : "Save changes"}
+              {updateMutation.isPending
+                ? t("common.saving")
+                : t("common.saveChanges")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -421,9 +445,11 @@ function BeneficiarySettings() {
       >
         <DialogContent data-ocid="settings.beneficiary_remove_modal">
           <DialogHeader>
-            <DialogTitle>Remove beneficiary</DialogTitle>
+            <DialogTitle>{t("settings.removeBeneficiary")}</DialogTitle>
             <DialogDescription>
-              Remove {removing?.name} from the vault? This cannot be undone.
+              {t("settings.removeBeneficiaryDesc", {
+                name: removing?.name ?? "",
+              })}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
@@ -432,7 +458,7 @@ function BeneficiarySettings() {
               data-ocid="settings.beneficiary.remove_cancel_button"
               onClick={() => setRemoving(null)}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"
@@ -440,7 +466,9 @@ function BeneficiarySettings() {
               onClick={() => removeMutation.mutate()}
               disabled={removeMutation.isPending}
             >
-              {removeMutation.isPending ? "Removing…" : "Remove"}
+              {removeMutation.isPending
+                ? t("common.removing")
+                : t("common.remove")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -450,19 +478,18 @@ function BeneficiarySettings() {
 }
 
 export function SettingsPage() {
+  const { t } = useTranslation();
   return (
     <div data-ocid="settings" className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
       <header className="mb-8 animate-fade-rise">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          Settings
+          {t("settings.eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground">
-          Vault Configuration
+          {t("settings.title")}
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Preserve the configuration that governs your legacy — the arm/disarm
-          state of The Switch, its check-in cadence, and the beneficiaries it is
-          sealed for.
+          {t("settings.subtitle")}
         </p>
       </header>
 
@@ -473,11 +500,9 @@ export function SettingsPage() {
         >
           <CardHeader className="px-0 pt-0">
             <CardTitle className="font-display text-xl font-semibold tracking-tight">
-              The Switch
+              {t("settings.switchTitle")}
             </CardTitle>
-            <CardDescription>
-              Arm or disarm the vault and set how often it must be verified.
-            </CardDescription>
+            <CardDescription>{t("settings.switchDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="px-0 pb-0">
             <SwitchSettings />
@@ -490,11 +515,9 @@ export function SettingsPage() {
         >
           <CardHeader className="px-0 pt-0">
             <CardTitle className="font-display text-xl font-semibold tracking-tight">
-              Beneficiaries
+              {t("settings.beneficiariesTitle")}
             </CardTitle>
-            <CardDescription>
-              Edit the people and causes your legacy is sealed for.
-            </CardDescription>
+            <CardDescription>{t("settings.beneficiariesDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="px-0 pb-0">
             <BeneficiarySettings />

@@ -1,5 +1,6 @@
 import { createActor } from "@/backend";
 import type { AuditEvent } from "@/backend";
+import { useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
 
@@ -62,6 +63,7 @@ function formatTimestamp(timestamp: bigint): {
  * accent; verification events read in success tone.
  */
 export function AuditLogPage() {
+  const { t } = useTranslation();
   const { data: events = [], isLoading, isError } = useAuditEvents();
 
   return (
@@ -71,10 +73,10 @@ export function AuditLogPage() {
     >
       <header className="mb-8 animate-fade-rise">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          Audit Logs
+          {t("audit.eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground">
-          Audit Logs
+          {t("audit.title")}
         </h1>
       </header>
 
@@ -84,10 +86,10 @@ export function AuditLogPage() {
       >
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-6 py-4">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            Event Ledger
+            {t("audit.ledger")}
           </p>
           <p className="font-mono text-xs text-muted-foreground">
-            {events.length} event{events.length === 1 ? "" : "s"} sealed
+            {t("audit.count", { count: events.length })}
           </p>
         </div>
 
@@ -110,10 +112,10 @@ export function AuditLogPage() {
             className="flex flex-col items-center gap-3 px-6 py-12 text-center"
           >
             <p className="font-mono text-xs uppercase tracking-[0.18em] text-destructive">
-              Ledger unreachable
+              {t("audit.errorEyebrow")}
             </p>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              We couldn&apos;t read the audit ledger. Please try again.
+              {t("audit.errorBody")}
             </p>
           </div>
         ) : events.length === 0 ? (
@@ -122,18 +124,17 @@ export function AuditLogPage() {
             className="flex flex-col items-center gap-3 px-6 py-12 text-center"
           >
             <p className="font-display text-xl font-semibold text-foreground">
-              No events yet
+              {t("audit.emptyTitle")}
             </p>
             <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
-              Every action taken against the vault will be sealed here, in
-              order, as it happens.
+              {t("audit.emptyBody")}
             </p>
           </div>
         ) : (
           <table
             data-ocid="audit_logs.table"
             className="w-full border-collapse"
-            aria-label="Vault audit log"
+            aria-label={t("audit.tableAria")}
           >
             <thead>
               <tr className="border-b border-border">
@@ -141,19 +142,19 @@ export function AuditLogPage() {
                   scope="col"
                   className="w-[8.5rem] px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground"
                 >
-                  Timestamp
+                  {t("audit.timestamp")}
                 </th>
                 <th
                   scope="col"
                   className="w-[8.5rem] px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground"
                 >
-                  Event
+                  {t("audit.event")}
                 </th>
                 <th
                   scope="col"
                   className="px-6 py-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground"
                 >
-                  Description
+                  {t("audit.description")}
                 </th>
               </tr>
             </thead>
@@ -205,8 +206,7 @@ export function AuditLogPage() {
             aria-hidden="true"
           />
           <p className="font-mono text-xs text-muted-foreground">
-            Every entry is sealed on the ledger. Entries cannot be edited or
-            removed.
+            {t("audit.footer")}
           </p>
         </div>
       </section>

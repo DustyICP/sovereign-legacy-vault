@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import ReactDOM from "react-dom/client";
 import App from "./App";
+import { applyLanguageDirection, getStoredLanguage } from "./lib/i18n";
 import "./index.css";
 
 BigInt.prototype.toJSON = function () {
@@ -20,6 +21,10 @@ declare global {
     toJSON(): string;
   }
 }
+
+// Apply the stored language before first paint so the document never flashes
+// in English when a different locale was selected.
+applyLanguageDirection(getStoredLanguage());
 
 const queryClient = new QueryClient();
 

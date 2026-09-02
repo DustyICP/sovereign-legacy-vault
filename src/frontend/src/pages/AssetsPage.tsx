@@ -1,5 +1,6 @@
 import { createActor } from "@/backend";
 import type { Asset, AssetAllocation, Beneficiary } from "@/backend";
+import { type TranslationKey, useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
 
@@ -52,20 +53,27 @@ function useBeneficiaries() {
 function beneficiaryName(
   id: bigint,
   beneficiaries: Beneficiary[] | undefined,
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string,
 ): string {
   const match = beneficiaries?.find((b) => b.id === id);
-  return match ? match.name : `Beneficiary #${id.toString()}`;
+  return match
+    ? match.name
+    : t("assets.beneficiaryFallback", { id: id.toString() });
 }
 
 function AllocationBar({
   allocations,
+  t,
 }: {
   allocations: AssetAllocation[];
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
 }) {
   const total = allocations.reduce((sum, a) => sum + a.share, 0n);
   if (total <= 0n) {
     return (
-      <p className="font-mono text-xs text-muted-foreground">Unallocated</p>
+      <p className="font-mono text-xs text-muted-foreground">
+        {t("assets.unallocated")}
+      </p>
     );
   }
   return (
@@ -87,9 +95,11 @@ function AllocationBar({
 function AllocationLegend({
   allocations,
   beneficiaries,
+  t,
 }: {
   allocations: AssetAllocation[];
   beneficiaries: Beneficiary[] | undefined;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
 }) {
   return (
     <div className="flex flex-wrap gap-x-5 gap-y-1">
@@ -104,7 +114,7 @@ function AllocationLegend({
             }`}
             aria-hidden="true"
           />
-          {beneficiaryName(allocation.beneficiaryId, beneficiaries)}
+          {beneficiaryName(allocation.beneficiaryId, beneficiaries, t)}
           <span className="text-foreground">
             {allocation.share.toString()}%
           </span>
@@ -120,6 +130,7 @@ function AllocationLegend({
  * `listBeneficiaries` queries.
  */
 export function AssetsPage() {
+  const { t } = useTranslation();
   const assetsQuery = useAssets();
   const beneficiariesQuery = useBeneficiaries();
   const loading = assetsQuery.isLoading || beneficiariesQuery.isLoading;
@@ -130,14 +141,13 @@ export function AssetsPage() {
     <div data-ocid="assets" className="mx-auto max-w-7xl px-6 py-10 lg:px-8">
       <header className="mb-8 animate-fade-rise">
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
-          Legacy &amp; Assets
+          {t("assets.eyebrow")}
         </p>
         <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-foreground">
-          Held Assets
+          {t("assets.title")}
         </h1>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
-          Everything held in the vault — balances, holdings, and the
-          instructions that govern them.
+          {t("assets.subtitle")}
         </p>
       </header>
 
@@ -147,7 +157,7 @@ export function AssetsPage() {
       >
         <div className="rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            Assets Held
+            {t("assets.assetsHeld")}
           </p>
           <p className="mt-4 font-display text-4xl font-semibold tracking-tight text-foreground">
             {loading ? "—" : assets.length.toString()}
@@ -155,7 +165,7 @@ export function AssetsPage() {
         </div>
         <div className="rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:60ms]">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            Beneficiaries
+            {t("assets.beneficiaries")}
           </p>
           <p className="mt-4 font-display text-4xl font-semibold tracking-tight text-foreground">
             {loading ? "—" : (beneficiaries?.length ?? 0).toString()}
@@ -163,7 +173,7 @@ export function AssetsPage() {
         </div>
         <div className="rounded border border-border bg-surface p-6 shadow-subtle transition-smooth hover:border-primary/40 hover:shadow-gold-glow [animation-delay:120ms]">
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            Allocation Status
+            {t("assets.allocationStatus")}
           </p>
           <div className="mt-4 flex items-center gap-3">
             <span
@@ -171,7 +181,7 @@ export function AssetsPage() {
               aria-hidden="true"
             />
             <span className="font-mono text-sm font-semibold uppercase tracking-[0.16em] text-foreground">
-              Sealed
+              {t("assets.sealed")}
             </span>
           </div>
         </div>
@@ -183,10 +193,10 @@ export function AssetsPage() {
           className="rounded border border-destructive/40 bg-surface p-8 text-center shadow-subtle"
         >
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-destructive">
-            Vault unreachable
+            {t("assets.errorEyebrow")}
           </p>
           <p className="mt-2 text-sm text-muted-foreground">
-            We couldn&apos;t read the held assets. Please try again.
+            {t("assets.errorBody")}
           </p>
         </section>
       )}
@@ -212,11 +222,10 @@ export function AssetsPage() {
           className="rounded border border-border bg-surface p-10 text-center shadow-subtle"
         >
           <p className="font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-            No assets held
+            {t("assets.emptyEyebrow")}
           </p>
           <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-muted-foreground">
-            The vault currently holds no crypto assets. Once assets are added,
-            their balances and beneficiary allocations will appear here.
+            {t("assets.emptyBody")}
           </p>
         </section>
       )}
@@ -253,13 +262,14 @@ export function AssetsPage() {
 
               <div className="mt-6">
                 <p className="mb-2 font-mono text-xs uppercase tracking-[0.18em] text-muted-foreground">
-                  Beneficiary Allocation
+                  {t("assets.allocationLabel")}
                 </p>
-                <AllocationBar allocations={asset.allocations} />
+                <AllocationBar allocations={asset.allocations} t={t} />
                 <div className="mt-3">
                   <AllocationLegend
                     allocations={asset.allocations}
                     beneficiaries={beneficiaries}
+                    t={t}
                   />
                 </div>
               </div>

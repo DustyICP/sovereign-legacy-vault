@@ -79,3 +79,58 @@ describe("infinity emblem removal", () => {
     expect(css).not.toContain("text-infinity");
   });
 });
+
+describe("gold-gradient emboss treatment for the wordmark and hero headline", () => {
+  it("keeps the .text-extruded-gold utility defined with a gold gradient fill", () => {
+    // The wordmark and hero headline keep their gold-gradient emboss/script
+    // treatment. The .text-extruded-gold utility must survive the change that
+    // moves section/card headings to plain gold Fraunces.
+    const extruded = css.slice(css.indexOf(".text-extruded-gold"));
+    expect(extruded).toContain("background-image");
+    expect(extruded).toContain("background-clip: text");
+    expect(extruded).toContain("color: transparent");
+    // The face is a warm gold gradient, not a flat color.
+    expect(extruded).toContain("oklch");
+    expect(extruded).toContain("linear-gradient");
+  });
+
+  it("keeps the --gradient-gold token defined for gold fills", () => {
+    // The gold gradient token backs the gold button fills and the wordmark's
+    // emboss. It must remain defined in both :root and .dark.
+    const rootBlock = css.slice(css.indexOf(":root"), css.indexOf(".dark"));
+    expect(rootBlock).toContain("--gradient-gold");
+    expect(rootBlock).toContain("linear-gradient");
+    const darkBlock = css.slice(css.indexOf(".dark"));
+    expect(darkBlock).toContain("--gradient-gold");
+  });
+});
+
+describe("warm gold primary text color", () => {
+  it("sets the foreground tokens to the warm gold value in both :root and .dark", () => {
+    // The primary text color is the warm gold (#D4A96A ≈ oklch 0.72 0.16 85),
+    // replacing the previous cream foreground everywhere it was used.
+    const gold = "0.72 0.16 85";
+    const rootBlock = css.slice(css.indexOf(":root"), css.indexOf(".dark"));
+    const darkBlock = css.slice(css.indexOf(".dark"));
+    for (const block of [rootBlock, darkBlock]) {
+      expect(block).toContain(`--foreground: ${gold}`);
+      expect(block).toContain(`--card-foreground: ${gold}`);
+      expect(block).toContain(`--popover-foreground: ${gold}`);
+      expect(block).toContain(`--secondary-foreground: ${gold}`);
+      expect(block).toContain(`--muted-foreground: ${gold}`);
+      expect(block).toContain(`--sidebar-foreground: ${gold}`);
+      expect(block).toContain(`--sidebar-accent-foreground: ${gold}`);
+    }
+  });
+
+  it("reserves white (primary-foreground) for text on gold fills, not general text", () => {
+    // White text is reserved for text on solid gold button fills and urgent/
+    // armed status states. The primary-foreground token stays the near-black
+    // steel (0.14 0.02 85) rather than a general-purpose white.
+    const rootBlock = css.slice(css.indexOf(":root"), css.indexOf(".dark"));
+    expect(rootBlock).toContain("--primary-foreground: 0.14 0.02 85");
+    // No general text token is set to a near-white value.
+    expect(rootBlock).not.toMatch(/--foreground: 0\.9/);
+    expect(rootBlock).not.toMatch(/--foreground: 0\.93/);
+  });
+});

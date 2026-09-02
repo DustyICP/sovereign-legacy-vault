@@ -27,7 +27,13 @@ The extruded-metal gold wordmark and vault-door hero make the interface read as 
 - Display: Fraunces — wordmark, hero headline, numerals, status words (ARMED/DISARMED)
 - Body: Inter — body copy, UI labels, buttons (neutral grotesque, weights 400/500/600 via @fontsource/inter)
 - Mono: IBM Plex Mono — timestamps, IDs, audit rows, uppercase micro-labels (weights 400/500/600 via @fontsource/ibm-plex-mono)
+- RTL fallbacks: display stacks Noto Naskh Arabic → Vazirmatn → Noto Nastaliq Urdu; body stacks Noto Sans Arabic → Noto Sans Bengali → Noto Sans Devanagari → Vazirmatn → Noto Nastaliq Urdu; mono stacks Noto Sans Arabic → Noto Sans Mono. System fonts only — no extra bundled files. Latin glyphs keep rendering in the primary faces.
 - Scale: hero text-5xl md:text-7xl font-semibold tracking-tight; h2 text-2xl md:text-3xl; label text-[0.6875rem] font-medium uppercase tracking-[0.18em]; body text-sm text-base
+
+## RTL & Direction
+- dir="rtl" is set on documentElement for ar/fa/ur; layout flips via CSS logical properties (ms/me/ps/pe/start/end, text-start, border-s/e) wherever components use them.
+- [dir=rtl] overrides in index.css mirror LTR-biased utilities: .text-extruded-gold emboss drop-shadows flip to step down-left (upper-right light source), .absolute.left-0 active gold bars and SwitchPage timeline progress flip to right-0, .border-r/.border-l swap, .ml-2/.mr-2/.pl-3/.pr-8 swap, .text-left/.text-right swap.
+- No copy is translated — direction, layout, and glyph coverage only. Colors and the gold identity are untouched.
 
 ## Elevation & Depth
 Cards float on the dark background via surface + hairline border + shadow-subtle; raised layers use shadow-elevated; gold elements carry a restrained gold-glow; primary buttons get a machined metal-edge inset.

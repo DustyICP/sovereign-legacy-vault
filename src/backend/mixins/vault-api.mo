@@ -22,6 +22,8 @@ mixin (
     };
     let beneficiary = VaultLib.addBeneficiary(beneficiaries, ids.nextBeneficiaryId, name, allocationShare, walletAddress, Time.now());
     ids.nextBeneficiaryId += 1;
+    ignore VaultLib.appendAuditEvent(auditEvents, ids.nextAuditEventId, "beneficiary_added", "Beneficiary '" # name # "' added with allocation share " # allocationShare.toText() # "%", Time.now());
+    ids.nextAuditEventId += 1;
     beneficiary
   };
 
@@ -41,14 +43,27 @@ mixin (
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized");
     };
-    VaultLib.updateBeneficiary(beneficiaries, id, name, allocationShare, walletAddress)
+    let updated = VaultLib.updateBeneficiary(beneficiaries, id, name, allocationShare, walletAddress);
+    switch (updated) {
+      case (?b) {
+        ignore VaultLib.appendAuditEvent(auditEvents, ids.nextAuditEventId, "beneficiary_updated", "Beneficiary '" # name # "' (id " # id.toText() # ") updated with allocation share " # allocationShare.toText() # "%", Time.now());
+        ids.nextAuditEventId += 1;
+      };
+      case null {};
+    };
+    updated
   };
 
   public shared ({ caller }) func removeBeneficiary(id : Nat) : async Bool {
     if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized");
     };
-    VaultLib.removeBeneficiary(beneficiaries, id)
+    let removed = VaultLib.removeBeneficiary(beneficiaries, assets, id);
+    if (removed) {
+      ignore VaultLib.appendAuditEvent(auditEvents, ids.nextAuditEventId, "beneficiary_removed", "Beneficiary (id " # id.toText() # ") removed and its asset allocations cleaned up", Time.now());
+      ids.nextAuditEventId += 1;
+    };
+    removed
   };
 
   public shared ({ caller }) func addAsset(
@@ -63,6 +78,8 @@ mixin (
     };
     let asset = VaultLib.addAsset(assets, ids.nextAssetId, symbol, name, balance, decimals, allocations, Time.now());
     ids.nextAssetId += 1;
+    ignore VaultLib.appendAuditEvent(auditEvents, ids.nextAuditEventId, "asset_added", "Asset '" # name # "' (" # symbol # ") added with balance " # balance.toText(), Time.now());
+    ids.nextAuditEventId += 1;
     asset
   };
 
