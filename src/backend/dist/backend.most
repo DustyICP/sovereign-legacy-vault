@@ -4,6 +4,7 @@ type AccessControlState__201339279 =
     var adminAssigned : Bool;
     userRoles : Map__386906547<Principal, UserRole__91647283>
   };
+type AssetAllocation__351192594 = {beneficiaryId : Nat; share : Nat};
 type AssetAllocation__794517451 = {beneficiaryId : Nat; share : Nat};
 type AssetAllocation__794882480 = {beneficiaryId : Nat; share : Nat};
 type Asset__37931526 =
@@ -18,6 +19,15 @@ type Asset__37931526 =
 type Asset__447052111 =
   {
     allocations : [AssetAllocation__794517451];
+    balance : Nat;
+    decimals : Nat;
+    id : Nat;
+    name : Text;
+    symbol : Text
+  };
+type Asset__579926533 =
+  {
+    allocations : [AssetAllocation__351192594];
     balance : Nat;
     decimals : Nat;
     id : Nat;
@@ -42,10 +52,27 @@ type AuditEvent__3739697 =
     prevHash : Blob;
     timestamp : Timestamp__281624749
   };
+type AuditEvent__679156841 =
+  {
+    description : Text;
+    eventType : Text;
+    hash : Blob;
+    id : Nat;
+    prevHash : Blob;
+    timestamp : Timestamp__210726600
+  };
 type Beneficiary__121212938 =
   {
     allocationShare : Nat;
     createdAt : Timestamp__265477422;
+    id : Nat;
+    name : Text;
+    walletAddress : Text
+  };
+type Beneficiary__16704897 =
+  {
+    allocationShare : Nat;
+    createdAt : Timestamp__210726600;
     id : Nat;
     name : Text;
     walletAddress : Text
@@ -75,6 +102,15 @@ type Map__386906547<K, V> = Map__670138087<K, V>;
 type Map__670138087<K, V> = Map__13625999<K, V>;
 type Nat__58649523 = Nat__920180692;
 type Nat__920180692 = Nat;
+type NewActor__509629864 =
+  {
+    accessControlState : AccessControlState__201339279;
+    assets : List__89170296<Asset__579926533>;
+    auditEvents : List__89170296<AuditEvent__679156841>;
+    beneficiaries : List__89170296<Beneficiary__16704897>;
+    ids : VaultIds__256631246;
+    switchState : NewSwitchStateInternal__499767008
+  };
 type NewActor__934361114 =
   {
     accessControlState : AccessControlState__201339279;
@@ -84,9 +120,34 @@ type NewActor__934361114 =
     ids : VaultIds__795502377;
     switchState : SwitchStateInternal__785960710
   };
+type NewSwitchStateInternal__499767008 =
+  {
+    var armedAt : ?Timestamp__210726600;
+    var lastCheckIn : ?Timestamp__210726600;
+    var status : SwitchStatus__933052505;
+    var triggerDays : Nat;
+    var warningOnsetDays : Nat;
+    var warningRepeatDays : Nat
+  };
 type Node__430031793<K, V> =
   {#internal : Internal__161573640<K, V>; #leaf : Leaf__1045638083<K, V>};
 type OldActor__423149881 = {};
+type OldActor__426030763 =
+  {
+    accessControlState : AccessControlState__201339279;
+    assets : List__89170296<Asset__579926533>;
+    auditEvents : List__89170296<AuditEvent__679156841>;
+    beneficiaries : List__89170296<Beneficiary__16704897>;
+    ids : VaultIds__256631246;
+    switchState : OldSwitchStateInternal__397378322
+  };
+type OldSwitchStateInternal__397378322 =
+  {
+    var armedAt : ?Timestamp__210726600;
+    var cadenceSeconds : Nat;
+    var lastCheckIn : ?Timestamp__210726600;
+    var status : SwitchStatus__933052505
+  };
 type SwitchStateInternal__785960710 =
   {
     var armedAt : ?Timestamp__281624749;
@@ -95,10 +156,20 @@ type SwitchStateInternal__785960710 =
     var status : SwitchStatus__54792110
   };
 type SwitchStatus__54792110 = {#armed; #disarmed};
+type SwitchStatus__761859272 = SwitchStatus__844281464;
 type SwitchStatus__844281464 = {#armed; #disarmed};
+type SwitchStatus__933052505 = {#armed; #disarmed};
+type Timestamp__181267602 = Timestamp__265477422;
+type Timestamp__210726600 = Int;
 type Timestamp__265477422 = Int;
 type Timestamp__281624749 = Int;
 type UserRole__91647283 = {#admin; #guest; #user};
+type VaultIds__256631246 =
+  {
+    var nextAssetId : Nat;
+    var nextAuditEventId : Nat;
+    var nextBeneficiaryId : Nat
+  };
 type VaultIds__795502377 =
   {
     var nextAssetId : Nat;
@@ -106,7 +177,8 @@ type VaultIds__795502377 =
     var nextBeneficiaryId : Nat
   };
 {
-  "20260831_200942" : (_old : OldActor__423149881) -> NewActor__934361114
+  "20260831_200942" : (_old : OldActor__423149881) -> NewActor__934361114;
+  "20260903_000000" : (old : OldActor__426030763) -> NewActor__509629864
 }
 actor  {
   stable accessControlState :
@@ -140,9 +212,11 @@ actor  {
     };
   stable switchState :
     {
-      var armedAt : ?Timestamp__265477422;
-      var cadenceSeconds : Nat;
-      var lastCheckIn : ?Timestamp__265477422;
-      var status : SwitchStatus__844281464
+      var armedAt : ?Timestamp__181267602;
+      var lastCheckIn : ?Timestamp__181267602;
+      var status : SwitchStatus__761859272;
+      var triggerDays : Nat;
+      var warningOnsetDays : Nat;
+      var warningRepeatDays : Nat
     }
 };

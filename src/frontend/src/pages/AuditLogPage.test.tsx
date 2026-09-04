@@ -1,18 +1,22 @@
-import { AuditLogPage } from "@/pages/AuditLogPage";
-import { actorState } from "@/test/state";
+import { router } from "@/lib/router";
 import {
   createMockActor,
-  renderPage,
+  renderApp,
   setActor,
   setAuthenticated,
 } from "@/test/utils";
 import { screen, within } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 describe("AuditLogPage", () => {
   beforeEach(() => {
     setAuthenticated(true);
     setActor(null);
+  });
+
+  afterEach(async () => {
+    await router.navigate({ to: "/" });
+    router.invalidate();
   });
 
   it("renders audit rows with event type and description", async () => {
@@ -37,7 +41,8 @@ describe("AuditLogPage", () => {
     ]);
     setActor(actor);
 
-    renderPage(<AuditLogPage />);
+    renderApp();
+    await router.navigate({ to: "/overview/audit" });
 
     expect(await screen.findByText("SECURITY")).toBeInTheDocument();
     expect(screen.getByText("VERIFICATION")).toBeInTheDocument();
@@ -56,7 +61,8 @@ describe("AuditLogPage", () => {
     actor.listAuditEvents.mockRejectedValue(new Error("boom"));
     setActor(actor);
 
-    renderPage(<AuditLogPage />);
+    renderApp();
+    await router.navigate({ to: "/overview/audit" });
 
     expect(await screen.findByText("Ledger unreachable")).toBeInTheDocument();
     expect(
@@ -69,7 +75,8 @@ describe("AuditLogPage", () => {
     actor.listAuditEvents.mockResolvedValue([]);
     setActor(actor);
 
-    renderPage(<AuditLogPage />);
+    renderApp();
+    await router.navigate({ to: "/overview/audit" });
 
     expect(await screen.findByText("No events yet")).toBeInTheDocument();
     expect(
@@ -85,7 +92,8 @@ describe("AuditLogPage", () => {
     actor.listAuditEvents.mockResolvedValue([]);
     setActor(actor);
 
-    renderPage(<AuditLogPage />);
+    renderApp();
+    await router.navigate({ to: "/overview/audit" });
 
     expect(await screen.findByText("No events yet")).toBeInTheDocument();
     expect(screen.getByText("0 event(s) sealed")).toBeInTheDocument();

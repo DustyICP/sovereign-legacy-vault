@@ -1,27 +1,17 @@
 import { Layout } from "@/components/Layout";
-import { AssetsPage } from "@/pages/AssetsPage";
 import { AuditLogPage } from "@/pages/AuditLogPage";
-import { BeneficiariesPage } from "@/pages/BeneficiariesPage";
-import { DashboardPage } from "@/pages/DashboardPage";
+import { BeneficiaryPage } from "@/pages/BeneficiaryPage";
 import { LandingPage } from "@/pages/LandingPage";
+import { OverviewPage } from "@/pages/OverviewPage";
 import { SettingsPage } from "@/pages/SettingsPage";
-import { SwitchPage } from "@/pages/SwitchPage";
+import { TimelinesPage } from "@/pages/TimelinesPage";
+import { WalletPage } from "@/pages/WalletPage";
 import {
   createRootRoute,
   createRoute,
   createRouter,
 } from "@tanstack/react-router";
-
-export type SectionKey =
-  | "beneficiaries"
-  | "legacy-assets"
-  | "the-switch"
-  | "audit-logs"
-  | "settings";
-
-export interface SectionSearch {
-  section: SectionKey;
-}
+import { Navigate } from "@tanstack/react-router";
 
 const rootRoute = createRootRoute({
   component: Layout,
@@ -33,54 +23,87 @@ const landingRoute = createRoute({
   component: LandingPage,
 });
 
-const dashboardRoute = createRoute({
+const overviewRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/dashboard",
-  component: DashboardPage,
+  path: "/overview",
+  component: OverviewPage,
 });
 
-export const beneficiariesRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/beneficiaries",
-  component: BeneficiariesPage,
-  validateSearch: (): SectionSearch => ({ section: "beneficiaries" }),
-});
-
-const legacyRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/legacy-assets",
-  component: AssetsPage,
-  validateSearch: (): SectionSearch => ({ section: "legacy-assets" }),
-});
-
-const switchRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/the-switch",
-  component: SwitchPage,
-});
-
+/* The full sealed audit ledger is a sub-view of Overview. */
 const auditRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: "/audit-logs",
+  path: "/overview/audit",
   component: AuditLogPage,
-  validateSearch: (): SectionSearch => ({ section: "audit-logs" }),
+});
+
+const walletRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/wallet",
+  component: WalletPage,
+});
+
+const beneficiaryRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/beneficiary",
+  component: BeneficiaryPage,
+});
+
+const timelinesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/timelines",
+  component: TimelinesPage,
 });
 
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/settings",
   component: SettingsPage,
-  validateSearch: (): SectionSearch => ({ section: "settings" }),
+});
+
+/* ---- Legacy route redirects to the new tabs ---- */
+const dashboardRedirect = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/dashboard",
+  component: () => <Navigate to="/overview" replace />,
+});
+
+const beneficiariesRedirect = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/beneficiaries",
+  component: () => <Navigate to="/beneficiary" replace />,
+});
+
+const legacyAssetsRedirect = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/legacy-assets",
+  component: () => <Navigate to="/beneficiary" replace />,
+});
+
+const theSwitchRedirect = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/the-switch",
+  component: () => <Navigate to="/timelines" replace />,
+});
+
+const auditLogsRedirect = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "/audit-logs",
+  component: () => <Navigate to="/overview/audit" replace />,
 });
 
 const routeTree = rootRoute.addChildren([
   landingRoute,
-  dashboardRoute,
-  beneficiariesRoute,
-  legacyRoute,
-  switchRoute,
+  overviewRoute,
   auditRoute,
+  walletRoute,
+  beneficiaryRoute,
+  timelinesRoute,
   settingsRoute,
+  dashboardRedirect,
+  beneficiariesRedirect,
+  legacyAssetsRedirect,
+  theSwitchRedirect,
+  auditLogsRedirect,
 ]);
 
 export const router = createRouter({

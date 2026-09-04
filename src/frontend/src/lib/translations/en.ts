@@ -42,6 +42,18 @@ export const en = {
     auditLogs: "Audit Logs",
     settings: "Settings",
   },
+  tabs: {
+    overview: "Overview",
+    wallet: "Wallet",
+    beneficiary: "Beneficiary",
+    timelines: "Timelines",
+  },
+  sidebar: {
+    beneficiaries: "Beneficiaries",
+    noBeneficiaries: "No beneficiaries yet",
+    noWallet: "No wallet address",
+    settings: "Settings",
+  },
   header: {
     home: "Sovereign Legacy home",
     networkBadge: "Network · Identity",
@@ -199,6 +211,7 @@ export const en = {
     allocation: "Beneficiary Allocation",
     allocationNone: "No allocations yet. Add a beneficiary to begin.",
     allocationAria: "Beneficiary allocation shares",
+    allocated: "allocated",
     switch: "The Switch",
     lastVerified: "Last verified · {time}",
     notVerified: "Not yet verified",
@@ -299,6 +312,69 @@ export const en = {
     cadence7d: "7 days",
     cadence30d: "30 days",
   },
+  timelines: {
+    eyebrow: "Timelines",
+    title: "Inactivity Timelines",
+    subtitle:
+      "Three separately configurable inactivity parameters govern when the vault warns you and when it finally releases to your beneficiaries.",
+    active: "Active · Dead man's switch",
+    standingDown: "Standing down",
+    armed: "ARMED",
+    disarmed: "DISARMED",
+    checkIn: "I'm still here",
+    log: "Log check-in",
+    arm: "Arm the switch",
+    disarm: "Disarm",
+    lastCheckIn: "Last check-in",
+    armedAt: "Armed at",
+    warningIn: "First warning in {duration}",
+    triggerIn: "Vault triggers in {duration}",
+    noWarningScheduled: "No warning scheduled",
+    noTriggerScheduled: "No trigger scheduled",
+    timelineAriaArmed:
+      "Inactivity timeline, first warning in {warning}, vault triggers in {trigger}",
+    timelineAriaDisarmed: "Inactivity timeline, disarmed",
+    standingDownTitle: "Standing down",
+    standingDownBody:
+      "Disarming halts the dead man's switch. The vault stays sealed, but it will no longer warn you or release to your beneficiaries on a missed check-in.",
+    disarmTheSwitch: "Disarm the switch",
+    armTitle: "Arm the switch",
+    armBody:
+      "Set the three inactivity parameters below, then arm the switch. If you stop checking in, the vault warns you and eventually releases to your beneficiaries.",
+    armError: "Could not arm the switch",
+    armErrorDesc: "The vault could not be armed. Please try again.",
+    disarmedToast: "The switch disarmed",
+    disarmedToastDesc: "The vault is no longer armed.",
+    armedToast: "The switch armed",
+    armedToastDesc: "Inactivity timelines are now active.",
+    checkInToast: "Check-in logged",
+    checkInToastDesc: "The inactivity clock has been reset to zero.",
+    checkInError: "Could not log check-in",
+    checkInErrorDesc: "The check-in could not be recorded. Please try again.",
+    errorEyebrow: "Switch unreachable",
+    errorBody: "We couldn't read the switch state. Please try again.",
+    param: {
+      onset: {
+        label: "Warning onset",
+        hint: "Days of inactivity before the first email warning",
+        unit: "days",
+      },
+      repeat: {
+        label: "Warning repeat",
+        hint: "How often subsequent warnings repeat",
+        unit: "days",
+      },
+      trigger: {
+        label: "Trigger",
+        hint: "Total days of inactivity before the vault releases",
+        unit: "days",
+      },
+    },
+    validation: {
+      allPositive: "All three parameters must be at least 1 day.",
+      onsetBeforeTrigger: "Warning onset must occur before the trigger day.",
+    },
+  },
   audit: {
     eyebrow: "Audit Logs",
     title: "Audit Logs",
@@ -315,6 +391,104 @@ export const en = {
       "Every action taken against the vault will be sealed here, in order, as it happens.",
     footer:
       "Every entry is sealed on the ledger. Entries cannot be edited or removed.",
+    eventTypes: {
+      login: "Login",
+      switch_armed: "Switch armed",
+      switch_disarmed: "Switch disarmed",
+      switch_checked_in: "Check-in",
+      beneficiary_added: "Beneficiary added",
+      beneficiary_updated: "Beneficiary updated",
+      beneficiary_removed: "Beneficiary removed",
+      asset_added: "Asset added",
+    },
+    descriptions: {
+      login: "User signed in",
+      switch_armed_cadence:
+        "Switch armed with check-in cadence of {seconds} seconds",
+      switch_armed_timeline:
+        "Switch armed: warning after {warning} days, repeating every {repeat} days, triggering after {trigger} days",
+      switch_disarmed: "Switch disarmed",
+      switch_checked_in: "Switch check-in recorded",
+      switch_checked_in_reset:
+        "Switch check-in recorded; inactivity clock reset",
+      beneficiary_added:
+        "Beneficiary '{name}' added with allocation share {share}%",
+      beneficiary_updated:
+        "Beneficiary '{name}' (id {id}) updated with allocation share {share}%",
+      beneficiary_removed:
+        "Beneficiary (id {id}) removed and its asset allocations cleaned up",
+      asset_added: "Asset '{name}' ({symbol}) added with balance {balance}",
+    },
+  },
+  wallet: {
+    eyebrow: "Wallet",
+    title: "Wallet",
+    subtitle:
+      "The liquid assets held in the vault, their live USD value, and the address to receive more.",
+    totalValue: "Portfolio Value",
+    assetsHeld: "{count} asset(s) held",
+    noAssets: "No assets held yet",
+    assetDropdown: "Select asset",
+    assetDropdownAria: "Select an asset to view its value",
+    allAssets: "All assets",
+    balance: "Balance",
+    price: "Price",
+    value: "Value",
+    allocation: "Allocation",
+    breakdown: "Portfolio Breakdown",
+    breakdownDesc: "Each asset's share of the total portfolio value.",
+    transactions: "Transaction History",
+    transactionsDesc: "Every action sealed against the vault, in order.",
+    noTransactions: "No transactions yet",
+    receive: "Receive",
+    receiveDesc: "Send assets to this address to deposit them into the vault.",
+    depositAddress: "Deposit address",
+    copyAddress: "Copy address",
+    copied: "Address copied",
+    qrAria: "QR code encoding the vault deposit address",
+    errorEyebrow: "Vault unreachable",
+    errorBody: "We couldn't read the wallet. Please try again.",
+    emptyTitle: "No assets held",
+    emptyBody:
+      "The vault currently holds no liquid assets. Once assets are added, their balances and live USD values will appear here.",
+    noPrice: "Price unavailable",
+    connectWallet: "Connect Wallet",
+    connectWalletDesc:
+      "Connect your OISY wallet to send assets from the vault. A popup will open at oisy.com for you to approve the connection.",
+    connecting: "Connecting to OISY…",
+    connected: "Connected",
+    connectedAccount: "OISY account",
+    disconnect: "Disconnect",
+    disconnectDesc:
+      "End the OISY session. The wallet returns to the disconnected state.",
+    send: "Send",
+    sendDesc:
+      "Send an ICRC-standard token from the vault. Every send requires your explicit approval in the OISY popup.",
+    sendTitle: "Send tokens",
+    asset: "Asset",
+    selectAsset: "Select asset",
+    recipient: "Recipient",
+    recipientPlaceholder: "Account identifier or principal",
+    amount: "Amount",
+    amountPlaceholder: "0.00",
+    available: "Available · {balance}",
+    sendButton: "Send",
+    waitingForApproval: "Waiting for approval in OISY",
+    waitingForApprovalDesc:
+      "Approve the transfer in the OISY popup to complete the send. This window stays open until you approve or reject it.",
+    sendSuccess: "Send complete",
+    sendSuccessDesc: "Transfer confirmed on block {block}.",
+    sendError: "Send failed",
+    sendErrorDesc: "The transfer was not completed. Please try again.",
+    sendRejected: "Send cancelled",
+    sendRejectedDesc: "The transfer was not approved in OISY.",
+    validation: {
+      recipientRequired: "Enter a recipient account.",
+      amountRequired: "Enter an amount to send.",
+      amountInvalid: "Enter a valid amount greater than zero.",
+      amountExceedsBalance: "Amount exceeds the available balance.",
+      assetRequired: "Select an asset to send.",
+    },
   },
   settings: {
     eyebrow: "Settings",
@@ -368,4 +542,9 @@ export const en = {
 /** Deep-widen English string literals so locale dictionaries may use any string. */
 type Widen<T> = T extends string ? string : { [K in keyof T]: Widen<T[K]> };
 
-export type Translations = Widen<typeof en>;
+export type Translations = Omit<Widen<typeof en>, "audit"> & {
+  audit: Omit<Widen<typeof en>["audit"], "eventTypes" | "descriptions"> & {
+    eventTypes?: Record<string, string>;
+    descriptions?: Record<string, string>;
+  };
+};

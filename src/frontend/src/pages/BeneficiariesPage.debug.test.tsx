@@ -1,4 +1,4 @@
-import { BeneficiariesPage } from "@/pages/BeneficiariesPage";
+import { BeneficiaryPage } from "@/pages/BeneficiaryPage";
 import {
   createMockActor,
   renderPage,
@@ -9,7 +9,7 @@ import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 
-describe("BeneficiariesPage share constraint", () => {
+describe("BeneficiaryPage share constraint", () => {
   beforeEach(() => {
     setAuthenticated(true);
     setActor(null);
@@ -21,12 +21,12 @@ describe("BeneficiariesPage share constraint", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(
       await screen.findByRole("button", { name: "Add beneficiary" }),
     );
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
 
     await user.type(within(modal).getByLabelText("Name"), "Elena");
     await user.type(within(modal).getByLabelText("Allocation share (%)"), "0");
@@ -37,6 +37,6 @@ describe("BeneficiariesPage share constraint", () => {
     // The share input's min={1} HTML constraint blocks the submit before React's
     // own validation runs, so no beneficiary is added and the dialog stays open.
     expect(actor.addBeneficiary).not.toHaveBeenCalled();
-    expect(screen.getByTestId("beneficiaries.modal")).toBeInTheDocument();
+    expect(screen.getByTestId("beneficiary.modal")).toBeInTheDocument();
   });
 });

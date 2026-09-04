@@ -1,56 +1,71 @@
+import { createActor } from "@/backend";
+import type { Beneficiary } from "@/backend";
 import { useTranslation } from "@/lib/translations";
-import { cn } from "@/lib/utils";
+import { useActor } from "@caffeineai/core-infrastructure";
+import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
+import { Settings } from "lucide-react";
 
-export const NAV_ITEMS = [
-  { to: "/dashboard", labelKey: "nav.dashboard" },
-  { to: "/beneficiaries", labelKey: "nav.beneficiaries" },
-  { to: "/legacy-assets", labelKey: "nav.legacyAssets" },
-  { to: "/the-switch", labelKey: "nav.theSwitch" },
-  { to: "/audit-logs", labelKey: "nav.auditLogs" },
-  { to: "/settings", labelKey: "nav.settings" },
-] as const;
+function useBeneficiaries() {
+  const { actor, isFetching } = useActor(createActor);
+  return useQuery({
+    queryKey: ["beneficiaries"],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.listBeneficiaries();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
 
+/**
+ * Narrowed quick-reference sidebar. No longer the primary navigation — it
+ * stays visible alongside whichever tab is active and shows only two things:
+ * a compact beneficiary contact card and a Settings link. Uses the
+ * `beneficiary-card` and `settings-link` design tokens.
+ */
 export function Sidebar() {
   const { t } = useTranslation();
+  const { data: beneficiaries = [] } = useBeneficiaries();
 
   return (
     <aside
       data-ocid="sidebar"
-      className="hidden w-60 shrink-0 border-r border-border bg-surface md:block"
+      className="hidden w-64 shrink-0 border-r border-border bg-surface md:block"
     >
-      <nav
-        className="sticky top-16 flex flex-col gap-1 p-4"
-        aria-label="Primary"
-      >
-        {NAV_ITEMS.map((item) => (
-          <Link
-            key={item.to}
-            to={item.to}
-            data-ocid={`sidebar.link.${item.to}`}
-            className={cn(
-              "group relative flex items-center rounded px-3 py-2.5 text-sm font-medium text-muted-foreground transition-smooth hover:bg-surface-raised hover:text-foreground",
-            )}
-            activeProps={{
-              className:
-                "bg-surface-raised text-foreground shadow-subtle hover:bg-surface-raised hover:text-foreground",
-            }}
-          >
-            {({ isActive }) => (
-              <>
-                <span
-                  aria-hidden="true"
-                  className={cn(
-                    "absolute inset-y-2 left-0 w-0.5 rounded-full bg-gradient-gold transition-opacity",
-                    isActive ? "opacity-100" : "opacity-0",
-                  )}
-                />
-                {t(item.labelKey)}
-              </>
-            )}
-          </Link>
-        ))}
-      </nav>
+      <div className="sticky top-16 flex flex-col gap-6 p-4">
+        <section
+          data-ocid="sidebar.beneficiaries"
+          className="beneficiary-card p-4"
+        >
+          <p className="contact-label">{t("sidebar.beneficiaries")}</p>
+          {beneficiaries.length === 0 ? (
+            <p className="mt-3 font-mono text-xs text-muted-foreground">
+              {t("sidebar.noBeneficiaries")}
+            </p>
+          ) : (
+            <ul className="mt-3 space-y-3">
+              {beneficiaries.map((b: Beneficiary) => (
+                <li key={b.id.toString()} className="min-w-0">
+                  <p className="contact-value truncate">{b.name}</p>
+                  <p className="mt-0.5 truncate font-mono text-[0.6875rem] text-muted-foreground">
+                    {b.walletAddress || t("sidebar.noWallet")}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+
+        <Link
+          to="/settings"
+          data-ocid="sidebar.settings"
+          className="settings-link flex items-center gap-2"
+        >
+          <Settings className="size-4" aria-hidden="true" />
+          {t("sidebar.settings")}
+        </Link>
+      </div>
     </aside>
   );
 }

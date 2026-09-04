@@ -193,6 +193,7 @@ export const th: Partial<Translations> = {
     allocation: "การจัดสรรผู้รับผลประโยชน์",
     allocationNone: "ยังไม่มีการจัดสรร เพิ่มผู้รับผลประโยชน์เพื่อเริ่มต้น",
     allocationAria: "ส่วนแบ่งการจัดสรรผู้รับผลประโยชน์",
+    allocated: "จัดสรรแล้ว",
     switch: "สวิตช์",
     lastVerified: "ยืนยันล่าสุด · {time}",
     notVerified: "ยังไม่ได้รับการยืนยัน",

@@ -192,6 +192,7 @@ export const ja: Partial<Translations> = {
     allocation: "受益者配分",
     allocationNone: "まだ配分がありません。受益者を追加して始めましょう。",
     allocationAria: "受益者の配分比率",
+    allocated: "配分済み",
     switch: "スイッチ",
     lastVerified: "最終確認 · {time}",
     notVerified: "未確認",

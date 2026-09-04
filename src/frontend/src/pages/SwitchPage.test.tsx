@@ -1,6 +1,5 @@
-import { type SwitchState, SwitchStatus } from "@/backend";
+import { type SwitchState, SwitchStatus, type SwitchTimeline } from "@/backend";
 import { SwitchPage } from "@/pages/SwitchPage";
-import { actorState } from "@/test/state";
 import {
   createMockActor,
   renderPage,
@@ -11,7 +10,48 @@ import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 
-describe("SwitchPage", () => {
+function disarmedState(): SwitchState {
+  return {
+    status: SwitchStatus.disarmed,
+    warningOnsetDays: 30n,
+    warningRepeatDays: 7n,
+    triggerDays: 180n,
+  };
+}
+
+function armedState(): SwitchState {
+  return {
+    status: SwitchStatus.armed,
+    warningOnsetDays: 30n,
+    warningRepeatDays: 7n,
+    triggerDays: 180n,
+    armedAt: 1n,
+    lastCheckIn: 1n,
+  };
+}
+
+function disarmedTimeline(): SwitchTimeline {
+  return {
+    status: SwitchStatus.disarmed,
+    warningOnsetDays: 30n,
+    warningRepeatDays: 7n,
+    triggerDays: 180n,
+  };
+}
+
+function armedTimeline(): SwitchTimeline {
+  return {
+    status: SwitchStatus.armed,
+    warningOnsetDays: 30n,
+    warningRepeatDays: 7n,
+    triggerDays: 180n,
+    timeSinceLastCheckIn: 10n,
+    timeUntilWarning: 2_592_000n,
+    timeUntilTrigger: 15_552_000n,
+  };
+}
+
+describe("SwitchPage (Timelines tab)", () => {
   beforeEach(() => {
     setAuthenticated(true);
     setActor(null);
@@ -19,14 +59,8 @@ describe("SwitchPage", () => {
 
   it("shows DISARMED with arm controls when the switch is disarmed", async () => {
     const actor = createMockActor();
-    actor.getSwitchState.mockResolvedValue({
-      status: SwitchStatus.disarmed,
-      cadenceSeconds: 0n,
-    });
-    actor.getSwitchTimeline.mockResolvedValue({
-      status: SwitchStatus.disarmed,
-      cadenceSeconds: 0n,
-    });
+    actor.getSwitchState.mockResolvedValue(disarmedState());
+    actor.getSwitchTimeline.mockResolvedValue(disarmedTimeline());
     setActor(actor);
 
     renderPage(<SwitchPage />);
@@ -40,26 +74,32 @@ describe("SwitchPage", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("arms the switch end to end and shows ARMED with a check-in button", async () => {
+  it("arms the switch with three parameters and shows ARMED with a check-in button", async () => {
     const actor = createMockActor();
-    let state: SwitchState = {
-      status: SwitchStatus.disarmed,
-      cadenceSeconds: 0n,
-    };
+    let state: SwitchState = disarmedState();
     actor.getSwitchState.mockImplementation(async () => state);
-    actor.getSwitchTimeline.mockImplementation(async () => ({
-      status: state.status,
-      cadenceSeconds: state.cadenceSeconds,
-    }));
-    actor.armSwitch.mockImplementation(async (cadenceSeconds: bigint) => {
-      state = {
-        status: SwitchStatus.armed,
-        cadenceSeconds,
-        armedAt: 1n,
-        lastCheckIn: 1n,
-      };
-      return state;
-    });
+    actor.getSwitchTimeline.mockImplementation(async () =>
+      state.status === SwitchStatus.armed
+        ? armedTimeline()
+        : disarmedTimeline(),
+    );
+    actor.armSwitch.mockImplementation(
+      async (
+        warningOnsetDays: bigint,
+        warningRepeatDays: bigint,
+        triggerDays: bigint,
+      ) => {
+        state = {
+          status: SwitchStatus.armed,
+          warningOnsetDays,
+          warningRepeatDays,
+          triggerDays,
+          armedAt: 1n,
+          lastCheckIn: 1n,
+        };
+        return state;
+      },
+    );
     setActor(actor);
 
     const user = userEvent.setup();
@@ -70,7 +110,7 @@ describe("SwitchPage", () => {
       screen.getAllByRole("button", { name: /Arm the switch/i })[0],
     );
 
-    expect(actor.armSwitch).toHaveBeenCalledWith(604800n);
+    expect(actor.armSwitch).toHaveBeenCalledWith(30n, 7n, 180n);
     expect(await screen.findByText("ARMED")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: /I'm still here/i }),
@@ -79,29 +119,15 @@ describe("SwitchPage", () => {
 
   it("checks in and disarms the switch", async () => {
     const actor = createMockActor();
-    let state: SwitchState = {
-      status: SwitchStatus.armed,
-      cadenceSeconds: 604800n,
-      armedAt: 1n,
-      lastCheckIn: 1n,
-    };
+    let state: SwitchState = armedState();
     actor.getSwitchState.mockImplementation(async () => state);
-    actor.getSwitchTimeline.mockImplementation(async () => ({
-      status: state.status,
-      cadenceSeconds: state.cadenceSeconds,
-      timeSinceLastCheckIn: 10n,
-      timeUntilRelease: 604790n,
-    }));
+    actor.getSwitchTimeline.mockImplementation(async () => armedTimeline());
     actor.checkIn.mockImplementation(async () => {
       state = { ...state, lastCheckIn: 2n };
       return state;
     });
     actor.disarmSwitch.mockImplementation(async () => {
-      state = {
-        status: SwitchStatus.disarmed,
-        cadenceSeconds: state.cadenceSeconds,
-        lastCheckIn: 2n,
-      };
+      state = disarmedState();
       return state;
     });
     setActor(actor);
@@ -133,29 +159,26 @@ describe("SwitchPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("shows the release timeline when armed", async () => {
+  it("shows the warning and trigger timeline when armed", async () => {
     const actor = createMockActor();
-    actor.getSwitchState.mockResolvedValue({
-      status: SwitchStatus.armed,
-      cadenceSeconds: 604800n,
-      armedAt: 1n,
-      lastCheckIn: 1n,
-    });
-    actor.getSwitchTimeline.mockResolvedValue({
-      status: SwitchStatus.armed,
-      cadenceSeconds: 604800n,
-      timeSinceLastCheckIn: 10n,
-      timeUntilRelease: 604790n,
-    });
+    actor.getSwitchState.mockResolvedValue(armedState());
+    actor.getSwitchTimeline.mockResolvedValue(armedTimeline());
     setActor(actor);
 
     renderPage(<SwitchPage />);
 
     expect(await screen.findByText("ARMED")).toBeInTheDocument();
-    const statusCard = screen.getByTestId("switch.status_card");
-    expect(within(statusCard).getByText(/Release in/)).toBeInTheDocument();
+    const statusCard = screen.getByTestId("timelines.status_card");
     expect(
-      screen.getByRole("img", { name: /Dead man's switch timeline/ }),
+      within(statusCard).getByText(/First warning in/),
+    ).toBeInTheDocument();
+    // "Vault triggers in" appears both in the timeline header and the scale
+    // footer, so scope to the dedicated trigger element.
+    expect(
+      within(statusCard).getByTestId("timelines.time_until_trigger"),
+    ).toHaveTextContent(/Vault triggers in/);
+    expect(
+      screen.getByRole("img", { name: /Inactivity timeline/ }),
     ).toBeInTheDocument();
   });
 });

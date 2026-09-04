@@ -50,22 +50,35 @@ export type Error = { 'FrontendOriginsNotConfigured' : null } |
   { 'UntrustedSsoSource' : { 'domain' : string } } |
   { 'MissingField' : string } |
   { 'FrontendOriginMismatch' : { 'got' : string, 'expected' : Array<string> } };
+export interface Overview {
+  'switchStatus' : SwitchStatus,
+  'totalAllocationShare' : bigint,
+  'recentActivity' : Array<AuditEvent>,
+  'beneficiaryCount' : bigint,
+  'vaultBalance' : WalletBalance,
+  'timeline' : SwitchTimeline,
+}
 export interface Result { 'hasMore' : boolean, 'rows' : Array<Array<Cell>> }
 export type Result__1 = { 'ok' : null } |
   { 'err' : Error };
 export interface SwitchState {
   'status' : SwitchStatus,
-  'cadenceSeconds' : bigint,
+  'warningRepeatDays' : bigint,
+  'warningOnsetDays' : bigint,
   'armedAt' : [] | [Timestamp],
+  'triggerDays' : bigint,
   'lastCheckIn' : [] | [Timestamp],
 }
 export type SwitchStatus = { 'armed' : null } |
   { 'disarmed' : null };
 export interface SwitchTimeline {
   'status' : SwitchStatus,
-  'cadenceSeconds' : bigint,
+  'warningRepeatDays' : bigint,
+  'warningOnsetDays' : bigint,
+  'triggerDays' : bigint,
+  'timeUntilWarning' : [] | [bigint],
+  'timeUntilTrigger' : [] | [bigint],
   'timeSinceLastCheckIn' : [] | [bigint],
-  'timeUntilRelease' : [] | [bigint],
 }
 export type Timestamp = bigint;
 export type UserRole = { 'admin' : null } |
@@ -79,6 +92,7 @@ export type Value = { 'int' : bigint } |
   { 'text' : string };
 export interface WalletBalance {
   'assets' : Array<Asset>,
+  'depositAddress' : string,
   'totalUsd' : [] | [bigint],
 }
 export interface _SERVICE {
@@ -91,13 +105,15 @@ export interface _SERVICE {
   >,
   'addBeneficiary' : ActorMethod<[string, bigint, string], Beneficiary>,
   'appendAuditEvent' : ActorMethod<[string, string], AuditEvent>,
-  'armSwitch' : ActorMethod<[bigint], SwitchState>,
+  'armSwitch' : ActorMethod<[bigint, bigint, bigint], SwitchState>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'checkIn' : ActorMethod<[], SwitchState>,
   'disarmSwitch' : ActorMethod<[], SwitchState>,
   'execute' : ActorMethod<[string], Result>,
   'getApiDoc' : ActorMethod<[], string>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getDepositAddress' : ActorMethod<[], string>,
+  'getOverview' : ActorMethod<[], Overview>,
   'getSwitchState' : ActorMethod<[], SwitchState>,
   'getSwitchTimeline' : ActorMethod<[], SwitchTimeline>,
   'getWalletBalance' : ActorMethod<[], WalletBalance>,

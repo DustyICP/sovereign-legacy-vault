@@ -1,6 +1,7 @@
 type WalletBalance = 
  record {
    assets: vec Asset;
+   depositAddress: text;
    totalUsd: opt nat;
  };
 type Value = 
@@ -21,10 +22,13 @@ type UserRole =
 type Timestamp = int;
 type SwitchTimeline = 
  record {
-   cadenceSeconds: nat;
    status: SwitchStatus;
    timeSinceLastCheckIn: opt nat;
-   timeUntilRelease: opt nat;
+   timeUntilTrigger: opt nat;
+   timeUntilWarning: opt nat;
+   triggerDays: nat;
+   warningOnsetDays: nat;
+   warningRepeatDays: nat;
  };
 type SwitchStatus = 
  variant {
@@ -34,9 +38,11 @@ type SwitchStatus =
 type SwitchState = 
  record {
    armedAt: opt Timestamp;
-   cadenceSeconds: nat;
    lastCheckIn: opt Timestamp;
    status: SwitchStatus;
+   triggerDays: nat;
+   warningOnsetDays: nat;
+   warningRepeatDays: nat;
  };
 type Result__1 = 
  variant {
@@ -47,6 +53,15 @@ type Result =
  record {
    hasMore: bool;
    rows: vec vec Cell;
+ };
+type Overview = 
+ record {
+   beneficiaryCount: nat;
+   recentActivity: vec AuditEvent;
+   switchStatus: SwitchStatus;
+   timeline: SwitchTimeline;
+   totalAllocationShare: nat;
+   vaultBalance: WalletBalance;
  };
 type Error = 
  variant {
@@ -115,13 +130,16 @@ service : {
   addBeneficiary: (name: text, allocationShare: nat, walletAddress: text) ->
    (Beneficiary);
   appendAuditEvent: (eventType: text, description: text) -> (AuditEvent);
-  armSwitch: (cadenceSeconds: nat) -> (SwitchState);
+  armSwitch: (warningOnsetDays: nat, warningRepeatDays: nat, triggerDays:
+   nat) -> (SwitchState);
   assignCallerUserRole: (user: principal, role: UserRole) -> ();
   checkIn: () -> (SwitchState);
   disarmSwitch: () -> (SwitchState);
   execute: (qJson: text) -> (Result) query;
   getApiDoc: () -> (text) query;
   getCallerUserRole: () -> (UserRole) query;
+  getDepositAddress: () -> (text) query;
+  getOverview: () -> (Overview) query;
   getSwitchState: () -> (SwitchState) query;
   getSwitchTimeline: () -> (SwitchTimeline) query;
   getWalletBalance: () -> (WalletBalance) query;

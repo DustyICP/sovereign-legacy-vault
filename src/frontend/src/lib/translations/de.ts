@@ -195,6 +195,7 @@ export const de: Partial<Translations> = {
     allocationNone:
       "Noch keine Zuteilungen. Fügen Sie einen Begünstigten hinzu, um zu beginnen.",
     allocationAria: "Zuteilungsanteile der Begünstigten",
+    allocated: "zugewiesen",
     switch: "Der Schalter",
     lastVerified: "Zuletzt verifiziert · {time}",
     notVerified: "Noch nicht verifiziert",

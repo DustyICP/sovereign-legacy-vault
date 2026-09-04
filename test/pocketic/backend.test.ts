@@ -124,8 +124,13 @@ describe("vault backend", () => {
 
   it("rejects a non-positive or oversized switch cadence", async () => {
     actor.setPrincipal(OWNER);
-    await expect(actor.armSwitch(0n)).rejects.toThrow();
-    await expect(actor.armSwitch(31_536_001n)).rejects.toThrow();
+    // The three inactivity parameters are warning onset days, warning repeat
+    // frequency, and total days before trigger. Each must be positive and
+    // within the allowed range.
+    await expect(actor.armSwitch(0n, 7n, 180n)).rejects.toThrow();
+    await expect(actor.armSwitch(30n, 0n, 180n)).rejects.toThrow();
+    await expect(actor.armSwitch(30n, 7n, 0n)).rejects.toThrow();
+    await expect(actor.armSwitch(31_536_001n, 7n, 180n)).rejects.toThrow();
   });
 
   it("removes a beneficiary's asset allocations on removal", async () => {
@@ -151,13 +156,21 @@ describe("vault backend", () => {
     const initial = await actor.getSwitchState();
     expect(initial.status).toEqual({ disarmed: null });
 
-    const armed = await actor.armSwitch(604800n);
+    // Arm with the three separately configurable inactivity parameters:
+    // warning onset (30d), warning repeat frequency (7d), trigger (180d).
+    const armed = await actor.armSwitch(30n, 7n, 180n);
     expect(armed.status).toEqual({ armed: null });
-    expect(armed.cadenceSeconds).toBe(604800n);
+    expect(armed.warningOnsetDays).toBe(30n);
+    expect(armed.warningRepeatDays).toBe(7n);
+    expect(armed.triggerDays).toBe(180n);
 
     const timeline = await actor.getSwitchTimeline();
     expect(timeline.status).toEqual({ armed: null });
-    expect(timeline.timeUntilRelease.length).toBe(1);
+    expect(timeline.warningOnsetDays).toBe(30n);
+    expect(timeline.warningRepeatDays).toBe(7n);
+    expect(timeline.triggerDays).toBe(180n);
+    expect(timeline.timeUntilWarning.length).toBe(1);
+    expect(timeline.timeUntilTrigger.length).toBe(1);
     expect(timeline.timeSinceLastCheckIn.length).toBe(1);
 
     const checkedIn = await actor.checkIn();
@@ -192,7 +205,7 @@ describe("vault backend", () => {
     expect((await actor.listAuditEvents()).at(-1)!.eventType).toBe("beneficiary_removed");
 
     // Switch actions append their entries.
-    await actor.armSwitch(604800n);
+    await actor.armSwitch(30n, 7n, 180n);
     expect((await actor.listAuditEvents()).at(-1)!.eventType).toBe("switch_armed");
     await actor.checkIn();
     expect((await actor.listAuditEvents()).at(-1)!.eventType).toBe("switch_checked_in");

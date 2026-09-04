@@ -1,5 +1,5 @@
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { NAV_ITEMS } from "@/components/Sidebar";
+import { TABS } from "@/components/TabBar";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -82,11 +82,11 @@ export function Header() {
                   className="flex flex-col gap-1 px-4"
                   aria-label={t("header.mobilePrimary")}
                 >
-                  {NAV_ITEMS.map((item) => (
+                  {TABS.map((item) => (
                     <Link
                       key={item.to}
                       to={item.to}
-                      data-ocid={`header.mobile_link.${item.to}`}
+                      data-ocid={`header.mobile_link.${item.to.replace("/", "")}`}
                       className={cn(
                         "group relative flex items-center rounded px-3 py-2.5 text-sm font-medium text-muted-foreground transition-smooth hover:bg-surface-raised hover:text-foreground",
                       )}
@@ -109,6 +109,30 @@ export function Header() {
                       )}
                     </Link>
                   ))}
+                  <Link
+                    to="/settings"
+                    data-ocid="header.mobile_link.settings"
+                    className={cn(
+                      "group relative flex items-center rounded px-3 py-2.5 text-sm font-medium text-muted-foreground transition-smooth hover:bg-surface-raised hover:text-foreground",
+                    )}
+                    activeProps={{
+                      className:
+                        "bg-surface-raised text-foreground shadow-subtle hover:bg-surface-raised hover:text-foreground",
+                    }}
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <span
+                          aria-hidden="true"
+                          className={cn(
+                            "absolute inset-y-2 left-0 w-0.5 rounded-full bg-gradient-gold transition-opacity",
+                            isActive ? "opacity-100" : "opacity-0",
+                          )}
+                        />
+                        {t("nav.settings")}
+                      </>
+                    )}
+                  </Link>
                 </nav>
               </SheetContent>
             </Sheet>

@@ -2,6 +2,12 @@ import App from "@/App";
 import type { backendInterface } from "@/backend";
 import { actorState, authState } from "@/test/state";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {
+  RouterProvider,
+  createRootRoute,
+  createRoute,
+  createRouter,
+} from "@tanstack/react-router";
 import { render } from "@testing-library/react";
 import type { ReactElement } from "react";
 import { type Mock, vi } from "vitest";
@@ -30,6 +36,8 @@ export function createMockActor(): MockedBackend {
     execute: vi.fn(),
     getApiDoc: vi.fn(),
     getCallerUserRole: vi.fn(),
+    getDepositAddress: vi.fn(),
+    getOverview: vi.fn(),
     getSwitchState: vi.fn(),
     getSwitchTimeline: vi.fn(),
     getWalletBalance: vi.fn(),
@@ -59,11 +67,47 @@ function makeQueryClient(): QueryClient {
   });
 }
 
-/** Render a page component inside the providers the app uses. */
-export function renderPage(ui: ReactElement) {
+/**
+ * Render a page component inside the providers the app uses. Pages under test
+ * may render `<Link>` from `@tanstack/react-router` (e.g. OverviewPage's link
+ * to the audit ledger), which requires a router context. Pass `withRouter:
+ * true` for those pages; the dedicated test router renders the page at `/` and
+ * declares the routes those links target so they resolve without throwing.
+ *
+ * Note: `RouterProvider` renders asynchronously, so pages rendered with
+ * `withRouter` must be queried with async `findBy*` helpers. Pages that render
+ * synchronously (e.g. LandingPage) should omit the flag.
+ */
+export function renderPage(
+  ui: ReactElement,
+  options: { withRouter?: boolean } = {},
+) {
   const queryClient = makeQueryClient();
+  if (!options.withRouter) {
+    return render(
+      <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+    );
+  }
+  const rootRoute = createRootRoute({
+    component: () => ui,
+  });
+  // Routes referenced by <Link> in the pages under test.
+  const overviewRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/overview",
+    component: () => null,
+  });
+  const auditRoute = createRoute({
+    getParentRoute: () => rootRoute,
+    path: "/overview/audit",
+    component: () => null,
+  });
+  const routeTree = rootRoute.addChildren([overviewRoute, auditRoute]);
+  const testRouter = createRouter({ routeTree });
   return render(
-    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={testRouter} />
+    </QueryClientProvider>,
   );
 }
 

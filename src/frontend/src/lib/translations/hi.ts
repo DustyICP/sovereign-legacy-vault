@@ -193,6 +193,7 @@ export const hi: Partial<Translations> = {
     allocation: "लाभार्थी आवंटन",
     allocationNone: "अभी तक कोई आवंटन नहीं। शुरू करने के लिए लाभार्थी जोड़ें।",
     allocationAria: "लाभार्थी आवंटन हिस्से",
+    allocated: "आवंटित",
     switch: "स्विच",
     lastVerified: "अंतिम सत्यापन · {time}",
     notVerified: "अभी सत्यापित नहीं",

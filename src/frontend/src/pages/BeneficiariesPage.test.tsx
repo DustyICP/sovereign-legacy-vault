@@ -1,5 +1,4 @@
-import { BeneficiariesPage } from "@/pages/BeneficiariesPage";
-import { actorState } from "@/test/state";
+import { BeneficiaryPage } from "@/pages/BeneficiaryPage";
 import {
   createMockActor,
   renderPage,
@@ -39,7 +38,7 @@ function makeValidAccountId(): string {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 }
 
-describe("BeneficiariesPage", () => {
+describe("BeneficiaryPage", () => {
   beforeEach(() => {
     setAuthenticated(true);
     setActor(null);
@@ -58,14 +57,14 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     expect(await screen.findByText("No beneficiaries yet")).toBeInTheDocument();
     await user.click(
       screen.getAllByRole("button", { name: "Add beneficiary" })[0],
     );
 
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
     await user.type(within(modal).getByLabelText("Name"), "Elena Marchetti");
     await user.type(within(modal).getByLabelText("Allocation share (%)"), "40");
     await user.type(
@@ -92,12 +91,12 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(
       await screen.findByRole("button", { name: "Add beneficiary" }),
     );
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
     const form = modal.querySelector("form") as HTMLFormElement;
 
     // Empty form: the name is required.
@@ -124,12 +123,12 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(
       await screen.findByRole("button", { name: "Add beneficiary" }),
     );
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
 
     await user.type(within(modal).getByLabelText("Name"), "Elena");
     await user.type(within(modal).getByLabelText("Allocation share (%)"), "40");
@@ -144,7 +143,7 @@ describe("BeneficiariesPage", () => {
       ),
     ).toBeInTheDocument();
     expect(actor.addBeneficiary).not.toHaveBeenCalled();
-    expect(screen.getByTestId("beneficiaries.modal")).toBeInTheDocument();
+    expect(screen.getByTestId("beneficiary.modal")).toBeInTheDocument();
   });
 
   it("accepts a 64-hex account identifier with a valid CRC-32 checksum", async () => {
@@ -160,12 +159,12 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(
       await screen.findByRole("button", { name: "Add beneficiary" }),
     );
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
 
     await user.type(within(modal).getByLabelText("Name"), "Elena");
     await user.type(within(modal).getByLabelText("Allocation share (%)"), "40");
@@ -195,12 +194,12 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(
       await screen.findByRole("button", { name: "Add beneficiary" }),
     );
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
 
     const badAccountId =
       "0000000000000000000000000000000000000000000000000000000000000000";
@@ -236,12 +235,12 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(
       await screen.findByRole("button", { name: "Add beneficiary" }),
     );
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
 
     await user.type(within(modal).getByLabelText("Name"), "Bob");
     await user.type(within(modal).getByLabelText("Allocation share (%)"), "40");
@@ -259,6 +258,51 @@ describe("BeneficiariesPage", () => {
       ),
     ).toBeInTheDocument();
     expect(actor.addBeneficiary).not.toHaveBeenCalled();
+  });
+
+  it("rejects an edit that would push the total allocation over 100%", async () => {
+    // The allocation-sum invariant must hold on the edit path too: raising one
+    // beneficiary's share so the combined total exceeds 100% is a hard block.
+    // This behavior survives the merge of Beneficiaries + Assets into a single
+    // Beneficiary tab, so it is characterized here as protected.
+    const actor = createMockActor();
+    actor.listBeneficiaries.mockResolvedValue([
+      {
+        id: 0n,
+        name: "Ada",
+        allocationShare: 70n,
+        walletAddress: "rrkah-fqaaa-aaaaa-aaaaq-cai",
+        createdAt: 1n,
+      },
+      {
+        id: 1n,
+        name: "Bob",
+        allocationShare: 40n,
+        walletAddress: "2vxsx-fae",
+        createdAt: 2n,
+      },
+    ]);
+    setActor(actor);
+
+    const user = userEvent.setup();
+    renderPage(<BeneficiaryPage />);
+
+    await user.click(await screen.findByRole("button", { name: "Edit Ada" }));
+    const modal = screen.getByTestId("beneficiary.modal");
+    const shareInput = within(modal).getByLabelText("Allocation share (%)");
+    await user.clear(shareInput);
+    await user.type(shareInput, "80");
+    await user.click(
+      within(modal).getByRole("button", { name: "Save changes" }),
+    );
+
+    expect(
+      screen.getByText(
+        "This would bring the total allocation to 120%, exceeding the 100% limit.",
+      ),
+    ).toBeInTheDocument();
+    expect(actor.updateBeneficiary).not.toHaveBeenCalled();
+    expect(screen.getByTestId("beneficiary.modal")).toBeInTheDocument();
   });
 
   it("lists beneficiaries with their allocation shares and the allocation bar", async () => {
@@ -281,7 +325,7 @@ describe("BeneficiariesPage", () => {
     ]);
     setActor(actor);
 
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     expect(await screen.findByText("Ada")).toBeInTheDocument();
     expect(screen.getByText("Bob")).toBeInTheDocument();
@@ -312,7 +356,7 @@ describe("BeneficiariesPage", () => {
     ]);
     setActor(actor);
 
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     expect(await screen.findByText("Ada")).toBeInTheDocument();
     expect(screen.getByText("rrkah-fqaaa-aaaaa-aaaaq-cai")).toBeInTheDocument();
@@ -324,7 +368,7 @@ describe("BeneficiariesPage", () => {
     actor.listBeneficiaries.mockRejectedValue(new Error("boom"));
     setActor(actor);
 
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     expect(
       await screen.findByText(
@@ -355,10 +399,10 @@ describe("BeneficiariesPage", () => {
     setActor(actor);
 
     const user = userEvent.setup();
-    renderPage(<BeneficiariesPage />);
+    renderPage(<BeneficiaryPage />);
 
     await user.click(await screen.findByRole("button", { name: "Edit Ada" }));
-    const modal = screen.getByTestId("beneficiaries.modal");
+    const modal = screen.getByTestId("beneficiary.modal");
     const shareInput = within(modal).getByLabelText("Allocation share (%)");
     await user.clear(shareInput);
     await user.type(shareInput, "50");

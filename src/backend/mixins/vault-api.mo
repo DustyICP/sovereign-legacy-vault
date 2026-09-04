@@ -90,13 +90,6 @@ mixin (
     VaultLib.listAssets(assets)
   };
 
-  public query ({ caller }) func getWalletBalance() : async Types.WalletBalance {
-    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
-      Runtime.trap("Unauthorized");
-    };
-    VaultLib.getWalletBalance(assets)
-  };
-
   public shared ({ caller }) func appendAuditEvent(
     eventType : Text,
     description : Text,

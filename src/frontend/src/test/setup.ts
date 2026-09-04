@@ -2,6 +2,22 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup, configure } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
 
+// Radix Select dispatches pointer events that call the pointer-capture APIs,
+// which jsdom does not implement. Stub them so the send form's asset picker
+// can be opened and selected in tests.
+if (!Element.prototype.hasPointerCapture) {
+  Element.prototype.hasPointerCapture = () => false;
+}
+if (!Element.prototype.setPointerCapture) {
+  Element.prototype.setPointerCapture = () => {};
+}
+if (!Element.prototype.releasePointerCapture) {
+  Element.prototype.releasePointerCapture = () => {};
+}
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
 // Generated components carry `data-ocid` instead of `data-testid`; make the
 // Testing Library test-id queries target that attribute.
 configure({ testIdAttribute: "data-ocid" });

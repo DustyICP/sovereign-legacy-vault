@@ -56,6 +56,7 @@ export { ExternalBlob } from "@caffeineai/object-storage";
 export type Timestamp = bigint;
 export interface WalletBalance {
     assets: Array<Asset>;
+    depositAddress: string;
     totalUsd?: bigint;
 }
 export type Result__1 = {
@@ -115,14 +116,19 @@ export interface AssetAllocation {
 }
 export interface SwitchTimeline {
     status: SwitchStatus;
-    cadenceSeconds: bigint;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
+    triggerDays: bigint;
+    timeUntilWarning?: bigint;
+    timeUntilTrigger?: bigint;
     timeSinceLastCheckIn?: bigint;
-    timeUntilRelease?: bigint;
 }
 export interface SwitchState {
     status: SwitchStatus;
-    cadenceSeconds: bigint;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
     armedAt?: Timestamp;
+    triggerDays: bigint;
     lastCheckIn?: Timestamp;
 }
 export interface AuditEvent {
@@ -175,6 +181,14 @@ export interface Beneficiary {
     allocationShare: bigint;
     walletAddress: string;
 }
+export interface Overview {
+    switchStatus: SwitchStatus;
+    totalAllocationShare: bigint;
+    recentActivity: Array<AuditEvent>;
+    beneficiaryCount: bigint;
+    vaultBalance: WalletBalance;
+    timeline: SwitchTimeline;
+}
 export enum SwitchStatus {
     armed = "armed",
     disarmed = "disarmed"
@@ -191,13 +205,15 @@ export interface backendInterface {
     addAsset(symbol: string, name: string, balance: bigint, decimals: bigint, allocations: Array<AssetAllocation>): Promise<Asset>;
     addBeneficiary(name: string, allocationShare: bigint, walletAddress: string): Promise<Beneficiary>;
     appendAuditEvent(eventType: string, description: string): Promise<AuditEvent>;
-    armSwitch(cadenceSeconds: bigint): Promise<SwitchState>;
+    armSwitch(warningOnsetDays: bigint, warningRepeatDays: bigint, triggerDays: bigint): Promise<SwitchState>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkIn(): Promise<SwitchState>;
     disarmSwitch(): Promise<SwitchState>;
     execute(qJson: string): Promise<Result>;
     getApiDoc(): Promise<string>;
     getCallerUserRole(): Promise<UserRole>;
+    getDepositAddress(): Promise<string>;
+    getOverview(): Promise<Overview>;
     getSwitchState(): Promise<SwitchState>;
     getSwitchTimeline(): Promise<SwitchTimeline>;
     getWalletBalance(): Promise<WalletBalance>;
@@ -209,7 +225,7 @@ export interface backendInterface {
     schema(): Promise<string>;
     updateBeneficiary(id: bigint, name: string, allocationShare: bigint, walletAddress: string): Promise<Beneficiary | null>;
 }
-import type { Asset as _Asset, Beneficiary as _Beneficiary, Cell as _Cell, Error as _Error, Result as _Result, Result__1 as _Result__1, SwitchState as _SwitchState, SwitchStatus as _SwitchStatus, SwitchTimeline as _SwitchTimeline, Timestamp as _Timestamp, UserRole as _UserRole, Value as _Value, WalletBalance as _WalletBalance } from "./declarations/backend.did.d.ts";
+import type { Asset as _Asset, AuditEvent as _AuditEvent, Beneficiary as _Beneficiary, Cell as _Cell, Error as _Error, Overview as _Overview, Result as _Result, Result__1 as _Result__1, SwitchState as _SwitchState, SwitchStatus as _SwitchStatus, SwitchTimeline as _SwitchTimeline, Timestamp as _Timestamp, UserRole as _UserRole, Value as _Value, WalletBalance as _WalletBalance } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async _initialize_access_control(): Promise<void> {
@@ -296,17 +312,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async armSwitch(arg0: bigint): Promise<SwitchState> {
+    async armSwitch(arg0: bigint, arg1: bigint, arg2: bigint): Promise<SwitchState> {
         if (this.processError) {
             try {
-                const result = await this.actor.armSwitch(arg0);
+                const result = await this.actor.armSwitch(arg0, arg1, arg2);
                 return from_candid_SwitchState_n5(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.armSwitch(arg0);
+            const result = await this.actor.armSwitch(arg0, arg1, arg2);
             return from_candid_SwitchState_n5(this._uploadFile, this._downloadFile, result);
         }
     }
@@ -394,6 +410,34 @@ export class Backend implements backendInterface {
             return from_candid_UserRole_n20(this._uploadFile, this._downloadFile, result);
         }
     }
+    async getDepositAddress(): Promise<string> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getDepositAddress();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getDepositAddress();
+            return result;
+        }
+    }
+    async getOverview(): Promise<Overview> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getOverview();
+                return from_candid_Overview_n22(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getOverview();
+            return from_candid_Overview_n22(this._uploadFile, this._downloadFile, result);
+        }
+    }
     async getSwitchState(): Promise<SwitchState> {
         if (this.processError) {
             try {
@@ -412,28 +456,28 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.getSwitchTimeline();
-                return from_candid_SwitchTimeline_n22(this._uploadFile, this._downloadFile, result);
+                return from_candid_SwitchTimeline_n27(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getSwitchTimeline();
-            return from_candid_SwitchTimeline_n22(this._uploadFile, this._downloadFile, result);
+            return from_candid_SwitchTimeline_n27(this._uploadFile, this._downloadFile, result);
         }
     }
     async getWalletBalance(): Promise<WalletBalance> {
         if (this.processError) {
             try {
                 const result = await this.actor.getWalletBalance();
-                return from_candid_WalletBalance_n25(this._uploadFile, this._downloadFile, result);
+                return from_candid_WalletBalance_n24(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.getWalletBalance();
-            return from_candid_WalletBalance_n25(this._uploadFile, this._downloadFile, result);
+            return from_candid_WalletBalance_n24(this._uploadFile, this._downloadFile, result);
         }
     }
     async isCallerAdmin(): Promise<boolean> {
@@ -524,14 +568,14 @@ export class Backend implements backendInterface {
         if (this.processError) {
             try {
                 const result = await this.actor.updateBeneficiary(arg0, arg1, arg2, arg3);
-                return from_candid_opt_n27(this._uploadFile, this._downloadFile, result);
+                return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.updateBeneficiary(arg0, arg1, arg2, arg3);
-            return from_candid_opt_n27(this._uploadFile, this._downloadFile, result);
+            return from_candid_opt_n29(this._uploadFile, this._downloadFile, result);
         }
     }
 }
@@ -540,6 +584,9 @@ function from_candid_Cell_n16(_uploadFile: (file: ExternalBlob) => Promise<Uint8
 }
 function from_candid_Error_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Error): Error_ {
     return from_candid_variant_n4(_uploadFile, _downloadFile, value);
+}
+function from_candid_Overview_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Overview): Overview {
+    return from_candid_record_n23(_uploadFile, _downloadFile, value);
 }
 function from_candid_Result__1_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Result__1): Result__1 {
     return from_candid_variant_n2(_uploadFile, _downloadFile, value);
@@ -553,8 +600,8 @@ function from_candid_SwitchState_n5(_uploadFile: (file: ExternalBlob) => Promise
 function from_candid_SwitchStatus_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SwitchStatus): SwitchStatus {
     return from_candid_variant_n8(_uploadFile, _downloadFile, value);
 }
-function from_candid_SwitchTimeline_n22(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SwitchTimeline): SwitchTimeline {
-    return from_candid_record_n23(_uploadFile, _downloadFile, value);
+function from_candid_SwitchTimeline_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _SwitchTimeline): SwitchTimeline {
+    return from_candid_record_n28(_uploadFile, _downloadFile, value);
 }
 function from_candid_UserRole_n20(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _UserRole): UserRole {
     return from_candid_variant_n21(_uploadFile, _downloadFile, value);
@@ -562,13 +609,13 @@ function from_candid_UserRole_n20(_uploadFile: (file: ExternalBlob) => Promise<U
 function from_candid_Value_n18(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Value): Value {
     return from_candid_variant_n19(_uploadFile, _downloadFile, value);
 }
-function from_candid_WalletBalance_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _WalletBalance): WalletBalance {
-    return from_candid_record_n26(_uploadFile, _downloadFile, value);
+function from_candid_WalletBalance_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _WalletBalance): WalletBalance {
+    return from_candid_record_n25(_uploadFile, _downloadFile, value);
 }
-function from_candid_opt_n24(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
+function from_candid_opt_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [bigint]): bigint | null {
     return value.length === 0 ? null : value[0];
 }
-function from_candid_opt_n27(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Beneficiary]): Beneficiary | null {
+function from_candid_opt_n29(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Beneficiary]): Beneficiary | null {
     return value.length === 0 ? null : value[0];
 }
 function from_candid_opt_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: [] | [_Timestamp]): Timestamp | null {
@@ -599,50 +646,92 @@ function from_candid_record_n17(_uploadFile: (file: ExternalBlob) => Promise<Uin
     };
 }
 function from_candid_record_n23(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
-    status: _SwitchStatus;
-    cadenceSeconds: bigint;
-    timeSinceLastCheckIn: [] | [bigint];
-    timeUntilRelease: [] | [bigint];
+    switchStatus: _SwitchStatus;
+    totalAllocationShare: bigint;
+    recentActivity: Array<_AuditEvent>;
+    beneficiaryCount: bigint;
+    vaultBalance: _WalletBalance;
+    timeline: _SwitchTimeline;
 }): {
-    status: SwitchStatus;
-    cadenceSeconds: bigint;
-    timeSinceLastCheckIn?: bigint;
-    timeUntilRelease?: bigint;
+    switchStatus: SwitchStatus;
+    totalAllocationShare: bigint;
+    recentActivity: Array<AuditEvent>;
+    beneficiaryCount: bigint;
+    vaultBalance: WalletBalance;
+    timeline: SwitchTimeline;
 } {
     return {
-        status: from_candid_SwitchStatus_n7(_uploadFile, _downloadFile, value.status),
-        cadenceSeconds: value.cadenceSeconds,
-        timeSinceLastCheckIn: record_opt_to_undefined(from_candid_opt_n24(_uploadFile, _downloadFile, value.timeSinceLastCheckIn)),
-        timeUntilRelease: record_opt_to_undefined(from_candid_opt_n24(_uploadFile, _downloadFile, value.timeUntilRelease))
+        switchStatus: from_candid_SwitchStatus_n7(_uploadFile, _downloadFile, value.switchStatus),
+        totalAllocationShare: value.totalAllocationShare,
+        recentActivity: value.recentActivity,
+        beneficiaryCount: value.beneficiaryCount,
+        vaultBalance: from_candid_WalletBalance_n24(_uploadFile, _downloadFile, value.vaultBalance),
+        timeline: from_candid_SwitchTimeline_n27(_uploadFile, _downloadFile, value.timeline)
     };
 }
-function from_candid_record_n26(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n25(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     assets: Array<_Asset>;
+    depositAddress: string;
     totalUsd: [] | [bigint];
 }): {
     assets: Array<Asset>;
+    depositAddress: string;
     totalUsd?: bigint;
 } {
     return {
         assets: value.assets,
-        totalUsd: record_opt_to_undefined(from_candid_opt_n24(_uploadFile, _downloadFile, value.totalUsd))
+        depositAddress: value.depositAddress,
+        totalUsd: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.totalUsd))
+    };
+}
+function from_candid_record_n28(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    status: _SwitchStatus;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
+    triggerDays: bigint;
+    timeUntilWarning: [] | [bigint];
+    timeUntilTrigger: [] | [bigint];
+    timeSinceLastCheckIn: [] | [bigint];
+}): {
+    status: SwitchStatus;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
+    triggerDays: bigint;
+    timeUntilWarning?: bigint;
+    timeUntilTrigger?: bigint;
+    timeSinceLastCheckIn?: bigint;
+} {
+    return {
+        status: from_candid_SwitchStatus_n7(_uploadFile, _downloadFile, value.status),
+        warningRepeatDays: value.warningRepeatDays,
+        warningOnsetDays: value.warningOnsetDays,
+        triggerDays: value.triggerDays,
+        timeUntilWarning: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.timeUntilWarning)),
+        timeUntilTrigger: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.timeUntilTrigger)),
+        timeSinceLastCheckIn: record_opt_to_undefined(from_candid_opt_n26(_uploadFile, _downloadFile, value.timeSinceLastCheckIn))
     };
 }
 function from_candid_record_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     status: _SwitchStatus;
-    cadenceSeconds: bigint;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
     armedAt: [] | [_Timestamp];
+    triggerDays: bigint;
     lastCheckIn: [] | [_Timestamp];
 }): {
     status: SwitchStatus;
-    cadenceSeconds: bigint;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
     armedAt?: Timestamp;
+    triggerDays: bigint;
     lastCheckIn?: Timestamp;
 } {
     return {
         status: from_candid_SwitchStatus_n7(_uploadFile, _downloadFile, value.status),
-        cadenceSeconds: value.cadenceSeconds,
+        warningRepeatDays: value.warningRepeatDays,
+        warningOnsetDays: value.warningOnsetDays,
         armedAt: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.armedAt)),
+        triggerDays: value.triggerDays,
         lastCheckIn: record_opt_to_undefined(from_candid_opt_n9(_uploadFile, _downloadFile, value.lastCheckIn))
     };
 }

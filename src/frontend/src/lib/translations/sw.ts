@@ -194,6 +194,7 @@ export const sw: Partial<Translations> = {
     allocation: "Mgao wa Wanufaika",
     allocationNone: "Hakuna mgao bado. Ongeza mnufaika kuanza.",
     allocationAria: "Sehemu za mgao wa wanufaika",
+    allocated: "imetengwa",
     switch: "Swichi",
     lastVerified: "Imethibitishwa mwisho · {time}",
     notVerified: "Bado haijathibitishwa",

@@ -193,6 +193,7 @@ export const ko: Partial<Translations> = {
     allocation: "수혜자 배분",
     allocationNone: "아직 배분이 없습니다. 수혜자를 추가하여 시작하세요.",
     allocationAria: "수혜자 배분 몫",
+    allocated: "배분됨",
     switch: "스위치",
     lastVerified: "마지막 확인 · {time}",
     notVerified: "아직 확인되지 않음",

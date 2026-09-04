@@ -192,6 +192,7 @@ export const ar: Partial<Translations> = {
     allocation: "تخصيص المستفيدين",
     allocationNone: "لا توجد تخصيصات بعد. أضف مستفيداً للبدء.",
     allocationAria: "حصص تخصيص المستفيدين",
+    allocated: "مخصص",
     switch: "المفتاح",
     lastVerified: "آخر تحقق · {time}",
     notVerified: "لم يتم التحقق بعد",
@@ -301,6 +302,32 @@ export const ar: Partial<Translations> = {
     emptyTitle: "لا توجد أحداث بعد",
     emptyBody: "سيتم إغلاق كل إجراء يُتخذ ضد الخزنة هنا، بالترتيب، لحظة حدوثه.",
     footer: "كل إدخال مغلق في السجل. لا يمكن تعديل الإدخالات أو إزالتها.",
+    eventTypes: {
+      login: "تسجيل الدخول",
+      switch_armed: "تم تفعيل المفتاح",
+      switch_disarmed: "تم تعطيل المفتاح",
+      switch_checked_in: "تسجيل دخول",
+      beneficiary_added: "تمت إضافة مستفيد",
+      beneficiary_updated: "تم تحديث مستفيد",
+      beneficiary_removed: "تمت إزالة مستفيد",
+      asset_added: "تمت إضافة أصل",
+    },
+    descriptions: {
+      login: "قام المستخدم بتسجيل الدخول",
+      switch_armed_cadence:
+        "تم تفعيل المفتاح بوتيرة تسجيل دخول تبلغ {seconds} ثانية",
+      switch_armed_timeline:
+        "تم تفعيل المفتاح: تحذير بعد {warning} يوم، يتكرر كل {repeat} يوم، ويُفعَّل بعد {trigger} يوم",
+      switch_disarmed: "تم تعطيل المفتاح",
+      switch_checked_in: "تم تسجيل تسجيل الدخول",
+      switch_checked_in_reset: "تم تسجيل تسجيل الدخول؛ إعادة ضبط ساعة الخمول",
+      beneficiary_added: "تمت إضافة المستفيد '{name}' بحصة تخصيص {share}%",
+      beneficiary_updated:
+        "تم تحديث المستفيد '{name}' (المعرف {id}) بحصة تخصيص {share}%",
+      beneficiary_removed:
+        "تمت إزالة المستفيد (المعرف {id}) وتنظيف تخصيصات أصوله",
+      asset_added: "تمت إضافة الأصل '{name}' ({symbol}) برصيد {balance}",
+    },
   },
   settings: {
     eyebrow: "الإعدادات",

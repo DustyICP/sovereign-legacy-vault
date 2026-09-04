@@ -1,15 +1,17 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
+import { TabBar } from "@/components/TabBar";
 import { useTranslation } from "@/lib/translations";
 import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { Navigate, Outlet, useRouterState } from "@tanstack/react-router";
 
 /**
  * App shell. The landing route renders header + content + footer; every
- * protected route renders header + sidebar + content + footer. Authentication
- * gates the dashboard and all protected sections: unauthenticated visitors
- * are sent to the landing page, authenticated ones are sent to the dashboard.
+ * protected route renders header + horizontal tab bar + narrowed sidebar +
+ * content + footer. Authentication gates the protected sections:
+ * unauthenticated visitors are sent to the landing page, authenticated ones
+ * to the Overview tab.
  */
 export function Layout() {
   const { t } = useTranslation();
@@ -44,7 +46,7 @@ export function Layout() {
 
   if (isLanding) {
     if (isAuthenticated) {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/overview" replace />;
     }
     return (
       <div className="flex min-h-screen flex-col">
@@ -64,6 +66,7 @@ export function Layout() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
+      <TabBar />
       <div className="flex flex-1">
         <Sidebar />
         <main className="min-w-0 flex-1 bg-background">

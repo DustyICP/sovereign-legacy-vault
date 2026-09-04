@@ -195,6 +195,7 @@ export const it: Partial<Translations> = {
     allocationNone:
       "Nessuna assegnazione per ora. Aggiungi un beneficiario per iniziare.",
     allocationAria: "Quote di assegnazione dei beneficiari",
+    allocated: "assegnato",
     switch: "L'Interruttore",
     lastVerified: "Ultima verifica · {time}",
     notVerified: "Non ancora verificato",

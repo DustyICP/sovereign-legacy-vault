@@ -39,9 +39,13 @@
   "dependencies": {
     "@caffeineai/core-infrastructure": "^1.3.0",
     "@caffeineai/object-storage": "^1.1.1",
+    "@dfinity/oisy-wallet-signer": "4.1.3",
+    "@dfinity/utils": "^4.2.1",
+    "@dfinity/zod-schemas": "^3.2.0",
     "@fontsource/ibm-plex-mono": "^5.3.0",
     "@fontsource/inter": "^5.3.0",
     "@icp-sdk/auth": "^7.1.0",
+    "@icp-sdk/canisters": "^3.6.0",
     "@icp-sdk/core": "^5.3.0",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.1.2",
@@ -88,6 +92,7 @@
     "react-dom": "~19.1.0",
     "react-hook-form": "^7.53.0",
     "react-icons": "^5.4.0",
+    "react-qr-code": "^2.2.0",
     "react-quill-new": "3.4.6",
     "react-resizable-panels": "^2.1.7",
     "react-use": "~17.6.0",
@@ -96,6 +101,7 @@
     "tailwind-merge": "^2.5.2",
     "three": "^0.176.0",
     "vaul": "^1.1.2",
+    "zod": "^4.5.4",
     "zustand": "~5.0.5"
   }
 }

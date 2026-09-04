@@ -19,7 +19,7 @@ chain = "src/backend/migrations"
 check-limit = 1
 
 [toolchain]
-moc = "1.15.0"
+moc = "1.15.1"
 lintoko = "0.11.0"
 
 [lint]

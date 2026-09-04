@@ -194,6 +194,7 @@ export const id: Partial<Translations> = {
     allocationNone:
       "Belum ada alokasi. Tambahkan penerima manfaat untuk memulai.",
     allocationAria: "Bagian alokasi penerima manfaat",
+    allocated: "dialokasikan",
     switch: "Saklar",
     lastVerified: "Terakhir diverifikasi · {time}",
     notVerified: "Belum diverifikasi",

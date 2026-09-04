@@ -1,17 +1,17 @@
 {
-  "overview": "Sovereign Legacy is a digital dead man's switch for crypto — a vault that releases to your beneficiaries if you stop checking in, built natively on the Internet Computer.",
+  "overview": "Sovereign Legacy is a digital vault app that lets users manage beneficiaries, assets, and a dead-man's switch, with a full audit log of account activity.",
   "features": [
-    "22-language switcher with right-to-left support for Arabic, Persian, and Urdu",
-    "Translated landing, dashboard, and navigation copy",
-    "Persistent language choice applied before first paint",
-    "RTL layout flipping and glyph-covering fonts"
+    "Manage beneficiaries and assets in a secure vault",
+    "Arm and disarm a dead-man's switch with check-ins",
+    "Full audit log of account activity",
+    "Localized interface across 22 languages including right-to-left support"
   ],
   "category": "productivity",
   "tags": [
-    "crypto",
-    "inheritance",
-    "dead-mans-switch",
+    "vault",
+    "security",
+    "audit-log",
     "i18n"
   ],
-  "last_updated": "2026-09-01T22:49:13.406Z"
+  "last_updated": "2026-09-04T01:52:39.601Z"
 }

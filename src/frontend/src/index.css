@@ -73,6 +73,26 @@
       oklch(0.19 0.016 255) 0%,
       oklch(0.15 0.012 255) 100%
     );
+
+    /* Navigation restructure tokens (brownfield additions) */
+    --tab-bar: 0.15 0.012 255;
+    --tab-foreground: 0.56 0.012 80;
+    --tab-foreground-active: 0.72 0.16 85;
+    --tab-indicator: 0.78 0.15 85;
+    --beneficiary-card: 0.17 0.014 255;
+    --asset-row: 0.17 0.014 255;
+    --qr-panel: 0.15 0.012 255;
+    --slider-track: 0.26 0.014 255;
+    --slider-fill: 0.72 0.16 85;
+
+    /* OISY wallet integration tokens (brownfield additions) */
+    --wallet-badge: 0.17 0.014 255;
+    --wallet-badge-accent: 0.72 0.16 85;
+    --wallet-badge-idle: 0.56 0.012 80;
+    --send-input: 0.15 0.012 255;
+    --send-input-focus: 0.78 0.15 85;
+    --approval-wait: 0.8 0.14 85;
+    --disconnect: 0.55 0.2 25;
   }
 
   .dark {
@@ -137,6 +157,26 @@
       oklch(0.19 0.016 255) 0%,
       oklch(0.15 0.012 255) 100%
     );
+
+    /* Navigation restructure tokens (brownfield additions) */
+    --tab-bar: 0.15 0.012 255;
+    --tab-foreground: 0.56 0.012 80;
+    --tab-foreground-active: 0.72 0.16 85;
+    --tab-indicator: 0.78 0.15 85;
+    --beneficiary-card: 0.17 0.014 255;
+    --asset-row: 0.17 0.014 255;
+    --qr-panel: 0.15 0.012 255;
+    --slider-track: 0.26 0.014 255;
+    --slider-fill: 0.72 0.16 85;
+
+    /* OISY wallet integration tokens (brownfield additions) */
+    --wallet-badge: 0.17 0.014 255;
+    --wallet-badge-accent: 0.72 0.16 85;
+    --wallet-badge-idle: 0.56 0.012 80;
+    --send-input: 0.15 0.012 255;
+    --send-input-focus: 0.78 0.15 85;
+    --approval-wait: 0.8 0.14 85;
+    --disconnect: 0.55 0.2 25;
   }
 
   * {
@@ -268,5 +308,414 @@
   }
   [dir="rtl"] .text-right {
     text-align: left;
+  }
+
+  /* ===== Navigation restructure (brownfield additions) =====
+     Horizontal tab bar under the header, narrowed quick-reference sidebar,
+     and the new Overview/Wallet/Beneficiary/Timelines page surfaces. All
+     reuse the existing Vault OKLCH tokens — no new color families. */
+
+  /* --- Horizontal tab bar --- */
+  .tab-bar {
+    background-color: oklch(var(--tab-bar));
+    border-bottom: 1px solid oklch(var(--border));
+  }
+
+  .tab-item {
+    position: relative;
+    color: oklch(var(--tab-foreground));
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.875rem 1rem;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+  }
+
+  .tab-item:hover {
+    color: oklch(var(--tab-foreground-active));
+  }
+
+  .tab-item[data-active="true"] {
+    color: oklch(var(--tab-foreground-active));
+  }
+
+  /* Gold active indicator bar under the active tab */
+  .tab-item[data-active="true"]::after {
+    content: "";
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: -1px;
+    height: 2px;
+    background-image: var(--gradient-gold);
+    border-radius: 2px 2px 0 0;
+    box-shadow: 0 -1px 6px oklch(0.72 0.16 85 / 0.35);
+  }
+
+  /* Scrollable variant for mobile: horizontal scroll, hidden scrollbar */
+  .tab-bar-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tab-bar-scroll::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* --- Narrowed sidebar: beneficiary contact card + Settings --- */
+  .beneficiary-card {
+    background-color: oklch(var(--beneficiary-card));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px oklch(0.08 0.01 255 / 0.5), 0 2px 8px
+      oklch(0.08 0.01 255 / 0.35);
+  }
+
+  .beneficiary-card .contact-label {
+    color: oklch(var(--tab-foreground));
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  .beneficiary-card .contact-value {
+    color: oklch(var(--foreground));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+  }
+
+  .settings-link {
+    color: oklch(var(--tab-foreground));
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .settings-link:hover {
+    color: oklch(var(--tab-foreground-active));
+  }
+
+  /* --- Overview: summary snapshot card --- */
+  .snapshot-card {
+    background-color: oklch(var(--beneficiary-card));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px oklch(0.08 0.01 255 / 0.5), 0 2px 8px
+      oklch(0.08 0.01 255 / 0.35);
+  }
+  .snapshot-card:hover {
+    border-color: oklch(0.78 0.15 85 / 0.45);
+    box-shadow: 0 0 0 1px oklch(0.72 0.16 85 / 0.4), 0 4px 20px
+      oklch(0.72 0.16 85 / 0.18);
+  }
+
+  /* --- Wallet: asset row with USD value --- */
+  .asset-row {
+    background-color: oklch(var(--asset-row));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s
+      cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .asset-row:hover {
+    border-color: oklch(0.78 0.15 85 / 0.45);
+    box-shadow: 0 0 0 1px oklch(0.72 0.16 85 / 0.4), 0 4px 20px
+      oklch(0.72 0.16 85 / 0.18);
+  }
+  .asset-row .asset-symbol {
+    color: oklch(var(--foreground));
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .asset-row .asset-usd {
+    color: oklch(var(--tab-foreground-active));
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+
+  /* --- Wallet: receive-address + QR panel --- */
+  .qr-panel {
+    background-color: oklch(var(--qr-panel));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+  }
+  .qr-panel .receive-address {
+    color: oklch(var(--foreground));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    word-break: break-all;
+  }
+  .qr-panel .qr-frame {
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    background-color: oklch(0.135 0.012 255);
+  }
+
+  /* --- Beneficiary: editable list with percentage slider/input --- */
+  .slider-track {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 9999px;
+    background: linear-gradient(
+      to right,
+      oklch(var(--slider-fill)) var(--fill, 0%),
+      oklch(var(--slider-track)) var(--fill, 0%)
+    );
+    outline: none;
+    cursor: pointer;
+  }
+  .slider-track::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background-image: var(--gradient-gold);
+    border: 2px solid oklch(0.135 0.012 255);
+    box-shadow: 0 0 0 1px oklch(0.72 0.16 85 / 0.4), 0 2px 6px
+      oklch(0.06 0.01 255 / 0.5);
+  }
+  .slider-track::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 9999px;
+    background-image: var(--gradient-gold);
+    border: 2px solid oklch(0.135 0.012 255);
+    box-shadow: 0 0 0 1px oklch(0.72 0.16 85 / 0.4), 0 2px 6px
+      oklch(0.06 0.01 255 / 0.5);
+  }
+  .slider-track::-moz-range-track {
+    height: 4px;
+    border-radius: 9999px;
+    background-color: oklch(var(--slider-track));
+  }
+  .slider-track::-moz-range-progress {
+    height: 4px;
+    border-radius: 9999px;
+    background-color: oklch(var(--slider-fill));
+  }
+
+  .percent-input {
+    background-color: oklch(var(--asset-row));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.375rem;
+    color: oklch(var(--foreground));
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.5rem;
+    width: 4.5rem;
+    text-align: right;
+  }
+  .percent-input:focus {
+    outline: none;
+    border-color: oklch(var(--ring));
+    box-shadow: 0 0 0 1px oklch(var(--ring) / 0.4);
+  }
+
+  /* --- Timelines: three-parameter configuration controls --- */
+  .param-control {
+    background-color: oklch(var(--beneficiary-card));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+  }
+  .param-control .param-label {
+    color: oklch(var(--tab-foreground));
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .param-control .param-value {
+    color: oklch(var(--foreground));
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  /* RTL: tab indicator bar flips to the right edge */
+  [dir="rtl"] .tab-item[data-active="true"]::after {
+    left: auto;
+    right: 1rem;
+  }
+
+  /* ===== OISY wallet integration (brownfield additions) =====
+     Connect/disconnect, connected-account badge, send form, and the
+     waiting-for-approval state. All reuse the existing Vault steel + gold
+     families via the new wallet tokens above — no new color families. */
+
+  /* --- Connect Wallet primary action --- */
+  .connect-wallet-btn {
+    background-image: var(--gradient-gold);
+    color: oklch(0.14 0.02 85);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    border-radius: 0.375rem;
+    padding: 0.625rem 1.125rem;
+    box-shadow: inset 0 1px 0 oklch(0.85 0.05 85 / 0.35), inset 0 -1px 0
+      oklch(0.3 0.04 85 / 0.6), 0 2px 6px oklch(0.06 0.01 255 / 0.5);
+    transition: filter 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s
+      cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .connect-wallet-btn:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 0 0 1px oklch(0.72 0.16 85 / 0.4), 0 4px 20px
+      oklch(0.72 0.16 85 / 0.18);
+  }
+
+  /* --- Connected OISY account badge --- */
+  .wallet-badge {
+    background-color: oklch(var(--wallet-badge));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .wallet-badge .badge-label {
+    color: oklch(var(--wallet-badge-idle));
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .wallet-badge .badge-account {
+    color: oklch(var(--wallet-badge-accent));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    word-break: break-all;
+  }
+  .wallet-badge .badge-dot {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background-image: var(--gradient-gold);
+    box-shadow: 0 0 6px oklch(0.72 0.16 85 / 0.5);
+    flex-shrink: 0;
+  }
+
+  /* --- Disconnect (destructive) action --- */
+  .disconnect-btn {
+    color: oklch(var(--disconnect));
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border: 1px solid oklch(var(--disconnect) / 0.4);
+    border-radius: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    background-color: transparent;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color
+      0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .disconnect-btn:hover {
+    background-color: oklch(var(--disconnect) / 0.12);
+    border-color: oklch(var(--disconnect) / 0.7);
+  }
+
+  /* --- Send form: asset picker, recipient, amount --- */
+  .send-form {
+    background-color: oklch(var(--wallet-badge));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 2px oklch(0.08 0.01 255 / 0.5), 0 2px 8px
+      oklch(0.08 0.01 255 / 0.35);
+  }
+  .send-field {
+    background-color: oklch(var(--send-input));
+    border: 1px solid oklch(var(--border));
+    border-radius: 0.375rem;
+    color: oklch(var(--foreground));
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    padding: 0.625rem 0.75rem;
+    width: 100%;
+    transition: border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s
+      cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .send-field::placeholder {
+    color: oklch(var(--wallet-badge-idle));
+  }
+  .send-field:focus {
+    outline: none;
+    border-color: oklch(var(--send-input-focus));
+    box-shadow: 0 0 0 1px oklch(var(--send-input-focus) / 0.4);
+  }
+  .send-field[aria-invalid="true"] {
+    border-color: oklch(var(--disconnect) / 0.7);
+  }
+  .send-form .field-label {
+    color: oklch(var(--wallet-badge-idle));
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .send-form .send-amount {
+    color: oklch(var(--foreground));
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  .send-form .balance-hint {
+    color: oklch(var(--wallet-badge-idle));
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+  }
+
+  /* --- Waiting-for-approval state --- */
+  .approval-pending {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    color: oklch(var(--approval-wait));
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .approval-pending .approval-spinner {
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: 9999px;
+    border: 2px solid oklch(var(--approval-wait) / 0.25);
+    border-top-color: oklch(var(--approval-wait));
+    animation: approval-spin 1s linear infinite;
+    flex-shrink: 0;
+  }
+  .approval-pending .approval-pulse {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background-image: var(--gradient-gold);
+    animation: approval-pulse 1.6s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .approval-panel {
+    background-color: oklch(var(--wallet-badge));
+    border: 1px solid oklch(var(--approval-wait) / 0.45);
+    border-radius: 0.5rem;
+    box-shadow: 0 0 0 1px oklch(var(--approval-wait) / 0.2), 0 4px 20px
+      oklch(0.72 0.16 85 / 0.12);
   }
 }

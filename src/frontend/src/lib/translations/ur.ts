@@ -193,6 +193,7 @@ export const ur: Partial<Translations> = {
     allocation: "مستفیدین کی تخصیص",
     allocationNone: "ابھی کوئی تخصیص نہیں۔ شروع کرنے کے لیے مستفید شامل کریں۔",
     allocationAria: "مستفیدین کی تخصیص کے حصے",
+    allocated: "مختص",
     switch: "سوئچ",
     lastVerified: "آخری تصدیق · {time}",
     notVerified: "ابھی تصدیق نہیں ہوئی",

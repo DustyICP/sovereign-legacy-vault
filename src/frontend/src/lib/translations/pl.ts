@@ -194,6 +194,7 @@ export const pl: Partial<Translations> = {
     allocation: "Przydział Beneficjentów",
     allocationNone: "Brak przydziałów. Dodaj beneficjenta, aby rozpocząć.",
     allocationAria: "Udziały przydziału beneficjentów",
+    allocated: "przydzielono",
     switch: "Przełącznik",
     lastVerified: "Ostatnia weryfikacja · {time}",
     notVerified: "Jeszcze nie zweryfikowano",

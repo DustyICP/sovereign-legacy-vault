@@ -193,6 +193,7 @@ export const vi: Partial<Translations> = {
     allocation: "Phân Bổ Người Thụ Hưởng",
     allocationNone: "Chưa có phân bổ nào. Thêm người thụ hưởng để bắt đầu.",
     allocationAria: "Phần phân bổ của người thụ hưởng",
+    allocated: "đã phân bổ",
     switch: "Công Tắc",
     lastVerified: "Xác minh lần cuối · {time}",
     notVerified: "Chưa được xác minh",

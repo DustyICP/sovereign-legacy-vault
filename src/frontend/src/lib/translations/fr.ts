@@ -194,6 +194,7 @@ export const fr: Partial<Translations> = {
     allocationNone:
       "Aucune allocation pour l'instant. Ajoutez un bénéficiaire pour commencer.",
     allocationAria: "Parts d'allocation des bénéficiaires",
+    allocated: "alloué",
     switch: "L'Interrupteur",
     lastVerified: "Dernière vérification · {time}",
     notVerified: "Pas encore vérifié",

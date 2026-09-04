@@ -193,6 +193,7 @@ export const uk: Partial<Translations> = {
     allocation: "Розподіл Бенефіціарів",
     allocationNone: "Ще немає розподілів. Додайте бенефіціара, щоб почати.",
     allocationAria: "Частки розподілу бенефіціарів",
+    allocated: "розподілено",
     switch: "Перемикач",
     lastVerified: "Остання перевірка · {time}",
     notVerified: "Ще не перевірено",

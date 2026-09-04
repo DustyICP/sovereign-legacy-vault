@@ -64,8 +64,10 @@ export const SwitchStatus = IDL.Variant({
 });
 export const SwitchState = IDL.Record({
   'status' : SwitchStatus,
-  'cadenceSeconds' : IDL.Nat,
+  'warningRepeatDays' : IDL.Nat,
+  'warningOnsetDays' : IDL.Nat,
   'armedAt' : IDL.Opt(Timestamp),
+  'triggerDays' : IDL.Nat,
   'lastCheckIn' : IDL.Opt(Timestamp),
 });
 export const UserRole = IDL.Variant({
@@ -86,15 +88,27 @@ export const Result = IDL.Record({
   'hasMore' : IDL.Bool,
   'rows' : IDL.Vec(IDL.Vec(Cell)),
 });
-export const SwitchTimeline = IDL.Record({
-  'status' : SwitchStatus,
-  'cadenceSeconds' : IDL.Nat,
-  'timeSinceLastCheckIn' : IDL.Opt(IDL.Nat),
-  'timeUntilRelease' : IDL.Opt(IDL.Nat),
-});
 export const WalletBalance = IDL.Record({
   'assets' : IDL.Vec(Asset),
+  'depositAddress' : IDL.Text,
   'totalUsd' : IDL.Opt(IDL.Nat),
+});
+export const SwitchTimeline = IDL.Record({
+  'status' : SwitchStatus,
+  'warningRepeatDays' : IDL.Nat,
+  'warningOnsetDays' : IDL.Nat,
+  'triggerDays' : IDL.Nat,
+  'timeUntilWarning' : IDL.Opt(IDL.Nat),
+  'timeUntilTrigger' : IDL.Opt(IDL.Nat),
+  'timeSinceLastCheckIn' : IDL.Opt(IDL.Nat),
+});
+export const Overview = IDL.Record({
+  'switchStatus' : SwitchStatus,
+  'totalAllocationShare' : IDL.Nat,
+  'recentActivity' : IDL.Vec(AuditEvent),
+  'beneficiaryCount' : IDL.Nat,
+  'vaultBalance' : WalletBalance,
+  'timeline' : SwitchTimeline,
 });
 
 export const idlService = IDL.Service({
@@ -108,13 +122,15 @@ export const idlService = IDL.Service({
     ),
   'addBeneficiary' : IDL.Func([IDL.Text, IDL.Nat, IDL.Text], [Beneficiary], []),
   'appendAuditEvent' : IDL.Func([IDL.Text, IDL.Text], [AuditEvent], []),
-  'armSwitch' : IDL.Func([IDL.Nat], [SwitchState], []),
+  'armSwitch' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Nat], [SwitchState], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'checkIn' : IDL.Func([], [SwitchState], []),
   'disarmSwitch' : IDL.Func([], [SwitchState], []),
   'execute' : IDL.Func([IDL.Text], [Result], ['query']),
   'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getDepositAddress' : IDL.Func([], [IDL.Text], ['query']),
+  'getOverview' : IDL.Func([], [Overview], ['query']),
   'getSwitchState' : IDL.Func([], [SwitchState], ['query']),
   'getSwitchTimeline' : IDL.Func([], [SwitchTimeline], ['query']),
   'getWalletBalance' : IDL.Func([], [WalletBalance], ['query']),
@@ -190,8 +206,10 @@ export const idlFactory = ({ IDL }) => {
   });
   const SwitchState = IDL.Record({
     'status' : SwitchStatus,
-    'cadenceSeconds' : IDL.Nat,
+    'warningRepeatDays' : IDL.Nat,
+    'warningOnsetDays' : IDL.Nat,
     'armedAt' : IDL.Opt(Timestamp),
+    'triggerDays' : IDL.Nat,
     'lastCheckIn' : IDL.Opt(Timestamp),
   });
   const UserRole = IDL.Variant({
@@ -212,15 +230,27 @@ export const idlFactory = ({ IDL }) => {
     'hasMore' : IDL.Bool,
     'rows' : IDL.Vec(IDL.Vec(Cell)),
   });
-  const SwitchTimeline = IDL.Record({
-    'status' : SwitchStatus,
-    'cadenceSeconds' : IDL.Nat,
-    'timeSinceLastCheckIn' : IDL.Opt(IDL.Nat),
-    'timeUntilRelease' : IDL.Opt(IDL.Nat),
-  });
   const WalletBalance = IDL.Record({
     'assets' : IDL.Vec(Asset),
+    'depositAddress' : IDL.Text,
     'totalUsd' : IDL.Opt(IDL.Nat),
+  });
+  const SwitchTimeline = IDL.Record({
+    'status' : SwitchStatus,
+    'warningRepeatDays' : IDL.Nat,
+    'warningOnsetDays' : IDL.Nat,
+    'triggerDays' : IDL.Nat,
+    'timeUntilWarning' : IDL.Opt(IDL.Nat),
+    'timeUntilTrigger' : IDL.Opt(IDL.Nat),
+    'timeSinceLastCheckIn' : IDL.Opt(IDL.Nat),
+  });
+  const Overview = IDL.Record({
+    'switchStatus' : SwitchStatus,
+    'totalAllocationShare' : IDL.Nat,
+    'recentActivity' : IDL.Vec(AuditEvent),
+    'beneficiaryCount' : IDL.Nat,
+    'vaultBalance' : WalletBalance,
+    'timeline' : SwitchTimeline,
   });
   
   return IDL.Service({
@@ -238,13 +268,15 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'appendAuditEvent' : IDL.Func([IDL.Text, IDL.Text], [AuditEvent], []),
-    'armSwitch' : IDL.Func([IDL.Nat], [SwitchState], []),
+    'armSwitch' : IDL.Func([IDL.Nat, IDL.Nat, IDL.Nat], [SwitchState], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'checkIn' : IDL.Func([], [SwitchState], []),
     'disarmSwitch' : IDL.Func([], [SwitchState], []),
     'execute' : IDL.Func([IDL.Text], [Result], ['query']),
     'getApiDoc' : IDL.Func([], [IDL.Text], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getDepositAddress' : IDL.Func([], [IDL.Text], ['query']),
+    'getOverview' : IDL.Func([], [Overview], ['query']),
     'getSwitchState' : IDL.Func([], [SwitchState], ['query']),
     'getSwitchTimeline' : IDL.Func([], [SwitchTimeline], ['query']),
     'getWalletBalance' : IDL.Func([], [WalletBalance], ['query']),

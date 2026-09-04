@@ -18,42 +18,87 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type TranslationKey, useTranslation } from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ShieldCheck, ShieldOff, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { type CSSProperties, useState } from "react";
 import { toast } from "sonner";
 
-const CADENCE_OPTIONS = [
-  { seconds: 86400n, labelKey: "settings.daily", hintKey: "settings.h24" },
-  { seconds: 604800n, labelKey: "settings.weekly", hintKey: "settings.h7d" },
-  { seconds: 2592000n, labelKey: "settings.monthly", hintKey: "settings.h30d" },
-  {
-    seconds: 31536000n,
-    labelKey: "settings.yearly",
-    hintKey: "settings.h365d",
-  },
-] as const;
+const ONSET_MIN = 1;
+const ONSET_MAX = 365;
+const REPEAT_MIN = 1;
+const REPEAT_MAX = 90;
+const TRIGGER_MIN = 1;
+const TRIGGER_MAX = 730;
 
-function formatCadence(
-  seconds: bigint,
-  t: (key: TranslationKey, params?: Record<string, string | number>) => string,
-): string {
-  const option = CADENCE_OPTIONS.find((o) => o.seconds === seconds);
-  return option ? t(option.labelKey) : `${seconds} s`;
+const DEFAULT_ONSET = 30;
+const DEFAULT_REPEAT = 7;
+const DEFAULT_TRIGGER = 180;
+
+interface Param {
+  key: "onset" | "repeat" | "trigger";
+  min: number;
+  max: number;
+  value: number;
+  onChange: (value: number) => void;
 }
 
 function formatShare(share: bigint): string {
   return `${Number(share)}%`;
+}
+
+function ParamControl({
+  param,
+  t,
+}: {
+  param: Param;
+  t: (key: TranslationKey, params?: Record<string, string | number>) => string;
+}) {
+  const labelKey = `timelines.param.${param.key}.label` as TranslationKey;
+  const hintKey = `timelines.param.${param.key}.hint` as TranslationKey;
+  const unitKey = `timelines.param.${param.key}.unit` as TranslationKey;
+  const fill = ((param.value - param.min) / (param.max - param.min)) * 100;
+
+  return (
+    <div
+      data-ocid={`settings.param.${param.key}`}
+      className="param-control p-5"
+    >
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0">
+          <p className="param-label">{t(labelKey)}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
+            {t(hintKey)}
+          </p>
+        </div>
+        <div className="shrink-0 text-right">
+          <p className="param-value">{param.value}</p>
+          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-muted-foreground">
+            {t(unitKey)}
+          </p>
+        </div>
+      </div>
+
+      <input
+        type="range"
+        data-ocid={`settings.param.${param.key}.slider`}
+        className="slider-track mt-5"
+        min={param.min}
+        max={param.max}
+        value={param.value}
+        aria-label={t(labelKey)}
+        style={{ "--fill": `${fill}%` } as CSSProperties}
+        onChange={(e) => param.onChange(Number(e.target.value))}
+      />
+
+      <div className="mt-2 flex justify-between font-mono text-[0.6875rem] text-muted-foreground">
+        <span>{param.min}</span>
+        <span>{param.max}</span>
+      </div>
+    </div>
+  );
 }
 
 function SwitchSettings() {
@@ -71,16 +116,22 @@ function SwitchSettings() {
   });
 
   const armMutation = useMutation({
-    mutationFn: async (cadenceSeconds: bigint) => {
+    mutationFn: async (config: {
+      warningOnsetDays: bigint;
+      warningRepeatDays: bigint;
+      triggerDays: bigint;
+    }) => {
       if (!actor) throw new Error("Backend is not ready");
-      return actor.armSwitch(cadenceSeconds);
+      return actor.armSwitch(
+        config.warningOnsetDays,
+        config.warningRepeatDays,
+        config.triggerDays,
+      );
     },
     onSuccess: (next: SwitchState) => {
       queryClient.setQueryData(["switchState"], next);
       toast.success(t("settings.toast.armed"), {
-        description: t("settings.toast.armedDesc", {
-          cadence: formatCadence(next.cadenceSeconds, t),
-        }),
+        description: t("settings.toast.armedDesc"),
       });
     },
     onError: () => {
@@ -108,9 +159,10 @@ function SwitchSettings() {
     },
   });
 
-  const [cadence, setCadence] = useState<string>(
-    CADENCE_OPTIONS[0].seconds.toString(),
-  );
+  const [onset, setOnset] = useState(DEFAULT_ONSET);
+  const [repeat, setRepeat] = useState(DEFAULT_REPEAT);
+  const [trigger, setTrigger] = useState(DEFAULT_TRIGGER);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   if (isLoading || !state) {
     return (
@@ -123,6 +175,56 @@ function SwitchSettings() {
   }
 
   const isArmed = state.status === "armed";
+
+  const params: Param[] = [
+    {
+      key: "onset",
+      min: ONSET_MIN,
+      max: ONSET_MAX,
+      value: onset,
+      onChange: (v) => {
+        setOnset(v);
+        setValidationError(null);
+      },
+    },
+    {
+      key: "repeat",
+      min: REPEAT_MIN,
+      max: REPEAT_MAX,
+      value: repeat,
+      onChange: (v) => {
+        setRepeat(v);
+        setValidationError(null);
+      },
+    },
+    {
+      key: "trigger",
+      min: TRIGGER_MIN,
+      max: TRIGGER_MAX,
+      value: trigger,
+      onChange: (v) => {
+        setTrigger(v);
+        setValidationError(null);
+      },
+    },
+  ];
+
+  const handleArm = () => {
+    if (onset < 1 || repeat < 1 || trigger < 1) {
+      setValidationError(t("timelines.validation.allPositive"));
+      return;
+    }
+    if (onset >= trigger) {
+      setValidationError(t("timelines.validation.onsetBeforeTrigger"));
+      return;
+    }
+    setValidationError(null);
+    armMutation.mutate({
+      warningOnsetDays: BigInt(onset),
+      warningRepeatDays: BigInt(repeat),
+      triggerDays: BigInt(trigger),
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -138,40 +240,16 @@ function SwitchSettings() {
         </div>
         <p className="font-mono text-xs text-muted-foreground">
           {t("settings.cadence", {
-            value: formatCadence(state.cadenceSeconds, t),
+            value: `${Number(state.triggerDays)} ${t("timelines.param.trigger.unit")}`,
           })}
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-[1fr_auto] sm:items-end">
-        <div className="space-y-2">
-          <Label htmlFor="cadence">{t("common.checkInCadence")}</Label>
-          <Select
-            value={cadence}
-            onValueChange={setCadence}
-            disabled={isArmed || armMutation.isPending}
-          >
-            <SelectTrigger
-              id="cadence"
-              data-ocid="settings.cadence"
-              className="w-full"
-            >
-              <SelectValue placeholder={t("common.selectCadence")} />
-            </SelectTrigger>
-            <SelectContent>
-              {CADENCE_OPTIONS.map((option) => (
-                <SelectItem
-                  key={option.seconds.toString()}
-                  value={option.seconds.toString()}
-                >
-                  {t(option.labelKey)} · {t(option.hintKey)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        {isArmed ? (
+      {isArmed ? (
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
+            {t("timelines.standingDownBody")}
+          </p>
           <Button
             data-ocid="settings.disarm_button"
             variant="outline"
@@ -183,17 +261,37 @@ function SwitchSettings() {
               ? t("common.disarming")
               : t("common.disarm")}
           </Button>
-        ) : (
-          <Button
-            data-ocid="settings.arm_button"
-            onClick={() => armMutation.mutate(BigInt(cadence))}
-            disabled={armMutation.isPending}
-          >
-            <ShieldCheck className="size-4" />
-            {armMutation.isPending ? t("common.arming") : t("common.arm")}
-          </Button>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {params.map((param) => (
+              <ParamControl key={param.key} param={param} t={t} />
+            ))}
+          </div>
+
+          {validationError && (
+            <p
+              data-ocid="settings.validation_error"
+              className="mt-4 flex items-center gap-2 text-sm text-destructive"
+            >
+              <ShieldCheck className="size-4" aria-hidden="true" />
+              {validationError}
+            </p>
+          )}
+
+          <div className="mt-6 flex justify-end">
+            <Button
+              data-ocid="settings.arm_button"
+              onClick={handleArm}
+              disabled={armMutation.isPending}
+            >
+              <ShieldCheck className="size-4" />
+              {armMutation.isPending ? t("common.arming") : t("common.arm")}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

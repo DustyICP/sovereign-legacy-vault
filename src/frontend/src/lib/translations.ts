@@ -145,6 +145,119 @@ export function formatDuration(seconds: bigint | number): string {
   return `${minutes}m`;
 }
 
+/** The `t` signature shared by the provider and the standalone helper. */
+type TranslateFn = (
+  key: TranslationKey,
+  params?: Record<string, string | number>,
+) => string;
+
+/** Known backend event-type values mapped to their `audit.eventTypes.*` key. */
+const EVENT_TYPE_KEYS: Record<string, TranslationKey> = {
+  login: "audit.eventTypes.login",
+  switch_armed: "audit.eventTypes.switch_armed",
+  switch_disarmed: "audit.eventTypes.switch_disarmed",
+  switch_checked_in: "audit.eventTypes.switch_checked_in",
+  beneficiary_added: "audit.eventTypes.beneficiary_added",
+  beneficiary_updated: "audit.eventTypes.beneficiary_updated",
+  beneficiary_removed: "audit.eventTypes.beneficiary_removed",
+  asset_added: "audit.eventTypes.asset_added",
+};
+
+/**
+ * Localize a backend event-type value. Unknown or future event types fall
+ * back to the raw value so the cell is never blank.
+ */
+export function translateEventType(t: TranslateFn, eventType: string): string {
+  const key = EVENT_TYPE_KEYS[eventType];
+  return key ? t(key) : eventType;
+}
+
+/**
+ * Localize the static wrapper text of a backend audit description while
+ * preserving its dynamic values (names, ids, shares, balances) as-is via
+ * `t` interpolation. Unrecognized descriptions fall back to the raw string.
+ */
+export function translateAuditDescription(
+  t: TranslateFn,
+  eventType: string,
+  description: string,
+): string {
+  switch (eventType) {
+    case "login":
+      return t("audit.descriptions.login");
+    case "switch_disarmed":
+      return t("audit.descriptions.switch_disarmed");
+    case "switch_checked_in":
+      return description.includes("inactivity clock reset")
+        ? t("audit.descriptions.switch_checked_in_reset")
+        : t("audit.descriptions.switch_checked_in");
+    case "switch_armed": {
+      const cadence = description.match(/cadence of (\d+) seconds/);
+      if (cadence) {
+        return t("audit.descriptions.switch_armed_cadence", {
+          seconds: cadence[1],
+        });
+      }
+      const warning = description.match(/warning after (\d+) days/);
+      const repeat = description.match(/repeating every (\d+) days/);
+      const trigger = description.match(/triggering after (\d+) days/);
+      if (warning && repeat && trigger) {
+        return t("audit.descriptions.switch_armed_timeline", {
+          warning: warning[1],
+          repeat: repeat[1],
+          trigger: trigger[1],
+        });
+      }
+      return description;
+    }
+    case "beneficiary_added": {
+      const m = description.match(
+        /Beneficiary '([^']+)' added with allocation share (\d+)%/,
+      );
+      return m
+        ? t("audit.descriptions.beneficiary_added", {
+            name: m[1],
+            share: m[2],
+          })
+        : description;
+    }
+    case "beneficiary_updated": {
+      const m = description.match(
+        /Beneficiary '([^']+)' \(id (\d+)\) updated with allocation share (\d+)%/,
+      );
+      return m
+        ? t("audit.descriptions.beneficiary_updated", {
+            name: m[1],
+            id: m[2],
+            share: m[3],
+          })
+        : description;
+    }
+    case "beneficiary_removed": {
+      const m = description.match(
+        /Beneficiary \(id (\d+)\) removed and its asset allocations cleaned up/,
+      );
+      return m
+        ? t("audit.descriptions.beneficiary_removed", { id: m[1] })
+        : description;
+    }
+    case "asset_added": {
+      const m = description.match(
+        /Asset '([^']+)' \(([^)]+)\) added with balance (\d+)/,
+      );
+      return m
+        ? t("audit.descriptions.asset_added", {
+            name: m[1],
+            symbol: m[2],
+            balance: m[3],
+          })
+        : description;
+    }
+    default:
+      return description;
+  }
+}
+
 export interface I18nContextValue {
   language: Language;
   setLanguage: (language: Language) => void;

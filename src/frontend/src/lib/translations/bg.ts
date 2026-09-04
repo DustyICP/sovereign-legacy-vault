@@ -194,6 +194,7 @@ export const bg: Partial<Translations> = {
     allocationNone:
       "Все още няма разпределения. Добави бенефициент, за да започнеш.",
     allocationAria: "Дялове на разпределението на бенефициентите",
+    allocated: "разпределено",
     switch: "Превключвателят",
     lastVerified: "Последна проверка · {time}",
     notVerified: "Все още не е проверено",

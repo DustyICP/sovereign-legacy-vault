@@ -195,6 +195,7 @@ export const es: Partial<Translations> = {
     allocationNone:
       "Aún no hay asignaciones. Añade un beneficiario para empezar.",
     allocationAria: "Participaciones de asignación de beneficiarios",
+    allocated: "asignado",
     switch: "El Interruptor",
     lastVerified: "Última verificación · {time}",
     notVerified: "Aún no verificado",
@@ -313,6 +314,34 @@ export const es: Partial<Translations> = {
       "Cada acción realizada contra la bóveda quedará sellada aquí, en orden, a medida que ocurra.",
     footer:
       "Cada entrada está sellada en el registro. Las entradas no pueden editarse ni eliminarse.",
+    eventTypes: {
+      login: "Inicio de sesión",
+      switch_armed: "Interruptor armado",
+      switch_disarmed: "Interruptor desarmado",
+      switch_checked_in: "Verificación",
+      beneficiary_added: "Beneficiario añadido",
+      beneficiary_updated: "Beneficiario actualizado",
+      beneficiary_removed: "Beneficiario eliminado",
+      asset_added: "Activo añadido",
+    },
+    descriptions: {
+      login: "El usuario inició sesión",
+      switch_armed_cadence:
+        "Interruptor armado con cadencia de verificación de {seconds} segundos",
+      switch_armed_timeline:
+        "Interruptor armado: aviso después de {warning} días, repitiéndose cada {repeat} días, activándose después de {trigger} días",
+      switch_disarmed: "Interruptor desarmado",
+      switch_checked_in: "Verificación registrada",
+      switch_checked_in_reset:
+        "Verificación registrada; reloj de inactividad reiniciado",
+      beneficiary_added:
+        "Beneficiario '{name}' añadido con participación de {share}%",
+      beneficiary_updated:
+        "Beneficiario '{name}' (id {id}) actualizado con participación de {share}%",
+      beneficiary_removed:
+        "Beneficiario (id {id}) eliminado y sus asignaciones de activos limpiadas",
+      asset_added: "Activo '{name}' ({symbol}) añadido con saldo {balance}",
+    },
   },
   settings: {
     eyebrow: "Ajustes",

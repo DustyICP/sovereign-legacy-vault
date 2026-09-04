@@ -195,6 +195,7 @@ export const fil: Partial<Translations> = {
     allocationNone:
       "Wala pang alokasyon. Magdagdag ng benepisyaryo upang magsimula.",
     allocationAria: "Mga bahagi ng alokasyon ng benepisyaryo",
+    allocated: "inilaan",
     switch: "Ang Switch",
     lastVerified: "Huling na-verify · {time}",
     notVerified: "Hindi pa na-verify",

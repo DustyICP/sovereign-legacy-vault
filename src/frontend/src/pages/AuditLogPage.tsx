@@ -1,8 +1,14 @@
 import { createActor } from "@/backend";
 import type { AuditEvent } from "@/backend";
-import { useTranslation } from "@/lib/translations";
+import {
+  translateAuditDescription,
+  translateEventType,
+  useTranslation,
+} from "@/lib/translations";
 import { useActor } from "@caffeineai/core-infrastructure";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 
 function useAuditEvents() {
   const { actor, isFetching } = useActor(createActor);
@@ -72,6 +78,17 @@ export function AuditLogPage() {
       className="mx-auto max-w-7xl px-6 py-10 lg:px-8"
     >
       <header className="mb-8 animate-fade-rise">
+        <Link
+          to="/overview"
+          data-ocid="audit_logs.back_link"
+          className="group mb-4 inline-flex items-center gap-2 font-mono text-xs font-medium uppercase tracking-[0.16em] text-primary transition-smooth hover:text-accent"
+        >
+          <ArrowLeft
+            className="h-3.5 w-3.5 transition-transform group-hover:-translate-x-0.5"
+            aria-hidden="true"
+          />
+          {t("tabs.overview")}
+        </Link>
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-muted-foreground">
           {t("audit.eyebrow")}
         </p>
@@ -184,13 +201,17 @@ export function AuditLogPage() {
                         <span
                           className={`truncate font-mono text-xs font-medium uppercase tracking-[0.14em] ${eventTone(event.eventType)}`}
                         >
-                          {event.eventType}
+                          {translateEventType(t, event.eventType)}
                         </span>
                       </span>
                     </td>
                     <td className="px-6 py-4 align-top">
                       <p className="text-sm leading-relaxed text-foreground/90">
-                        {event.description}
+                        {translateAuditDescription(
+                          t,
+                          event.eventType,
+                          event.description,
+                        )}
                       </p>
                     </td>
                   </tr>

@@ -10,6 +10,7 @@ export type Option<T> = Some<T> | None;
 export type Timestamp = bigint;
 export interface WalletBalance {
     assets: Array<Asset>;
+    depositAddress: string;
     totalUsd?: bigint;
 }
 export type Result__1 = {
@@ -69,14 +70,19 @@ export interface AssetAllocation {
 }
 export interface SwitchTimeline {
     status: SwitchStatus;
-    cadenceSeconds: bigint;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
+    triggerDays: bigint;
+    timeUntilWarning?: bigint;
+    timeUntilTrigger?: bigint;
     timeSinceLastCheckIn?: bigint;
-    timeUntilRelease?: bigint;
 }
 export interface SwitchState {
     status: SwitchStatus;
-    cadenceSeconds: bigint;
+    warningRepeatDays: bigint;
+    warningOnsetDays: bigint;
     armedAt?: Timestamp;
+    triggerDays: bigint;
     lastCheckIn?: Timestamp;
 }
 export interface AuditEvent {
@@ -129,6 +135,14 @@ export interface Beneficiary {
     allocationShare: bigint;
     walletAddress: string;
 }
+export interface Overview {
+    switchStatus: SwitchStatus;
+    totalAllocationShare: bigint;
+    recentActivity: Array<AuditEvent>;
+    beneficiaryCount: bigint;
+    vaultBalance: WalletBalance;
+    timeline: SwitchTimeline;
+}
 export enum SwitchStatus {
     armed = "armed",
     disarmed = "disarmed"
@@ -142,13 +156,15 @@ export interface backendInterface {
     addAsset(symbol: string, name: string, balance: bigint, decimals: bigint, allocations: Array<AssetAllocation>): Promise<Asset>;
     addBeneficiary(name: string, allocationShare: bigint, walletAddress: string): Promise<Beneficiary>;
     appendAuditEvent(eventType: string, description: string): Promise<AuditEvent>;
-    armSwitch(cadenceSeconds: bigint): Promise<SwitchState>;
+    armSwitch(warningOnsetDays: bigint, warningRepeatDays: bigint, triggerDays: bigint): Promise<SwitchState>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     checkIn(): Promise<SwitchState>;
     disarmSwitch(): Promise<SwitchState>;
     execute(qJson: string): Promise<Result>;
     getApiDoc(): Promise<string>;
     getCallerUserRole(): Promise<UserRole>;
+    getDepositAddress(): Promise<string>;
+    getOverview(): Promise<Overview>;
     getSwitchState(): Promise<SwitchState>;
     getSwitchTimeline(): Promise<SwitchTimeline>;
     getWalletBalance(): Promise<WalletBalance>;

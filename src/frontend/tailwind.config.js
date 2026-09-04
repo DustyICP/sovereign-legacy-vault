@@ -105,6 +105,7 @@ export default {
         elevated: "0 1px 2px oklch(0.08 0.01 255 / 0.5), 0 12px 32px oklch(0.06 0.01 255 / 0.55)",
         "gold-glow": "0 0 0 1px oklch(0.72 0.16 85 / 0.4), 0 4px 20px oklch(0.72 0.16 85 / 0.18)",
         "metal-edge": "inset 0 1px 0 oklch(0.85 0.05 85 / 0.35), inset 0 -1px 0 oklch(0.3 0.04 85 / 0.6), 0 2px 6px oklch(0.06 0.01 255 / 0.5)",
+        "tab-indicator": "0 -1px 6px oklch(0.72 0.16 85 / 0.35)",
       },
       keyframes: {
         "accordion-down": {
@@ -119,11 +120,21 @@ export default {
           from: { opacity: "0", transform: "translateY(4px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
+        "approval-spin": {
+          from: { transform: "rotate(0deg)" },
+          to: { transform: "rotate(360deg)" },
+        },
+        "approval-pulse": {
+          "0%, 100%": { opacity: "0.45", transform: "scale(0.9)" },
+          "50%": { opacity: "1", transform: "scale(1.15)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-rise": "fade-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "approval-spin": "approval-spin 1s linear infinite",
+        "approval-pulse": "approval-pulse 1.6s ease-in-out infinite",
       },
     },
   },

@@ -13,14 +13,15 @@ import TextValue "mo:caffeineai-oql/TextValue";
 import IntValue "mo:caffeineai-oql/IntValue";
 import BlobValue "mo:caffeineai-oql/BlobValue";
 import Types "types/vault";
+import TimelineTypes "types/vault-timelines-wallet";
 import VaultLib "lib/vault";
-import SwitchApi "mixins/switch-api";
 import VaultApi "mixins/vault-api";
+import VaultTimelinesWalletApi "mixins/vault-timelines-wallet-api";
 import ApiDocMixin "mixins/api-doc";
 
 actor {
   let accessControlState : AccessControl.AccessControlState;
-  let switchState : Types.SwitchStateInternal;
+  let switchState : TimelineTypes.SwitchStateInternal;
   let beneficiaries : List.List<Types.Beneficiary>;
   let assets : List.List<Types.Asset>;
   let auditEvents : List.List<Types.AuditEvent>;
@@ -34,15 +35,17 @@ actor {
   include MixinAuthorization(accessControlState, ?onLogin);
   include Expose({
     entities = [
-      OQL.Entity.manual<Types.SwitchStateInternal>(
+      OQL.Entity.manual<TimelineTypes.SwitchStateInternal>(
         "switchState",
         func () = [switchState].values(),
         "SwitchState",
         "status",
       )
-        .sample({ var status = #disarmed; var cadenceSeconds = 0; var lastCheckIn = null; var armedAt = null } : Types.SwitchStateInternal)
+        .sample({ var status = #disarmed; var warningOnsetDays = 0; var warningRepeatDays = 0; var triggerDays = 0; var lastCheckIn = null; var armedAt = null } : TimelineTypes.SwitchStateInternal)
         .payload("status", func s = switch (s.status) { case (#armed) "armed"; case (#disarmed) "disarmed" })
-        .payload("cadenceSeconds", func s = s.cadenceSeconds)
+        .payload("warningOnsetDays", func s = s.warningOnsetDays)
+        .payload("warningRepeatDays", func s = s.warningRepeatDays)
+        .payload("triggerDays", func s = s.triggerDays)
         .payload("lastCheckIn", func s = switch (s.lastCheckIn) { case (?t) t; case null 0 })
         .payload("armedAt", func s = switch (s.armedAt) { case (?t) t; case null 0 })
         .controllerOnly()
@@ -66,7 +69,7 @@ actor {
         .build(),
     ];
   });
-  include SwitchApi(accessControlState, switchState, auditEvents, ids);
+  include VaultTimelinesWalletApi(accessControlState, switchState, beneficiaries, assets, auditEvents, ids);
   include VaultApi(accessControlState, beneficiaries, assets, auditEvents, ids);
   include ApiDocMixin();
 };

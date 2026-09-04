@@ -11,8 +11,10 @@ describe("dark-only OKLCH theme", () => {
     expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
     // Strip comments first: prose like "near-black steel" is not a color value.
     const cssWithoutComments = css.replace(/\/\*[\s\S]*?\*\//g, "");
+    // The `white-space` CSS property legitimately contains the word "white";
+    // exclude it so only actual named color values are flagged.
     expect(cssWithoutComments).not.toMatch(
-      /\b(red|blue|green|white|black|gray|grey|orange|purple)\b/i,
+      /\b(red|blue|green|black|gray|grey|orange|purple)\b|\bwhite(?!-space)\b/i,
     );
   });
 

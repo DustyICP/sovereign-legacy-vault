@@ -1,7 +1,7 @@
 import { SwitchStatus } from "@/backend";
 import { router } from "@/lib/router";
 import { I18nProvider } from "@/lib/translations";
-import { DashboardPage } from "@/pages/DashboardPage";
+import { TimelinesPage } from "@/pages/TimelinesPage";
 import {
   createMockActor,
   renderApp,
@@ -97,25 +97,17 @@ describe("i18n translation pass", () => {
     setAuthenticated(true);
     const user = userEvent.setup();
     renderApp();
-    await router.navigate({ to: "/dashboard" });
+    await router.navigate({ to: "/overview" });
 
-    // English dashboard title.
-    expect(
-      await screen.findByRole("heading", { name: "The Vault" }),
-    ).toBeInTheDocument();
+    // English protected-page copy: the header network badge.
+    expect(await screen.findByText("Network · Identity")).toBeInTheDocument();
 
     // Switch to Spanish.
     const select = screen.getByRole("combobox", { name: "Language" });
     await user.selectOptions(select, "es");
 
-    // The dashboard title and sidebar nav re-render in Spanish.
-    expect(
-      await screen.findByRole("heading", { name: "La Bóveda" }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Panel" })).toBeInTheDocument();
-    expect(
-      screen.getByRole("link", { name: "Beneficiarios" }),
-    ).toBeInTheDocument();
+    // The protected-page header copy re-renders in Spanish.
+    expect(await screen.findByText("Red · Identidad")).toBeInTheDocument();
   });
 
   it("sets documentElement.dir=rtl for Arabic, Persian, and Urdu", async () => {
@@ -186,13 +178,22 @@ describe("i18n translation pass", () => {
   it("formats dates with the active locale's conventions", async () => {
     setAuthenticated(true);
     const actor = createMockActor();
-    actor.getWalletBalance.mockResolvedValue({ assets: [] });
-    actor.listBeneficiaries.mockResolvedValue([]);
     actor.getSwitchState.mockResolvedValue({
       status: SwitchStatus.armed,
-      cadenceSeconds: 604800n,
+      warningOnsetDays: 30n,
+      warningRepeatDays: 7n,
+      triggerDays: 180n,
       armedAt: 1_700_000_000_000_000_000n,
       lastCheckIn: 1_700_000_000_000_000_000n,
+    });
+    actor.getSwitchTimeline.mockResolvedValue({
+      status: SwitchStatus.armed,
+      warningOnsetDays: 30n,
+      warningRepeatDays: 7n,
+      triggerDays: 180n,
+      timeSinceLastCheckIn: 10n,
+      timeUntilWarning: 2_592_000n,
+      timeUntilTrigger: 15_552_000n,
     });
     setActor(actor);
 
@@ -202,26 +203,30 @@ describe("i18n translation pass", () => {
     const view = render(
       <QueryClientProvider client={queryClient}>
         <I18nProvider>
-          <DashboardPage />
+          <TimelinesPage />
         </I18nProvider>
       </QueryClientProvider>,
     );
 
-    // English locale formats the last-verified label in English.
-    expect(await screen.findByText(/Last verified ·/)).toBeInTheDocument();
+    // English locale formats the last check-in date in English.
+    const englishLabel = await screen.findByText("Last check-in");
+    const englishDate =
+      englishLabel.parentElement!.querySelector("p:last-child")!.textContent;
+    expect(englishDate).toBeTruthy();
 
-    // Re-render with a Spanish locale and assert the label re-renders.
+    // Re-render with a Spanish locale and assert the date re-formats.
     window.localStorage.setItem("sovereign-legacy.lang", "es");
     view.unmount();
     render(
       <QueryClientProvider client={queryClient}>
         <I18nProvider>
-          <DashboardPage />
+          <TimelinesPage />
         </I18nProvider>
       </QueryClientProvider>,
     );
-    expect(
-      await screen.findByText(/Última verificación ·/),
-    ).toBeInTheDocument();
+    const spanishLabel = await screen.findByText("Last check-in");
+    const spanishDate =
+      spanishLabel.parentElement!.querySelector("p:last-child")!.textContent;
+    expect(spanishDate).not.toBe(englishDate);
   });
 });

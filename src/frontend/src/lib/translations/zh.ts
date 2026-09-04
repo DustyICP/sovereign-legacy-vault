@@ -192,6 +192,7 @@ export const zh: Partial<Translations> = {
     allocation: "受益人分配",
     allocationNone: "尚无分配。添加受益人即可开始。",
     allocationAria: "受益人分配份额",
+    allocated: "已分配",
     switch: "开关",
     lastVerified: "上次验证 · {time}",
     notVerified: "尚未验证",

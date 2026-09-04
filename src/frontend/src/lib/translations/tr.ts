@@ -193,6 +193,7 @@ export const tr: Partial<Translations> = {
     allocation: "Yararlanıcı Tahsisi",
     allocationNone: "Henüz tahsis yok. Başlamak için bir yararlanıcı ekleyin.",
     allocationAria: "Yararlanıcı tahsis payları",
+    allocated: "tahsis edildi",
     switch: "Anahtar",
     lastVerified: "Son doğrulama · {time}",
     notVerified: "Henüz doğrulanmadı",

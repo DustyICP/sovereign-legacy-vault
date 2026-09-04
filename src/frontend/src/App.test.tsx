@@ -1,3 +1,4 @@
+import { SwitchStatus } from "@/backend";
 import { router } from "@/lib/router";
 import { actorState, authState } from "@/test/state";
 import {
@@ -42,7 +43,7 @@ describe("App shell, landing, and auth gating", () => {
     expect(screen.getByText("Sovereign Legacy")).toBeInTheDocument();
   });
 
-  it("calls login from the landing CTA and reaches the dashboard once authenticated", async () => {
+  it("calls login from the landing CTA and reaches the overview once authenticated", async () => {
     const user = userEvent.setup();
     renderApp();
 
@@ -51,48 +52,70 @@ describe("App shell, landing, and auth gating", () => {
     );
     expect(authState.login).toHaveBeenCalledTimes(1);
 
-    // Simulate a completed Internet Identity sign-in, then reach the dashboard.
+    // Simulate a completed Internet Identity sign-in, then reach the overview.
+    const actor = createMockActor();
+    actor.getOverview.mockResolvedValue({
+      switchStatus: SwitchStatus.disarmed,
+      totalAllocationShare: 0n,
+      recentActivity: [],
+      beneficiaryCount: 0n,
+      vaultBalance: { assets: [], depositAddress: "" },
+      timeline: {
+        status: SwitchStatus.disarmed,
+        warningOnsetDays: 30n,
+        warningRepeatDays: 7n,
+        triggerDays: 180n,
+      },
+    });
     setAuthenticated(true);
-    setActor(createMockActor());
-    await router.navigate({ to: "/dashboard" });
+    setActor(actor);
+    await router.navigate({ to: "/overview" });
 
-    expect(await screen.findByText("The Vault")).toBeInTheDocument();
-    expect(screen.getByText("Vault Balance")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "Overview" }),
+    ).toBeInTheDocument();
+    // The vault balance snapshot card resolves asynchronously from the
+    // `getOverview` query, so wait for its label rather than reading it
+    // synchronously right after the (always-rendered) page heading appears.
+    expect(await screen.findByText("Vault Balance")).toBeInTheDocument();
   });
 
   it("gates protected routes behind login by redirecting to the landing page", async () => {
     renderApp();
-    await router.navigate({ to: "/dashboard" });
+    await router.navigate({ to: "/overview" });
 
     expect(
       await screen.findByText("Self-sovereign inheritance"),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "The Vault" }),
+      screen.queryByRole("heading", { name: "Overview" }),
     ).not.toBeInTheDocument();
   });
 
-  it("navigates between protected sections via the sidebar", async () => {
+  it("navigates between protected sections via the horizontal tab bar", async () => {
     setAuthenticated(true);
+    setActor(createMockActor());
     renderApp();
-    await router.navigate({ to: "/dashboard" });
+    await router.navigate({ to: "/overview" });
 
-    expect(await screen.findByText("The Vault")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "Overview" }),
+    ).toBeInTheDocument();
 
     const user = userEvent.setup();
-    await user.click(screen.getByRole("link", { name: "Beneficiaries" }));
+    await user.click(screen.getByRole("link", { name: "Wallet" }));
+    expect(
+      await screen.findByRole("heading", { name: "Wallet" }),
+    ).toBeInTheDocument();
+
+    await user.click(screen.getByRole("link", { name: "Beneficiary" }));
     expect(
       await screen.findByRole("heading", { name: "Beneficiaries" }),
     ).toBeInTheDocument();
 
-    await user.click(screen.getByRole("link", { name: "Audit Logs" }));
+    await user.click(screen.getByRole("link", { name: "Timelines" }));
     expect(
-      await screen.findByRole("heading", { name: "Audit Logs" }),
-    ).toBeInTheDocument();
-
-    await user.click(screen.getByRole("link", { name: "Settings" }));
-    expect(
-      await screen.findByRole("heading", { name: "Vault Configuration" }),
+      await screen.findByRole("heading", { name: "Inactivity Timelines" }),
     ).toBeInTheDocument();
   });
 
@@ -115,9 +138,11 @@ describe("App shell, landing, and auth gating", () => {
     setAuthenticated(true);
     setActor(createMockActor());
     renderApp();
-    await router.navigate({ to: "/dashboard" });
+    await router.navigate({ to: "/overview" });
 
-    expect(await screen.findByText("The Vault")).toBeInTheDocument();
+    expect(
+      await screen.findByRole("heading", { name: "Overview" }),
+    ).toBeInTheDocument();
 
     const header = screen.getByTestId("header");
     expect(header.className).toContain("sticky");

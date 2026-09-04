@@ -193,6 +193,7 @@ export const fa: Partial<Translations> = {
     allocation: "تخصیص ذی‌نفعان",
     allocationNone: "هنوز تخصیصی وجود ندارد. برای شروع یک ذی‌نفع اضافه کنید.",
     allocationAria: "سهم‌های تخصیص ذی‌نفعان",
+    allocated: "تخصیص‌یافته",
     switch: "کلید",
     lastVerified: "آخرین بررسی · {time}",
     notVerified: "هنوز تأیید نشده",
